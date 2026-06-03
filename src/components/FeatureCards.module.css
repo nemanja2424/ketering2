@@ -1,0 +1,137 @@
+.featuresSection {
+  width: 100%;
+  padding: 4rem 2rem;
+  position: relative;
+  height: 1000px;
+}
+
+/* blagi noise/texture feel */
+.featuresSection::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 70%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem; /* malo tighter */
+}
+
+.title {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 800;
+  color: #6c7e49;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #5a564c;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; /* malo tighter */
+}
+
+/* CARD */
+.card {
+  position: relative;
+  padding: 1.75rem;
+  background: linear-gradient(145deg, #f6e1ca, #f3d8b8);
+  border-radius: 16px;
+
+  border: 1px solid rgba(108, 126, 73, 0.25);
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.04);
+
+  text-align: left;
+
+  transition: all 0.35s ease;
+  cursor: pointer;
+
+  overflow: hidden;
+}
+
+/* top highlight line */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, #6c7e49, #a3b86c, #6c7e49);
+  opacity: 0.6;
+}
+
+/* hover */
+.card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(86, 111, 45, 0.18);
+  border-color: rgba(86, 111, 45, 0.6);
+}
+
+.card h3{
+    color: #6c7e49;
+}
+
+/* ICON */
+.icon {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+
+  border-radius: 12px;
+  color: #6c7e49;
+}
+
+/* TITLE */
+.cardTitle {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #011209;
+  margin-bottom: 0.5rem;
+}
+
+/* DESCRIPTION */
+.cardDescription {
+  font-size: 0.95rem;
+  color: #5a564c;
+  line-height: 1.6;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featuresSection {
+    padding: 3rem 1rem;
+  }
+}
