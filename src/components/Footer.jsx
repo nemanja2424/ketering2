@@ -1,6 +1,7 @@
 'use client';
 
 import styles from './Footer.module.css';
+import Link from 'next/link';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaInstagram, FaFacebook } from 'react-icons/fa';
 
 export default function Footer() {
@@ -29,12 +30,11 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Brzi linkovi</h3>
+            <h3 className={styles.sectionTitle}>Navigacija</h3>
             <ul className={styles.links}>
-              <li><a href="#services">Usluge</a></li>
-              <li><a href="#reviews">Recenzije</a></li>
-              <li><a href="#meni">Meni</a></li>
-              <li><a href="#contact">Kontakt</a></li>
+              <li><Link href="/">Početna</Link></li>
+              <li><Link href="/poruci">Naruči</Link></li>
+              <li><Link href="/o-nama">O nama</Link></li>
             </ul>
           </div>
 
