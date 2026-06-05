@@ -1,27 +1,27 @@
 @keyframes float1 {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translateY(50px);
+    transform: translate3d(0, 28px, 0);
   }
 }
 
 @keyframes float2 {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translateY(-60px);
+    transform: translate3d(0, -32px, 0);
   }
 }
 
 @keyframes float3 {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translate3d(-50%, 0, 0);
   }
   50% {
-    transform: translateY(40px);
+    transform: translate3d(-50%, 26px, 0);
   }
 }
 
@@ -30,16 +30,16 @@
     transform: rotate(0deg);
   }
   50% {
-    transform: rotate(15deg);
+    transform: rotate(8deg);
   }
 }
 
 @keyframes rotate2 {
   0%, 100% {
-    transform: rotate(0deg);
+    transform: scaleX(-1) rotate(0deg);
   }
   50% {
-    transform: rotate(-20deg);
+    transform: scaleX(-1) rotate(-8deg);
   }
 }
 
@@ -48,199 +48,175 @@
     transform: rotate(0deg);
   }
   50% {
-    transform: rotate(10deg);
+    transform: rotate(7deg);
   }
 }
 
 @keyframes rotate4 {
   0%, 100% {
-    transform: rotate(0deg);
+    transform: scaleX(-1) rotate(0deg);
   }
   50% {
-    transform: rotate(-15deg);
+    transform: scaleX(-1) rotate(-7deg);
   }
+}
+
+.shape1,
+.shape2,
+.shape3 {
+  position: fixed;
+  background: radial-gradient(circle, #6c7e49 0%, transparent 68%);
+  opacity: 0.24;
+  filter: blur(90px);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .shape1 {
-  position: fixed;
-  top: 5%;
-  left: 10%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #6c7e49 0%, transparent 70%);
-  opacity: 0.9;
-  filter: blur(100px);
-  z-index: -1;
-  pointer-events: none;
-  animation: float1 22s ease-in-out infinite;
+  top: 8%;
+  left: -8%;
+  width: 420px;
+  height: 420px;
+  animation: float1 24s ease-in-out infinite;
 }
 
 .shape2 {
-  position: fixed;
-  top: 40%;
-  right: 5%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #6c7e49 0%, transparent 70%);
-  opacity: 0.6;
-  filter: blur(100px);
-  z-index: -1;
-  pointer-events: none;
-  animation: float2 28s ease-in-out infinite;
+  top: 42%;
+  right: -10%;
+  width: 520px;
+  height: 520px;
+  animation: float2 30s ease-in-out infinite;
 }
 
 .shape3 {
-  position: fixed;
-  bottom: 10%;
+  bottom: 4%;
   left: 50%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, #6c7e49 0%, transparent 70%);
-  opacity: 0.7;
-  filter: blur(100px);
-  z-index: -1;
-  pointer-events: none;
-  animation: float3 24s ease-in-out infinite;
-  transform: translateX(-50%);
+  width: 380px;
+  height: 380px;
+  animation: float3 28s ease-in-out infinite;
 }
 
-/* Decorative leaves */
-.leaf1 {
+.leaf1,
+.leaf2,
+.leaf3,
+.leaf4 {
   position: fixed;
-  top: 15%;
-  right: 8%;
-  width: 80px;
-  height: 80px;
   color: #566f2d;
-  opacity: 0.35;
+  opacity: 0.16;
   z-index: -1;
   pointer-events: none;
-  animation: rotate1 8s ease-in-out infinite;
+}
+
+.leaf1 {
+  top: 18%;
+  right: 8%;
+  width: 72px;
+  height: 72px;
+  animation: rotate1 10s ease-in-out infinite;
 }
 
 .leaf2 {
-  position: fixed;
-  top: 60%;
-  left: 5%;
-  width: 100px;
-  height: 100px;
+  top: 62%;
+  left: 4%;
+  width: 92px;
+  height: 92px;
   color: #6c7e49;
-  opacity: 0.32;
-  z-index: -1;
-  pointer-events: none;
-  animation: rotate2 10s ease-in-out infinite;
-  transform: scaleX(-1);
+  animation: rotate2 12s ease-in-out infinite;
 }
 
 .leaf3 {
-  position: fixed;
-  bottom: 25%;
+  bottom: 24%;
   right: 12%;
-  width: 70px;
-  height: 70px;
-  color: #566f2d;
-  opacity: 0.34;
-  z-index: -1;
-  pointer-events: none;
-  animation: rotate3 9s ease-in-out infinite;
+  width: 64px;
+  height: 64px;
+  animation: rotate3 11s ease-in-out infinite;
 }
 
 .leaf4 {
-  position: fixed;
-  bottom: 15%;
-  left: 15%;
-  width: 90px;
-  height: 90px;
+  bottom: 12%;
+  left: 14%;
+  width: 84px;
+  height: 84px;
   color: #6c7e49;
-  opacity: 0.30;
-  z-index: -1;
-  pointer-events: none;
-  animation: rotate4 11s ease-in-out infinite;
-  transform: scaleX(-1);
+  animation: rotate4 13s ease-in-out infinite;
 }
 
-/* How It Works Section */
 .howItWorks {
-  padding: 80px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: clamp(4rem, 7vw, 6.5rem) 1.25rem;
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  width: min(100%, 980px);
+  margin: 0 auto;
   text-align: center;
 }
 
 .eyebrow {
-  display: inline-block;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 2px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 0.8rem;
+  margin-bottom: 0.9rem;
   color: #d4a574;
+  background: rgba(212, 165, 116, 0.12);
+  border: 1px solid rgba(212, 165, 116, 0.24);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  margin-bottom: 12px;
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  max-width: 780px;
+  margin: 0 auto 1.15rem;
   color: #566f2d;
-  margin: 12px 0 20px 0;
-  line-height: 1.2;
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: 0;
+  text-wrap: balance;
 }
 
 .description {
-  font-size: 1.25rem;
-  line-height: 1.6;
+  max-width: 860px;
+  margin: 0 auto;
   color: #5a564c;
-  max-width: 750px;
-  font-weight: 400;
-  letter-spacing: 0.3px;
+  font-size: 1.12rem;
+  font-weight: 430;
+  line-height: 1.85;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .howItWorks {
-    padding: 60px 16px;
+    padding: 4rem 1rem;
   }
 
-  .eyebrow {
-    font-size: 0.8rem;
-    margin-bottom: 12px;
+  .container {
+    text-align: left;
+  }
+
+  .title,
+  .description {
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .title {
     font-size: 2rem;
-    margin: 12px 0 16px 0;
   }
 
   .description {
     font-size: 1rem;
-    line-height: 1.7;
-  }
-}
-
-@media (max-width: 480px) {
-  .howItWorks {
-    padding: 50px 16px;
   }
 
-  .eyebrow {
-    font-size: 0.75rem;
-    letter-spacing: 1.5px;
-    margin-bottom: 12px;
-  }
-
-  .title {
-    font-size: 1.5rem;
-    margin: 12px 0 12px 0;
-  }
-
-  .description {
-    font-size: 0.95rem;
-    line-height: 1.6;
+  .shape1,
+  .shape2,
+  .shape3,
+  .leaf1,
+  .leaf2,
+  .leaf3,
+  .leaf4 {
+    opacity: 0.1;
   }
 }

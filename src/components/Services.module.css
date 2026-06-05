@@ -1,74 +1,77 @@
 .servicesSection {
-  padding: 80px 20px;
+  padding: clamp(4rem, 7vw, 6.5rem) 1.25rem;
 }
 
 .container {
-  max-width: 1200px;
+  width: min(100%, 1180px);
   margin: 0 auto;
 }
 
-/* Header */
 .header {
+  max-width: 760px;
+  margin: 0 auto 3rem;
   text-align: center;
-  margin-bottom: 60px;
 }
 
 .eyebrow {
-  display: inline-block;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 2px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 0.8rem;
+  margin-bottom: 0.9rem;
   color: #d4a574;
+  background: rgba(212, 165, 116, 0.12);
+  border: 1px solid rgba(212, 165, 116, 0.24);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  margin-bottom: 12px;
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  margin: 0 0 1rem;
   color: #566f2d;
-  margin: 12px 0 20px 0;
-  line-height: 1.2;
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: 0;
+  text-wrap: balance;
 }
 
 .subtitle {
-  font-size: 1.4rem;
-  color: #5a564c;
-  max-width: 600px;
+  max-width: 680px;
   margin: 0 auto;
-  line-height: 1.6;
+  color: #5a564c;
+  font-size: 1.12rem;
+  line-height: 1.7;
 }
 
-/* Grid */
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
-  margin-top: 40px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-/* Card */
 .card {
   position: relative;
-  min-height: 500px;
-  border-radius: 12px;
+  min-height: 460px;
   overflow: hidden;
   background-size: cover;
   background-position: center;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: 0;
-  transform: translateY(30px) translateX(0);
+  opacity: 1;
+  transform: translateY(0);
+  box-shadow: 0 16px 34px rgba(1, 18, 9, 0.12);
+  transition: transform 0.28s ease, box-shadow 0.28s ease, filter 0.28s ease;
 }
 
 .card:nth-child(1),
-.card:nth-child(3) {
-  animation: slideInLeft 0.6s ease-out forwards;
-}
-
+.card:nth-child(3),
 .card:nth-child(2),
 .card:nth-child(4) {
-  animation: slideInRight 0.6s ease-out forwards;
+  animation: none;
 }
 
 .card.visible {
@@ -79,161 +82,156 @@
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateY(30px) translateX(-30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) translateX(0);
+    transform: translateY(0);
   }
 }
 
 @keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateY(30px) translateX(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) translateX(0);
+    transform: translateY(0);
   }
 }
 
 .card:hover {
-  transform: scale(1.03);
-  filter: brightness(1.1);
+  transform: translateY(-6px);
+  filter: saturate(1.04);
+  box-shadow: 0 24px 48px rgba(1, 18, 9, 0.18);
 }
 
-/* Overlay */
 .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.8),
-    rgba(0, 0, 0, 0.1)
-  );
+  background:
+    linear-gradient(to top, rgba(1, 18, 9, 0.88), rgba(1, 18, 9, 0.22) 58%, rgba(1, 18, 9, 0.08)),
+    linear-gradient(180deg, rgba(86, 111, 45, 0.12), transparent);
   z-index: 1;
+  transition: opacity 0.25s ease;
 }
 
-/* Number */
+.card:hover .overlay {
+  opacity: 0.94;
+}
+
 .number {
   position: absolute;
-  top: 24px;
-  left: 24px;
-  font-size: 4rem;
-  font-weight: 300;
-  color: #566f2d;
-  line-height: 1;
-  font-weight: 600;
+  top: 1.25rem;
+  left: 1.25rem;
   z-index: 2;
-  letter-spacing: -2px;
+  color: rgba(246, 225, 202, 0.92);
+  font-size: 3.8rem;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: 0;
+  text-shadow: 0 10px 24px rgba(1, 18, 9, 0.32);
 }
 
-/* Content */
 .content {
   position: absolute;
-  bottom: 0;
   left: 0;
   right: 0;
-  padding: 32px 28px;
+  bottom: 0;
   z-index: 2;
+  padding: 1.35rem;
   color: white;
 }
 
 .cardTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 12px 0;
+  margin: 0 0 0.65rem;
   color: white;
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .cardDescription {
-  font-size: 1.2rem;
+  max-width: 95%;
+  margin: 0 0 1rem;
   color: rgba(255, 255, 255, 0.9);
-  margin: 0 0 16px 0;
-  line-height: 1.5;
-  max-width: 90%;
+  font-size: 0.98rem;
+  line-height: 1.65;
 }
 
 .link {
-  display: inline-block;
-  font-size: 0.9rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
   color: #d4a574;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  opacity: 0.8;
+  font-size: 0.88rem;
+  font-weight: 800;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .link:hover {
-  opacity: 1;
+  color: #f6e1ca;
   transform: translateX(4px);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card {
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 700px) {
+  .servicesSection {
+    padding: 4rem 1rem;
+  }
+
+  .header {
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+
+  .subtitle {
+    margin-left: 0;
+    font-size: 1rem;
+  }
+
   .title {
     font-size: 2rem;
   }
 
-  .subtitle {
-    font-size: 1rem;
-  }
-
   .grid {
     grid-template-columns: 1fr;
-    gap: 24px;
   }
 
   .card {
-    min-height: 400px;
+    min-height: 360px;
   }
 
   .number {
     font-size: 3rem;
   }
 
-  .content {
-    padding: 24px 20px;
-  }
-
   .cardTitle {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
   }
 }
 
 @media (max-width: 480px) {
-  .servicesSection {
-    padding: 60px 16px;
-  }
-
-  .header {
-    margin-bottom: 40px;
-  }
-
-  .title {
-    font-size: 1.5rem;
-  }
-
   .card {
-    min-height: 350px;
+    min-height: 330px;
   }
 
   .number {
-    font-size: 2.5rem;
-    top: 16px;
-    left: 16px;
+    top: 1rem;
+    left: 1rem;
   }
 
   .content {
-    padding: 20px 16px;
-  }
-
-  .cardTitle {
-    font-size: 1.1rem;
-  }
-
-  .cardDescription {
-    font-size: 0.85rem;
+    padding: 1rem;
   }
 }
