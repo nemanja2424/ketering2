@@ -1,0 +1,289 @@
+.ctaSection {
+  position: relative;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(1, 18, 9, 0.85) 0%,
+    rgba(86, 111, 45, 0.75) 100%
+  );
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 80px 20px;
+  max-width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto;
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ctaSection.visible .content {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Title */
+.title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+/* Subtitle */
+.subtitle {
+  font-size: 1.4rem;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+/* Description */
+.description {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 40px 0;
+  line-height: 1.7;
+  max-width: 550px;
+}
+
+/* Buttons Container */
+.buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Button Styles */
+.button {
+  padding: 16px 40px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+  text-decoration: none;
+  display: inline-block;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Primary Button */
+.primary {
+  background: linear-gradient(135deg, #d4a574 0%, #c89459 100%);
+  color: #011209;
+  box-shadow: 0 8px 24px rgba(212, 165, 116, 0.3);
+}
+
+.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(212, 165, 116, 0.4);
+}
+
+.primary:active {
+  transform: translateY(-1px);
+}
+
+/* Secondary Button */
+.secondary {
+  background: transparent;
+  color: #d4a574;
+  border: 2px solid #d4a574;
+  font-size: 0.95rem;
+}
+
+.secondary:hover {
+  background: rgba(212, 165, 116, 0.1);
+  transform: translateY(-3px);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.secondary:active {
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 2.8rem;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .ctaSection {
+    min-height: 450px;
+  }
+
+  .container {
+    padding: 60px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .description {
+    font-size: 0.95rem;
+    margin-bottom: 32px;
+  }
+
+  .ctaSection {
+    min-height: 400px;
+  }
+
+  .container {
+    padding: 50px 16px;
+  }
+
+  .button {
+    padding: 14px 32px;
+    font-size: 0.9rem;
+  }
+
+  .buttons {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 1.85rem;
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .description {
+    font-size: 0.9rem;
+    margin-bottom: 28px;
+  }
+
+  .ctaSection {
+    min-height: 380px;
+  }
+
+  .container {
+    padding: 40px 16px;
+  }
+
+  .button {
+    padding: 12px 28px;
+    font-size: 0.85rem;
+  }
+
+  .buttons {
+    gap: 10px;
+    width: 100%;
+  }
+
+  .primary,
+  .secondary {
+    flex: 1;
+    min-width: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .description {
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .ctaSection {
+    min-height: 320px;
+  }
+
+  .container {
+    padding: 32px 12px;
+  }
+
+  .button {
+    padding: 11px 20px;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .primary,
+  .secondary {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .secondary {
+    padding: 10px 20px;
+  }
+}

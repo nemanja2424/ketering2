@@ -2,7 +2,6 @@
   width: 100%;
   padding: 4rem 2rem;
   position: relative;
-  height: 1000px;
 }
 
 /* blagi noise/texture feel */
@@ -33,7 +32,7 @@
 }
 
 .subtitle {
-  font-size: 1rem;
+  font-size: 1.15rem;
   color: #5a564c;
   font-weight: 400;
   line-height: 1.6;
@@ -114,7 +113,7 @@
 
 /* DESCRIPTION */
 .cardDescription {
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   color: #5a564c;
   line-height: 1.6;
 }
@@ -129,6 +128,11 @@
 @media (max-width: 640px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0 0.5rem;
   }
 
   .featuresSection {

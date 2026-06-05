@@ -39,7 +39,7 @@ export default function Header() {
           <Link href="#narucivanje" className={styles.navLink}>
             Naruči
           </Link>
-          <Link href="#onama" className={styles.navLink}>
+          <Link href="/o-nama" className={styles.navLink}>
             O nama
           </Link>
         </nav>

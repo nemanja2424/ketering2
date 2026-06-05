@@ -1,0 +1,233 @@
+.reviewsSection {
+  padding: 80px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #566f2d;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #5a564c;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+/* Review Card */
+.reviewCard {
+  background: linear-gradient(135deg, #f8f6f2 0%, #f3f0eb 100%);
+  padding: 40px;
+  border-radius: 16px;
+  border-top: 4px solid #6c7e49;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+  opacity: 0;
+  transform: translateY(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.reviewCard::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  font-size: 5rem;
+  color: rgba(108, 126, 73, 0.08);
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.reviewCard.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reviewCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  border-top-color: #d4a574;
+}
+
+/* Stars */
+.stars {
+  font-size: 1.1rem;
+  color: #d4a574;
+  margin-bottom: 20px;
+  letter-spacing: 3px;
+  display: block;
+  font-weight: 600;
+}
+
+/* Review Text */
+.reviewText {
+  font-size: 1.2rem;
+  color: #011209;
+  line-height: 1.9;
+  margin: 0 0 28px 0;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* Client Info */
+.clientInfo {
+  border-top: 2px solid rgba(108, 126, 73, 0.2);
+  padding-top: 18px;
+  margin-top: 8px;
+}
+
+.clientName {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #011209;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.3px;
+}
+
+.eventType {
+  font-size: 0.8rem;
+  color: #6c7e49;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .reviewsSection {
+    padding: 60px 20px;
+  }
+
+  .header {
+    margin-bottom: 48px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .reviewCard {
+    padding: 32px;
+  }
+
+  .reviewText {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .reviewsSection {
+    padding: 60px 16px;
+  }
+
+  .header {
+    margin-bottom: 40px;
+  }
+
+  .title {
+    font-size: 1.75rem;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .reviewCard {
+    padding: 28px;
+  }
+
+  .reviewText {
+    font-size: 0.98rem;
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .stars {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviewsSection {
+    padding: 50px 14px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .reviewCard {
+    padding: 24px;
+  }
+
+  .reviewCard::before {
+    font-size: 3.5rem;
+    top: -5px;
+    left: 12px;
+  }
+
+  .reviewText {
+    font-size: 0.92rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .clientName {
+    font-size: 0.9rem;
+  }
+
+  .eventType {
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+  }
+
+  .stars {
+    font-size: 1rem;
+    margin-bottom: 14px;
+  }
+}

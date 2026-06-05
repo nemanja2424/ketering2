@@ -23,20 +23,20 @@ export default function Hero() {
           <span className={styles.eyebrow}>PREMIUM KETERING</span>
 
           {/* Main Heading */}
-          <h1 className={styles.heading}>Ukusi koji ostavljaju utisak</h1>
+          <h1 className={styles.heading}>Menije koji oslikavaju vašu viziju</h1>
 
           {/* Subheading */}
           <p className={styles.subheading}>
-            Profesionalni ketering za poslovne događaje, proslave, venčanja i privatne događaje.
+            Birajte iz našeg repertoara ili kreirajte potpuno personalizovani meni. Savršena kombinacija kvaliteta, kreativnosti i fleksibilnosti.
           </p>
 
           {/* Buttons */}
           <div className={styles.buttons}>
             <button className={`${styles.button} ${styles.primary}`}>
-              Zatraži ponudu
+              Kreiraj svoj meni
             </button>
             <button className={`${styles.button} ${styles.secondary}`}>
-              Pogledaj meni
+              Vidi spremne menije
             </button>
           </div>
         </div>

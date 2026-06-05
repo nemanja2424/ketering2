@@ -108,7 +108,7 @@
 
 /* Subheading */
 .subheading {
-  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 2.5rem;
