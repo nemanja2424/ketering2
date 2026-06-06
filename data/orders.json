@@ -1,0 +1,68 @@
+[
+  {
+    "id": "3ae538ae-5afd-4131-bac4-0c3620857597",
+    "status": "created",
+    "paymentIntentId": null,
+    "createdAt": "2026-06-05T23:45:14.889Z",
+    "updatedAt": "2026-06-05T23:45:14.889Z",
+    "type": "menu",
+    "guestCount": 1,
+    "menu": {
+      "id": "vegetarijanski",
+      "name": "Vegetarijanski raj",
+      "description": "Hranljive vegetarijanske opcije, zdrava i ukusna kombinacija.",
+      "items": [
+        "Grilovano povrce",
+        "Veganski burgeri",
+        "Tofu",
+        "Smoothie bowls"
+      ],
+      "priceRsdPerPerson": 1200
+    },
+    "totalRsd": 1200
+  },
+  {
+    "id": "83f06a3a-fd9c-4aae-ae69-e77f618a2886",
+    "status": "created",
+    "paymentIntentId": null,
+    "createdAt": "2026-06-05T23:04:25.836Z",
+    "updatedAt": "2026-06-05T23:04:25.836Z",
+    "type": "menu",
+    "guestCount": 1,
+    "menu": {
+      "id": "premium",
+      "name": "Premium izbor",
+      "description": "Nasa najluksuznija ponuda sa ekskluzivnim jelima za posebne dogadjaje.",
+      "items": [
+        "Biftek",
+        "Jastog",
+        "Tiramisu",
+        "Jagnje"
+      ],
+      "priceRsdPerPerson": 2500
+    },
+    "totalRsd": 2500
+  },
+  {
+    "id": "721e37c9-6501-4405-b1da-87998b434025",
+    "status": "created",
+    "paymentIntentId": null,
+    "createdAt": "2026-06-05T23:04:18.044Z",
+    "updatedAt": "2026-06-05T23:04:18.044Z",
+    "type": "menu",
+    "guestCount": 1,
+    "menu": {
+      "id": "klasicni",
+      "name": "Klasicni recepti",
+      "description": "Tradicionalna srpska kuhinja sa modernim dodirom. Idealno za poslovne dogadjaje.",
+      "items": [
+        "Pljeskavica",
+        "Cevapi",
+        "Raznjici",
+        "Musaka"
+      ],
+      "priceRsdPerPerson": 1500
+    },
+    "totalRsd": 1500
+  }
+]

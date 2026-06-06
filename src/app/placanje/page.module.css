@@ -1,0 +1,258 @@
+.container {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.formWrapper {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.formWrapper h1 {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #333;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.formGroup input {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+  font-family: inherit;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: #5469d4;
+  box-shadow: 0 0 0 3px rgba(84, 105, 212, 0.1);
+}
+
+.formGroup input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.cardElement {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  transition: border-color 0.3s;
+}
+
+.submitBtn {
+  padding: 14px;
+  background: linear-gradient(135deg, #5469d4 0%, #42a5f5 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 10px;
+}
+
+.submitBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(84, 105, 212, 0.3);
+}
+
+.submitBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.message {
+  padding: 12px 16px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.testInfo {
+  margin-top: 30px;
+  padding: 16px;
+  background-color: #f0f4f8;
+  border-left: 4px solid #5469d4;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #555;
+}
+
+.testInfo p {
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  color: #333;
+}
+
+.testInfo ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style-position: inside;
+}
+
+.testInfo li {
+  margin: 5px 0;
+}
+
+@media (max-width: 600px) {
+  .formWrapper {
+    padding: 24px;
+  }
+
+  .formWrapper h1 {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .form {
+    gap: 16px;
+  }
+}
+
+.orderSummary {
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  border: 1px solid #d0d9e6;
+}
+
+.orderSummary h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+.summaryContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.summaryItem .label {
+  font-weight: 600;
+  color: #555;
+  flex-shrink: 0;
+  min-width: 150px;
+}
+
+.summaryItem .value {
+  color: #333;
+  text-align: right;
+  flex-grow: 1;
+}
+
+.itemsList {
+  margin: 0;
+  padding-left: 20px;
+  color: #555;
+}
+
+.itemsList li {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.changeOrderLink {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 12px;
+  color: #5469d4;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #5469d4;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.changeOrderLink:hover {
+  background: #5469d4;
+  color: white;
+}
+
+.amountDisplay {
+  padding: 14px;
+  background: linear-gradient(135deg, #5469d4 0%, #42a5f5 100%);
+  border-radius: 6px;
+  border: 2px solid #4a5cc8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.amountValue {
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #d0d9e6;
+  color: #333;
+  font-size: 16px;
+}
+
+.totalRow strong {
+  color: #5469d4;
+  font-size: 18px;
+  text-align: right;
+}

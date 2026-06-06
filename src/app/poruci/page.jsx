@@ -1,96 +1,53 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import { FaCheck, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-
-const PREPARED_MENUS = [
-  {
-    id: 1,
-    name: 'Klasični recepti',
-    description: 'Tradicionalna srpska kuhinja sa modernim dosetkom. Idealno za ozbiljne poslovne događaje.',
-    image: '/04card.webp',
-    items: ['Pljeskavica', 'Ćevapi', 'Raznjići', 'Musaka'],
-    price: 'od 1500 din'
-  },
-  {
-    id: 2,
-    name: 'Mediteranski stil',
-    description: 'Svetle, svežu hranu sa mediteranskim ukusima. Savršeno za letnjih događaja.',
-    image: '/menu2.webp',
-    items: ['Gril riba', 'Rizoto', 'Mediteranska salata', 'Pasta'],
-    price: 'od 1800 din'
-  },
-  {
-    id: 3,
-    name: 'Premium izbor',
-    description: 'Naša najluksuznija ponuda sa eksluzivnom hranom. Za pravi special events.',
-    image: '/menu3.webp',
-    items: ['Biftek', 'Jastog', 'Tiramiš', 'Jagnje'],
-    price: 'od 2500 din'
-  },
-  {
-    id: 4,
-    name: 'Vegetarijanski raj',
-    description: 'Blistavih i hranljive vegetarijanske opcije. Zdrava i ukusna kombinacija.',
-    image: '/menu4.webp',
-    items: ['Grilovan povrće', 'Veganski burgeri', 'Tofu', 'Smoothie bowls'],
-    price: 'od 1200 din'
-  }
-];
-
-const DISHES_BY_CATEGORY = [
-  {
-    category: 'Glavna jela',
-    dishes: [
-      { id: 'pljeskavica', name: 'Pljeskavica' },
-      { id: 'cevapi', name: 'Ćevapi' },
-      { id: 'raznjici', name: 'Raznjići' },
-      { id: 'biftek', name: 'Biftek' },
-      { id: 'jagnje', name: 'Jagnje' },
-      { id: 'gril_riba', name: 'Gril Riba' }
-    ]
-  },
-  {
-    category: 'Dodatni jeli',
-    dishes: [
-      { id: 'musaka', name: 'Musaka' },
-      { id: 'rizoto', name: 'Rizoto' },
-      { id: 'pasta', name: 'Pasta' },
-      { id: 'grilovan_povrce', name: 'Grilovan Povrće' },
-      { id: 'salata', name: 'Mediteranska Salata' },
-      { id: 'veganski_burger', name: 'Veganski Burger' }
-    ]
-  },
-  {
-    category: 'Deserte',
-    dishes: [
-      { id: 'tiramisu', name: 'Tiramiš' },
-      { id: 'baklava', name: 'Baklava' },
-      { id: 'voćni_desert', name: 'Voćni Desert' },
-      { id: 'cokolada', name: 'Čokolada Torta' }
-    ]
-  }
-];
+import {
+  DISHES_BY_CATEGORY,
+  EVENT_TYPES,
+  PREPARED_MENUS,
+  calculateCustomOrder,
+  formatRsd,
+} from '@/lib/orderCatalog';
 
 export default function OrderPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
   const [selectedDishes, setSelectedDishes] = useState(new Set());
   const [showHint, setShowHint] = useState(true);
+  const [eventType, setEventType] = useState(EVENT_TYPES[0]);
+  const [guestCount, setGuestCount] = useState('50');
+  const [notes, setNotes] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const containerRef = useRef(null);
   const touchStartX = useRef(0);
 
+  const normalizedGuestCount = Number.parseInt(guestCount, 10) || 0;
+  const selectedDishIds = useMemo(() => Array.from(selectedDishes), [selectedDishes]);
+  const customEstimate = useMemo(() => {
+    if (normalizedGuestCount < 1 || selectedDishIds.length === 0) {
+      return { selectedDishes: [], priceRsdPerPerson: 0, totalRsd: 0 };
+    }
+
+    return calculateCustomOrder({
+      guestCount: normalizedGuestCount,
+      selectedDishIds,
+    });
+  }, [normalizedGuestCount, selectedDishIds]);
+
   useEffect(() => {
-    // Prikaži hint samo prvu 3 sekunde
     const hintTimer = setTimeout(() => setShowHint(false), 3000);
     return () => clearTimeout(hintTimer);
   }, []);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowRight' && activeTab < 1) {
+    const handleKeyDown = (event) => {
+      if (event.key === 'ArrowRight' && activeTab < 1) {
         setActiveTab(1);
-      } else if (e.key === 'ArrowLeft' && activeTab > 0) {
+      } else if (event.key === 'ArrowLeft' && activeTab > 0) {
         setActiveTab(0);
       }
     };
@@ -99,12 +56,12 @@ export default function OrderPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeTab]);
 
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
+  const handleTouchStart = (event) => {
+    touchStartX.current = event.touches[0].clientX;
   };
 
-  const handleTouchEnd = (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
+  const handleTouchEnd = (event) => {
+    const touchEndX = event.changedTouches[0].clientX;
     const diff = touchStartX.current - touchEndX;
 
     if (Math.abs(diff) > 50) {
@@ -117,27 +74,75 @@ export default function OrderPage() {
   };
 
   const handleDishToggle = (dishId) => {
-    const newSelected = new Set(selectedDishes);
-    if (newSelected.has(dishId)) {
-      newSelected.delete(dishId);
-    } else {
-      newSelected.add(dishId);
+    setSelectedDishes((current) => {
+      const next = new Set(current);
+
+      if (next.has(dishId)) {
+        next.delete(dishId);
+      } else {
+        next.add(dishId);
+      }
+
+      return next;
+    });
+  };
+
+  const createOrderAndGoToPayment = async (payload) => {
+    setSubmitting(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Narudzbina nije sacuvana.');
+      }
+
+      router.push(`/placanje?orderId=${data.order.id}`);
+    } catch (err) {
+      setError(err.message);
+      setSubmitting(false);
     }
-    setSelectedDishes(newSelected);
+  };
+
+  const handleMenuOrder = (menu) => {
+    createOrderAndGoToPayment({
+      type: 'menu',
+      menuId: menu.id,
+      guestCount: 1,
+    });
+  };
+
+  const handleCustomOrder = (event) => {
+    event.preventDefault();
+
+    if (selectedDishIds.length === 0) {
+      setError('Molimo odaberite bar jedno jelo.');
+      return;
+    }
+
+    createOrderAndGoToPayment({
+      type: 'custom',
+      eventType,
+      guestCount: normalizedGuestCount,
+      selectedDishIds,
+      notes,
+    });
   };
 
   return (
     <main className={styles.orderPage}>
-
-
-      {/* Swipe Container */}
-      <div 
+      <div
         className={styles.swipeContainer}
         ref={containerRef}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Scroll Hint */}
         {showHint && (
           <div className={styles.scrollHint}>
             <div className={styles.hintContent}>
@@ -149,31 +154,37 @@ export default function OrderPage() {
         )}
 
         <div className={styles.swipeWrapper} style={{ transform: `translateX(-${activeTab * 100}%)` }}>
-          {/* Tab 1: Prepared Menus */}
           <div className={styles.tab}>
             <div className={`${styles.tabContent} ${styles.prepared}`}>
               <div className={styles.tabHeader}>
-                <h2>Pripremljeni menji</h2>
-                <p>Odaberi jedan od naših kurisnih menija</p>
+                <h2>Pripremljeni meniji</h2>
+                <p>Odaberite jedan od nasih gotovih menija</p>
               </div>
 
               <div className={styles.menusGrid}>
                 {PREPARED_MENUS.map((menu) => (
                   <div key={menu.id} className={styles.menuCard}>
-                    <div className={styles.menuImage} style={{ backgroundImage: `url(${menu.image})` }}></div>
+                    <div className={styles.menuImage} style={{ backgroundImage: `url(${menu.image})` }} />
                     <div className={styles.menuContent}>
                       <h3>{menu.name}</h3>
                       <p className={styles.description}>{menu.description}</p>
                       <div className={styles.items}>
-                        {menu.items.map((item, idx) => (
-                          <div key={idx} className={styles.item}>
+                        {menu.items.map((item) => (
+                          <div key={item} className={styles.item}>
                             <FaCheck /> {item}
                           </div>
                         ))}
                       </div>
                       <div className={styles.priceFooter}>
-                        <span className={styles.price}>{menu.price}</span>
-                        <button className={styles.orderBtn}>Poruči</button>
+                        <span className={styles.price}>{formatRsd(menu.priceRsdPerPerson)} po osobi</span>
+                        <button
+                          type="button"
+                          className={styles.orderBtn}
+                          onClick={() => handleMenuOrder(menu)}
+                          disabled={submitting}
+                        >
+                          {submitting ? 'Cuvanje...' : 'Poruci'}
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -182,39 +193,43 @@ export default function OrderPage() {
             </div>
           </div>
 
-          {/* Tab 2: Custom Order */}
           <div className={styles.tab}>
             <div className={`${styles.tabContent} ${styles.custom}`}>
               <div className={styles.tabHeader}>
-                <h2>Personalizovana narudžbina</h2>
-                <p>Kreiraj meni po svojoj meri</p>
+                <h2>Personalizovana narudzbina</h2>
+                <p>Kreirajte meni po svojoj meri</p>
               </div>
 
-              <form className={styles.customForm}>
+              <form className={styles.customForm} onSubmit={handleCustomOrder}>
                 <div className={styles.formSection}>
                   <h3>Osnovni podaci</h3>
-                  
+
                   <div className={styles.formRow}>
                     <div className={styles.formGroup}>
-                      <label>Tip događaja</label>
-                      <select>
-                        <option>Poslovni događaj</option>
-                        <option>Venčanje</option>
-                        <option>Proslava</option>
-                        <option>Privatni sastanak</option>
-                        <option>Konferencija</option>
+                      <label>Tip dogadjaja</label>
+                      <select value={eventType} onChange={(event) => setEventType(event.target.value)}>
+                        {EVENT_TYPES.map((type) => (
+                          <option key={type}>{type}</option>
+                        ))}
                       </select>
                     </div>
 
                     <div className={styles.formGroup}>
                       <label>Broj osoba</label>
-                      <input type="number" placeholder="50" min="1" max="500" />
+                      <input
+                        type="number"
+                        placeholder="50"
+                        min="1"
+                        max="500"
+                        value={guestCount}
+                        onChange={(event) => setGuestCount(event.target.value)}
+                      />
                     </div>
                   </div>
                 </div>
 
                 <div className={styles.formSection}>
-                  <h3>Odaberi jela</h3>
+                  <h3>Odaberite jela</h3>
                   <div className={styles.dishesGrid}>
                     {DISHES_BY_CATEGORY.map((category) => (
                       <div key={category.category} className={styles.dishCategory}>
@@ -222,12 +237,15 @@ export default function OrderPage() {
                         <div className={styles.dishesCheckboxGroup}>
                           {category.dishes.map((dish) => (
                             <label key={dish.id} className={styles.dishCheckbox}>
-                              <input 
-                                type="checkbox" 
+                              <input
+                                type="checkbox"
                                 checked={selectedDishes.has(dish.id)}
                                 onChange={() => handleDishToggle(dish.id)}
                               />
                               <span>{dish.name}</span>
+                              <strong className={styles.dishPrice}>
+                                {formatRsd(dish.priceRsdPerPerson)}
+                              </strong>
                             </label>
                           ))}
                         </div>
@@ -238,15 +256,27 @@ export default function OrderPage() {
 
                 <div className={styles.formSection}>
                   <h3>Napomene</h3>
-                  
+
                   <div className={styles.formGroup}>
-                    <label>Dodatne napomene i želje</label>
-                    <textarea placeholder="Recite nam šta vam još treba..." rows="4"></textarea>
+                    <label>Dodatne napomene i zelje</label>
+                    <textarea
+                      placeholder="Recite nam sta vam jos treba..."
+                      rows="4"
+                      value={notes}
+                      onChange={(event) => setNotes(event.target.value)}
+                    />
                   </div>
                 </div>
 
-                <button type="submit" className={styles.submitBtn}>
-                  Pošalji upit
+                <div className={styles.estimateBox}>
+                  <span>Cena po osobi: {formatRsd(customEstimate.priceRsdPerPerson)}</span>
+                  <strong>Ukupno: {formatRsd(customEstimate.totalRsd)}</strong>
+                </div>
+
+                {error && <div className={styles.errorMessage}>{error}</div>}
+
+                <button type="submit" className={styles.submitBtn} disabled={submitting}>
+                  {submitting ? 'Cuvanje narudzbine...' : 'Nastavi na placanje'}
                 </button>
               </form>
             </div>
@@ -254,16 +284,17 @@ export default function OrderPage() {
         </div>
       </div>
 
-      {/* Fixed Tab Switcher */}
       <div className={styles.fixedTabs}>
         <div className={styles.tabSwitcher}>
-          <button 
+          <button
+            type="button"
             className={`${styles.tabBtn} ${activeTab === 0 ? styles.active : ''}`}
             onClick={() => setActiveTab(0)}
           >
-            <span>Pripremljeni menji</span>
+            <span>Pripremljeni meniji</span>
           </button>
-          <button 
+          <button
+            type="button"
             className={`${styles.tabBtn} ${activeTab === 1 ? styles.active : ''}`}
             onClick={() => setActiveTab(1)}
           >

@@ -42,6 +42,9 @@ export default function Header() {
           <Link href="/o-nama" className={styles.navLink}>
             O nama
           </Link>
+          <Link href="/placanje" className={styles.navLink}>
+            Plaćanje
+          </Link>
         </nav>
 
         {/* Hamburger Menu */}
@@ -61,11 +64,14 @@ export default function Header() {
         <Link href="/" className={styles.mobileNavLink} onClick={closeNav}>
           Početna
         </Link>
-        <Link href="#narucivanje" className={styles.mobileNavLink} onClick={closeNav}>
+        <Link href="/poruci" className={styles.mobileNavLink} onClick={closeNav}>
           Naruči
         </Link>
-        <Link href="#onama" className={styles.mobileNavLink} onClick={closeNav}>
+        <Link href="/o-nama" className={styles.mobileNavLink} onClick={closeNav}>
           O nama
+        </Link>
+        <Link href="/placanje" className={styles.mobileNavLink} onClick={closeNav}>
+          Plaćanje
         </Link>
       </nav>
     </header>

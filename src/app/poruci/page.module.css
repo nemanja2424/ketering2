@@ -427,9 +427,44 @@
   line-height: 1.35;
 }
 
+.dishPrice {
+  flex: 0 0 auto;
+  color: #d4a574;
+  font-size: 0.82rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
 .dishCheckbox input[type="checkbox"]:checked + span {
   color: #d4a574;
   font-weight: 800;
+}
+
+.estimateBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  color: #f6e1ca;
+  background: rgba(1, 18, 9, 0.18);
+  border: 1px solid rgba(246, 225, 202, 0.18);
+  border-radius: 8px;
+}
+
+.estimateBox span,
+.estimateBox strong {
+  font-size: 0.98rem;
+}
+
+.errorMessage {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  color: #fff5f5;
+  background: rgba(136, 31, 31, 0.5);
+  border: 1px solid rgba(255, 210, 210, 0.35);
+  border-radius: 8px;
+  font-weight: 700;
 }
 
 .submitBtn {
@@ -453,6 +488,14 @@
 .submitBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 18px 38px rgba(1, 18, 9, 0.22);
+}
+
+.submitBtn:disabled,
+.orderBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
 }
 
 .navBtn {
@@ -648,6 +691,11 @@
 
   .formRow {
     grid-template-columns: 1fr;
+  }
+
+  .estimateBox {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 
