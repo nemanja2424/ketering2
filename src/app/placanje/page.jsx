@@ -6,7 +6,6 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { formatRsd } from '@/lib/orderCatalog';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
