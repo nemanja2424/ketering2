@@ -99,6 +99,43 @@
   padding: clamp(2.5rem, 5vw, 4.75rem) 1.25rem 5rem;
 }
 
+.panelEnter {
+  animation-duration: 0.34s;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  animation-fill-mode: both;
+  will-change: opacity, transform;
+}
+
+.fromLeft {
+  animation-name: panelFromLeft;
+}
+
+.fromRight {
+  animation-name: panelFromRight;
+}
+
+@keyframes panelFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes panelFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .modeBar {
   position: sticky;
   top: 76px;
@@ -154,6 +191,23 @@
   transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .panelEnter {
+    animation: none;
+  }
+
+  .modeIndicator,
+  .menuCard,
+  .variantButton,
+  .checkboxOption,
+  .customSummary button,
+  .secondaryAction,
+  .dangerAction,
+  .addMealButton {
+    transition: none;
+  }
+}
+
 .sectionHeader {
   display: flex;
   align-items: flex-end;
@@ -180,16 +234,18 @@
 }
 
 .menusGrid {
+  width: min(100%, 920px);
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 1rem;
   min-width: 0;
 }
 
 .menuCard {
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
   min-width: 0;
   min-height: 100%;
   background: rgba(255, 255, 255, 0.56);
@@ -209,7 +265,8 @@
 .menuImage {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  min-height: 100%;
+  aspect-ratio: auto;
   background-color: #f3d8b8;
   background-position: center;
   background-size: cover;
@@ -669,10 +726,6 @@
 }
 
 @media (max-width: 1180px) {
-  .menusGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .customSections {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -703,26 +756,9 @@
 }
 
 @media (max-width: 680px) {
-  .menusGrid {
-    display: flex;
-    gap: 0.9rem;
-    margin-right: -1rem;
-    margin-left: -1rem;
-    padding: 0 1rem 0.85rem;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .menusGrid::-webkit-scrollbar {
-    display: none;
-  }
-
   .menuCard {
-    flex: 0 0 min(88vw, 380px);
-    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
   }
 
   .menuImage {
@@ -748,25 +784,7 @@
   }
 
   .customSections {
-    display: flex;
-    gap: 0.9rem;
-    margin-right: -1rem;
-    margin-left: -1rem;
-    padding: 0 1rem 0.75rem;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .customSections::-webkit-scrollbar {
-    display: none;
-  }
-
-  .customCard {
-    flex: 0 0 min(86vw, 360px);
-    scroll-snap-align: start;
+    grid-template-columns: 1fr;
   }
 
   .customMealHeader {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import { FaCheck, FaLeaf, FaUtensils } from 'react-icons/fa';
@@ -188,6 +188,7 @@ function formatRsd(value) {
 
 export default function OrderPage() {
   const router = useRouter();
+  const modeSwipe = useRef(null);
   const [mode, setMode] = useState('daily');
   const [pendingChoice, setPendingChoice] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
@@ -314,6 +315,35 @@ export default function OrderPage() {
     );
   };
 
+  const handleModeSwipeStart = (event) => {
+    if (event.target.closest('button, input, textarea, select')) {
+      modeSwipe.current = null;
+      return;
+    }
+
+    const touch = event.touches[0];
+    modeSwipe.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+    };
+  };
+
+  const handleModeSwipeEnd = (event) => {
+    if (!modeSwipe.current) {
+      return;
+    }
+
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - modeSwipe.current.x;
+    const deltaY = touch.clientY - modeSwipe.current.y;
+
+    if (Math.abs(deltaX) > 64 && Math.abs(deltaX) > Math.abs(deltaY) * 1.35) {
+      setMode(deltaX < 0 ? 'custom' : 'daily');
+    }
+
+    modeSwipe.current = null;
+  };
+
   const handleCustomOrder = async (event) => {
     event.preventDefault();
 
@@ -354,7 +384,14 @@ export default function OrderPage() {
   };
 
   return (
-    <main className={styles.orderPage}>
+    <main
+      className={styles.orderPage}
+      onTouchStart={handleModeSwipeStart}
+      onTouchEnd={handleModeSwipeEnd}
+      onTouchCancel={() => {
+        modeSwipe.current = null;
+      }}
+    >
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <span className={styles.eyebrow}>Poručivanje</span>
@@ -373,7 +410,7 @@ export default function OrderPage() {
             className={`${styles.modeButton} ${mode === 'daily' ? styles.activeMode : ''}`}
             onClick={() => setMode('daily')}
           >
-            Dnevni obroci
+            Pripremljeni
           </button>
           <button
             type="button"
@@ -390,7 +427,11 @@ export default function OrderPage() {
       </div>
 
       {mode === 'daily' ? (
-        <section className={styles.menuSection} aria-labelledby="daily-menu-title">
+        <section
+          key="daily"
+          className={`${styles.menuSection} ${styles.panelEnter} ${styles.fromLeft}`}
+          aria-labelledby="daily-menu-title"
+        >
           <div className={styles.sectionHeader}>
             <span className={styles.kicker}>4 sveže opcije</span>
             <h2 id="daily-menu-title">Današnji izbor za poručivanje</h2>
@@ -462,7 +503,11 @@ export default function OrderPage() {
           </div>
         </section>
       ) : (
-        <section className={styles.customSection} aria-labelledby="custom-menu-title">
+        <section
+          key="custom"
+          className={`${styles.customSection} ${styles.panelEnter} ${styles.fromRight}`}
+          aria-labelledby="custom-menu-title"
+        >
           <div className={styles.sectionHeader}>
             <span className={styles.kicker}>Složi po meri</span>
             <h2 id="custom-menu-title">Personalizovani obrok</h2>
