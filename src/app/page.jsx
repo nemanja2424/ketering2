@@ -26,8 +26,10 @@ export default function Home() {
           </div>
         </section>
 
+        {/*
         <Services />
-
+        */}
+        
         <Reviews />
 
         <CTA />

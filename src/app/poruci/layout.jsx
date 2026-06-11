@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Poruči - Pekarica2003 Ketering',
-  description: 'Izaberite iz naših pripremljenih menija ili kreirajte svoj personalizovani meni.',
+  description: 'Izaberite dnevne Clean i Lean obroke za poručivanje.',
 };
 
 export default function Layout({ children }) {

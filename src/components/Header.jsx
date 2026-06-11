@@ -24,8 +24,8 @@ export default function Header() {
             <Image 
               src="/LOGO no bg.png" 
               alt="Ketering Logo" 
-              width={60} 
-              height={60}
+              width={600} 
+              height={600}
               className={styles.logoImage}
             />
           </Link>

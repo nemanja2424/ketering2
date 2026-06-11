@@ -1,344 +1,572 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
-import { FaCheck, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaCheck, FaLeaf, FaUtensils } from 'react-icons/fa';
 
-const PREPARED_MENUS = [
+const VARIANT_PRICES_RSD = {
+  clean: 750,
+  lean: 850,
+};
+
+const CUSTOM_SECTIONS = [
   {
-    id: 1,
-    name: 'KlasiÄni recepti',
-    description: 'Tradicionalna srpska kuhinja sa modernim dosetkom. Idealno za ozbiljne poslovne dogaÄ‘aje.',
-    image: '/04card.webp',
-    items: ['Pljeskavica', 'Ä†evapi', 'RaznjiÄ‡i', 'Musaka'],
-    price: 'od 1500 din',
-    priceInEur: 15
+    id: 'baza',
+    title: 'Baza',
+    options: [
+      { id: 'pirinac', name: 'Integralni pirinač', priceRsdPerPerson: 180 },
+      { id: 'proso', name: 'Proso', priceRsdPerPerson: 190 },
+      { id: 'batat', name: 'Batat', priceRsdPerPerson: 240 },
+      { id: 'pasta', name: 'Pasta', priceRsdPerPerson: 220 },
+    ],
   },
   {
-    id: 2,
-    name: 'Mediteranski stil',
-    description: 'Svetle, sveÅ¾u hranu sa mediteranskim ukusima. SavrÅ¡eno za letnjih dogaÄ‘aja.',
-    image: '/menu2.webp',
-    items: ['Gril riba', 'Rizoto', 'Mediteranska salata', 'Pasta'],
-    price: 'od 1800 din',
-    priceInEur: 18
+    id: 'prilog',
+    title: 'Prilog',
+    options: [
+      { id: 'brokoli', name: 'Brokoli', priceRsdPerPerson: 170 },
+      { id: 'tikvice-paprika', name: 'Tikvice i paprika', priceRsdPerPerson: 190 },
+      { id: 'boranija', name: 'Boranija', priceRsdPerPerson: 160 },
+      { id: 'mesano-povrce', name: 'Mešano povrće', priceRsdPerPerson: 210 },
+    ],
   },
   {
-    id: 3,
-    name: 'Premium izbor',
-    description: 'NaÅ¡a najluksuznija ponuda sa eksluzivnom hranom. Za pravi special events.',
-    image: '/menu3.webp',
-    items: ['Biftek', 'Jastog', 'TiramiÅ¡', 'Jagnje'],
-    price: 'od 2500 din',
-    priceInEur: 25
+    id: 'glavno',
+    title: 'Glavno jelo',
+    options: [
+      { id: 'piletina', name: 'Grilovana piletina', priceRsdPerPerson: 420 },
+      { id: 'curetina', name: 'Ćuretina', priceRsdPerPerson: 480 },
+      { id: 'junetina', name: 'Junetina', priceRsdPerPerson: 620 },
+      { id: 'losos', name: 'Losos', priceRsdPerPerson: 760 },
+      { id: 'file-minjon', name: 'File minjon', priceRsdPerPerson: 820 },
+    ],
   },
   {
-    id: 4,
-    name: 'Vegetarijanski raj',
-    description: 'Blistavih i hranljive vegetarijanske opcije. Zdrava i ukusna kombinacija.',
-    image: '/menu4.webp',
-    items: ['Grilovan povrÄ‡e', 'Veganski burgeri', 'Tofu', 'Smoothie bowls'],
-    price: 'od 1200 din',
-    priceInEur: 12
-  }
+    id: 'salate',
+    title: 'Salate',
+    options: [
+      { id: 'zelena-salata', name: 'Zelena salata', priceRsdPerPerson: 140 },
+      { id: 'vitaminska', name: 'Vitaminska salata', priceRsdPerPerson: 170 },
+      { id: 'cvekla', name: 'Cvekla', priceRsdPerPerson: 150 },
+      { id: 'zeleni-mix', name: 'Zeleni mix', priceRsdPerPerson: 190 },
+    ],
+  },
+  {
+    id: 'dresing',
+    title: 'Dresing',
+    options: [
+      { id: 'jogurt', name: 'Jogurt dresing', priceRsdPerPerson: 80 },
+      { id: 'limun-maslinovo', name: 'Limun i maslinovo ulje', priceRsdPerPerson: 90 },
+      { id: 'senf-med', name: 'Senf i med', priceRsdPerPerson: 95 },
+      { id: 'avokado', name: 'Avokado krem', priceRsdPerPerson: 140 },
+    ],
+  },
 ];
 
-const DISHES_BY_CATEGORY = [
-  {
-    category: 'Glavna jela',
-    dishes: [
-      { id: 'pljeskavica', name: 'Pljeskavica' },
-      { id: 'cevapi', name: 'Ä†evapi' },
-      { id: 'raznjici', name: 'RaznjiÄ‡i' },
-      { id: 'biftek', name: 'Biftek' },
-      { id: 'jagnje', name: 'Jagnje' },
-      { id: 'gril_riba', name: 'Gril Riba' }
-    ]
-  },
-  {
-    category: 'Dodatni jeli',
-    dishes: [
-      { id: 'musaka', name: 'Musaka' },
-      { id: 'rizoto', name: 'Rizoto' },
-      { id: 'pasta', name: 'Pasta' },
-      { id: 'grilovan_povrce', name: 'Grilovan PovrÄ‡e' },
-      { id: 'salata', name: 'Mediteranska Salata' },
-      { id: 'veganski_burger', name: 'Veganski Burger' }
-    ]
-  },
-  {
-    category: 'Deserte',
-    dishes: [
-      { id: 'tiramisu', name: 'TiramiÅ¡' },
-      { id: 'baklava', name: 'Baklava' },
-      { id: 'voÄ‡ni_desert', name: 'VoÄ‡ni Desert' },
-      { id: 'cokolada', name: 'ÄŒokolada Torta' }
-    ]
-  }
-];
+const DAILY_MENUS = {
+  ponedeljak: [
+    {
+      clean: 'Piletina sa pirinčem i boranijom, zelena salata',
+      lean: 'Piletina sa brokolijem i šargarepom, zelena salata',
+    },
+    {
+      clean: 'Ćuretina sa pirinčem i mešanim povrćem, zelena salata',
+      lean: 'Ćuretina sa mešanim povrćem, zelena salata',
+    },
+    {
+      clean: 'Piletina sa pirinčem i pireom od spanaća',
+      lean: 'Piletina sa avokadom i brokolijem',
+    },
+    {
+      clean: 'File minjon sa krompir pireom, vitaminska salata',
+      lean: 'File minjon sa brokolijem i batatom, vitaminska salata',
+    },
+  ],
+  utorak: [
+    {
+      clean: 'Junetina sa celerom, krompirom i šargarepom',
+      lean: 'Junetina sa tikvicama i paprikom',
+    },
+    {
+      clean: 'File minjon sa krompir pireom i zelenom salatom',
+      lean: 'File minjon sa tikvicama, paprikom i šargarepom',
+    },
+    {
+      clean: 'Junetina u paradajz sosu sa krompir pireom, vitaminska salata',
+      lean: 'Junetina u paradajz sosu sa tikvicama i šargarepom, vitaminska salata',
+    },
+    {
+      clean: 'Ćuretina pasta u kari sosu sa tikvicama i paprikom',
+      lean: 'Ćuretina sa tikvicama i paprikom, zeleni mix',
+    },
+  ],
+  sreda: [
+    {
+      clean: 'File minjon sa mešanim povrćem i prosom, zelena salata',
+      lean: 'File minjon sa mešanim povrćem, zeleni mix',
+    },
+    {
+      clean: 'Piletina pasta sa paradajz sosom i parmezanom',
+      lean: 'Piletina sa spanaćem i cveklom',
+    },
+    {
+      clean: 'Ćuretina sa prosom, boranijom i šargarepom',
+      lean: 'Ćuretina sa boranijom i šargarepom',
+    },
+    {
+      clean: 'Piletina sa pirinčem, boranijom, šargarepom i cveklom',
+      lean: 'Piletina sa tikvicama i paprikom',
+    },
+  ],
+  cetvrtak: [
+    {
+      clean: 'Ćuretina pasta u paradajz sosu sa tikvicama i paprikom',
+      lean: 'Ćuretina sa pirinčem, tikvicama i paprikom',
+    },
+    {
+      clean: 'Junetina sa pirinčem i boranijom, zelena salata',
+      lean: 'Junetina sa boranijom i šargarepom, zelena salata',
+    },
+    {
+      clean: 'File minjon sa pekarskim krompirom, zelena salata',
+      lean: 'File minjon sa tikvicama i paprikom, zelena salata',
+    },
+    {
+      clean: 'Junetina sa celerom, šargarepom i krompirom',
+      lean: 'Junetina sa celerom i šargarepom, vitaminska salata',
+    },
+  ],
+  petak: [
+    {
+      clean: 'Losos sa krompirom i blitvom, zelena salata',
+      lean: 'Losos sa blitvom i karfiolom, zelena salata',
+    },
+    {
+      clean: 'Tuna sa batatom, kukuruzom, pasuljem i crvenim lukom',
+      lean: 'Tuna sa brokolijem i karfiolom',
+    },
+    {
+      clean: 'Pastrmka sa krompirom i blitvom',
+      lean: 'Pastrmka sa blitvom i vitaminskom salatom',
+    },
+    {
+      clean: 'Škarpina sa prosom i mešanim povrćem',
+      lean: 'Škarpina sa mešanim povrćem, zelena salata',
+    },
+  ],
+};
+
+const DAY_LABELS = {
+  ponedeljak: 'Ponedeljak',
+  utorak: 'Utorak',
+  sreda: 'Sreda',
+  cetvrtak: 'Četvrtak',
+  petak: 'Petak',
+};
+
+const NEXT_SERVICE_DAY_BY_INDEX = {
+  0: 'ponedeljak',
+  1: 'utorak',
+  2: 'sreda',
+  3: 'cetvrtak',
+  4: 'petak',
+  5: 'ponedeljak',
+  6: 'ponedeljak',
+};
+
+const CARD_IMAGES = ['/01card.webp', '/02card.webp', '/03card.webp', '/04card.webp'];
+const MAX_CUSTOM_MEALS = 10;
+
+function getNextServiceDay(date = new Date()) {
+  return NEXT_SERVICE_DAY_BY_INDEX[date.getDay()];
+}
+
+function formatRsd(value) {
+  return `${value.toLocaleString('sr-RS')} RSD`;
+}
 
 export default function OrderPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState(0);
-  const [selectedDishes, setSelectedDishes] = useState(new Set());
-  const [showHint, setShowHint] = useState(true);
-  const [eventType, setEventType] = useState('Poslovni dogaÄ‘aj');
-  const [guestCount, setGuestCount] = useState('50');
+  const [mode, setMode] = useState('daily');
+  const [pendingChoice, setPendingChoice] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [customMeals, setCustomMeals] = useState([{ id: 1, selected: new Set() }]);
   const [notes, setNotes] = useState('');
-  const containerRef = useRef(null);
-  const touchStartX = useRef(0);
 
-  useEffect(() => {
-    // PrikaÅ¾i hint samo prvu 3 sekunde
-    const hintTimer = setTimeout(() => setShowHint(false), 3000);
-    return () => clearTimeout(hintTimer);
-  }, []);
+  const serviceDay = useMemo(() => getNextServiceDay(), []);
+  const meals = DAILY_MENUS[serviceDay];
+  const serviceDayLabel = DAY_LABELS[serviceDay];
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowRight' && activeTab < 1) {
-        setActiveTab(1);
-      } else if (e.key === 'ArrowLeft' && activeTab > 0) {
-        setActiveTab(0);
+  const customMealSummaries = useMemo(() => {
+    return customMeals.map((meal, mealIndex) => {
+      const selectedDishes = CUSTOM_SECTIONS.flatMap((section) =>
+        section.options
+          .filter((option) => meal.selected.has(option.id))
+          .map((option) => ({
+            ...option,
+            category: section.title,
+            mealId: meal.id,
+            mealLabel: `Obrok ${mealIndex + 1}`,
+          }))
+      );
+      const totalRsd = selectedDishes.reduce((sum, option) => sum + option.priceRsdPerPerson, 0);
+
+      return {
+        ...meal,
+        label: `Obrok ${mealIndex + 1}`,
+        selectedDishes,
+        totalRsd,
+      };
+    });
+  }, [customMeals]);
+
+  const selectedCustomDishes = customMealSummaries.flatMap((meal) => meal.selectedDishes);
+  const customTotal = customMealSummaries.reduce((sum, meal) => sum + meal.totalRsd, 0);
+
+  const handleVariantOrder = async (meal, index, variant) => {
+    const pendingId = `${index}-${variant}`;
+    setPendingChoice(pendingId);
+    setErrorMessage('');
+
+    try {
+      const variantLabel = variant === 'clean' ? 'Clean' : 'Lean';
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'menu',
+          guestCount: 1,
+          menu: {
+            id: `${serviceDay}-obrok-${index + 1}-${variant}`,
+            name: `Obrok ${index + 1} - ${variantLabel}`,
+            description: `Dnevni meni za ${serviceDayLabel}`,
+            items: [meal[variant]],
+            variant: variantLabel,
+            serviceDay: serviceDayLabel,
+            priceRsdPerPerson: VARIANT_PRICES_RSD[variant],
+          },
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Narudžbina nije kreirana.');
       }
-    };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeTab]);
-
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0 && activeTab < 1) {
-        setActiveTab(1);
-      } else if (diff < 0 && activeTab > 0) {
-        setActiveTab(0);
-      }
+      router.push(`/placanje?orderId=${data.order.id}`);
+    } catch (error) {
+      setErrorMessage(error.message);
+      setPendingChoice(null);
     }
   };
 
-  const handleDishToggle = (dishId) => {
-    const newSelected = new Set(selectedDishes);
-    if (newSelected.has(dishId)) {
-      newSelected.delete(dishId);
-    } else {
-      newSelected.add(dishId);
-    }
-    setSelectedDishes(newSelected);
+  const handleCustomToggle = (mealId, optionId) => {
+    setCustomMeals((current) =>
+      current.map((meal) => {
+        if (meal.id !== mealId) {
+          return meal;
+        }
+
+        const selected = new Set(meal.selected);
+        if (selected.has(optionId)) {
+          selected.delete(optionId);
+        } else {
+          selected.add(optionId);
+        }
+
+        return { ...meal, selected };
+      })
+    );
   };
 
-  const handleMenuOrder = (menu) => {
-    const orderData = {
-      type: 'menu',
-      menuName: menu.name,
-      menuPrice: menu.price,
-      menuPriceInEur: menu.priceInEur,
-      menuItems: menu.items,
-      description: menu.description
-    };
-    // ProsleÄ‘i podatke preko URL-a
-    const encodedData = encodeURIComponent(JSON.stringify(orderData));
-    router.push(`/placanje?order=${encodedData}`);
+  const handleAddCustomMeal = () => {
+    setCustomMeals((current) => {
+      if (current.length >= MAX_CUSTOM_MEALS) {
+        return current;
+      }
+
+      const nextId = Math.max(...current.map((meal) => meal.id)) + 1;
+      return [...current, { id: nextId, selected: new Set() }];
+    });
   };
 
-  const handleCustomOrder = (e) => {
-    e.preventDefault();
-    
-    const dishesArray = Array.from(selectedDishes);
-    if (dishesArray.length === 0) {
-      alert('Molimo odaberi bar jedno jelo');
+  const handleRemoveCustomMeal = (mealId) => {
+    setCustomMeals((current) => {
+      if (current.length === 1) {
+        return current;
+      }
+
+      return current.filter((meal) => meal.id !== mealId);
+    });
+  };
+
+  const handleResetCustomMeal = (mealId) => {
+    setCustomMeals((current) =>
+      current.map((meal) => {
+        if (meal.id !== mealId) {
+          return meal;
+        }
+
+        return { ...meal, selected: new Set() };
+      })
+    );
+  };
+
+  const handleCustomOrder = async (event) => {
+    event.preventDefault();
+
+    if (selectedCustomDishes.length === 0) {
+      setErrorMessage('Odaberi bar jednu opciju za personalizovani obrok.');
       return;
     }
 
-    const orderData = {
-      type: 'custom',
-      eventType,
-      guestCount: parseInt(guestCount),
-      selectedDishes: dishesArray,
-      notes
-    };
-    
-    // ProsleÄ‘i podatke preko URL-a
-    const encodedData = encodeURIComponent(JSON.stringify(orderData));
-    router.push(`/placanje?order=${encodedData}`);
+    setPendingChoice('custom');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'custom',
+          eventType: 'Personalizovani obrok',
+          guestCount: customMeals.length,
+          selectedDishes: selectedCustomDishes,
+          notes,
+          priceRsdPerPerson: customTotal,
+          totalRsd: customTotal,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Narudžbina nije kreirana.');
+      }
+
+      router.push(`/placanje?orderId=${data.order.id}`);
+    } catch (error) {
+      setErrorMessage(error.message);
+      setPendingChoice(null);
+    }
   };
 
   return (
     <main className={styles.orderPage}>
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <span className={styles.eyebrow}>Poručivanje</span>
+          <h1>{mode === 'daily' ? `Obroci za ${serviceDayLabel}` : 'Personalizovani obrok'}</h1>
+          <p>
+            Izaberi dnevni Clean ili Lean obrok, ili složi svoj tanjir kroz bazu, prilog,
+            glavno jelo, salate i dresing.
+          </p>
+        </div>
+      </section>
 
+      <div className={styles.modeBar}>
+        <div className={styles.modeSwitch} role="tablist" aria-label="Tip narudžbine">
+          <button
+            type="button"
+            className={`${styles.modeButton} ${mode === 'daily' ? styles.activeMode : ''}`}
+            onClick={() => setMode('daily')}
+          >
+            Dnevni obroci
+          </button>
+          <button
+            type="button"
+            className={`${styles.modeButton} ${mode === 'custom' ? styles.activeMode : ''}`}
+            onClick={() => setMode('custom')}
+          >
+            Personalizovano
+          </button>
+          <span
+            className={styles.modeIndicator}
+            style={{ transform: `translateX(${mode === 'daily' ? 0 : 100}%)` }}
+          />
+        </div>
+      </div>
 
-      {/* Swipe Container */}
-      <div 
-        className={styles.swipeContainer}
-        ref={containerRef}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Scroll Hint */}
-        {showHint && (
-          <div className={styles.scrollHint}>
-            <div className={styles.hintContent}>
-              <FaChevronLeft className={styles.hintArrow} />
-              <span>Swipe or drag</span>
-              <FaChevronRight className={styles.hintArrow} />
-            </div>
-          </div>
-        )}
-
-        <div className={styles.swipeWrapper} style={{ transform: `translateX(-${activeTab * 100}%)` }}>
-          {/* Tab 1: Prepared Menus */}
-          <div className={styles.tab}>
-            <div className={`${styles.tabContent} ${styles.prepared}`}>
-              <div className={styles.tabHeader}>
-                <h2>Pripremljeni menji</h2>
-                <p>Odaberi jedan od naÅ¡ih kurisnih menija</p>
-              </div>
-
-              <div className={styles.menusGrid}>
-                {PREPARED_MENUS.map((menu) => (
-                  <div key={menu.id} className={styles.menuCard}>
-                    <div className={styles.menuImage} style={{ backgroundImage: `url(${menu.image})` }}></div>
-                    <div className={styles.menuContent}>
-                      <h3>{menu.name}</h3>
-                      <p className={styles.description}>{menu.description}</p>
-                      <div className={styles.items}>
-                        {menu.items.map((item, idx) => (
-                          <div key={idx} className={styles.item}>
-                            <FaCheck /> {item}
-                          </div>
-                        ))}
-                      </div>
-                      <div className={styles.priceFooter}>
-                        <span className={styles.price}>{menu.price}</span>
-                        <button 
-                          type="button"
-                          className={styles.orderBtn}
-                          onClick={() => handleMenuOrder(menu)}
-                        >
-                          PoruÄi
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+      {mode === 'daily' ? (
+        <section className={styles.menuSection} aria-labelledby="daily-menu-title">
+          <div className={styles.sectionHeader}>
+            <span className={styles.kicker}>4 sveže opcije</span>
+            <h2 id="daily-menu-title">Današnji izbor za poručivanje</h2>
           </div>
 
-          {/* Tab 2: Custom Order */}
-          <div className={styles.tab}>
-            <div className={`${styles.tabContent} ${styles.custom}`}>
-              <div className={styles.tabHeader}>
-                <h2>Personalizovana narudÅ¾bina</h2>
-                <p>Kreiraj meni po svojoj meri</p>
-              </div>
-
-              <form className={styles.customForm} onSubmit={handleCustomOrder}>
-                <div className={styles.formSection}>
-                  <h3>Osnovni podaci</h3>
-                  
-                  <div className={styles.formRow}>
-                    <div className={styles.formGroup}>
-                      <label>Tip dogaÄ‘aja</label>
-                      <select 
-                        value={eventType}
-                        onChange={(e) => setEventType(e.target.value)}
-                      >
-                        <option>Poslovni dogaÄ‘aj</option>
-                        <option>VenÄanje</option>
-                        <option>Proslava</option>
-                        <option>Privatni sastanak</option>
-                        <option>Konferencija</option>
-                      </select>
-                    </div>
-
-                    <div className={styles.formGroup}>
-                      <label>Broj osoba</label>
-                      <input 
-                        type="number" 
-                        placeholder="50" 
-                        min="1" 
-                        max="500"
-                        value={guestCount}
-                        onChange={(e) => setGuestCount(e.target.value)}
-                      />
-                    </div>
-                  </div>
+          <div className={styles.menusGrid}>
+            {meals.map((meal, index) => (
+              <article key={`${serviceDay}-${index}`} className={styles.menuCard}>
+                <div
+                  className={styles.menuImage}
+                  style={{ backgroundImage: `url(${CARD_IMAGES[index]})` }}
+                >
+                  <span>Obrok {index + 1}</span>
                 </div>
 
-                <div className={styles.formSection}>
-                  <h3>Odaberi jela</h3>
-                  <div className={styles.dishesGrid}>
-                    {DISHES_BY_CATEGORY.map((category) => (
-                      <div key={category.category} className={styles.dishCategory}>
-                        <h4>{category.category}</h4>
-                        <div className={styles.dishesCheckboxGroup}>
-                          {category.dishes.map((dish) => (
-                            <label key={dish.id} className={styles.dishCheckbox}>
-                              <input 
-                                type="checkbox" 
-                                checked={selectedDishes.has(dish.id)}
-                                onChange={() => handleDishToggle(dish.id)}
+                <div className={styles.menuContent}>
+                  <div className={styles.cardTopline}>
+                    <FaUtensils />
+                    <span>{serviceDayLabel}</span>
+                  </div>
+
+                  <h3>Obrok {index + 1}</h3>
+
+                  <div className={styles.variantList}>
+                    <div className={styles.variant}>
+                      <div className={styles.variantTitle}>
+                        <FaCheck />
+                        <span>Clean</span>
+                      </div>
+                      <p>{meal.clean}</p>
+                    </div>
+
+                    <div className={styles.variant}>
+                      <div className={styles.variantTitle}>
+                        <FaLeaf />
+                        <span>Lean</span>
+                      </div>
+                      <p>{meal.lean}</p>
+                    </div>
+                  </div>
+
+                  <div className={styles.variantActions}>
+                    <button
+                      type="button"
+                      className={styles.variantButton}
+                      disabled={Boolean(pendingChoice)}
+                      onClick={() => handleVariantOrder(meal, index, 'clean')}
+                    >
+                      <span>Clean</span>
+                      <strong>{formatRsd(VARIANT_PRICES_RSD.clean)}</strong>
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.variantButton}
+                      disabled={Boolean(pendingChoice)}
+                      onClick={() => handleVariantOrder(meal, index, 'lean')}
+                    >
+                      <span>Lean</span>
+                      <strong>{formatRsd(VARIANT_PRICES_RSD.lean)}</strong>
+                    </button>
+                  </div>
+
+                  {pendingChoice === `${index}-clean` || pendingChoice === `${index}-lean` ? (
+                    <p className={styles.loadingText}>Pripremamo plaćanje...</p>
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section className={styles.customSection} aria-labelledby="custom-menu-title">
+          <div className={styles.sectionHeader}>
+            <span className={styles.kicker}>Složi po meri</span>
+            <h2 id="custom-menu-title">Personalizovani obrok</h2>
+          </div>
+
+          <form className={styles.customForm} onSubmit={handleCustomOrder}>
+            <div className={styles.customControls}>
+              <label>
+                Napomena
+                <textarea
+                  rows="3"
+                  value={notes}
+                  placeholder="Alergije, posebne želje, bez luka..."
+                  onChange={(event) => setNotes(event.target.value)}
+                />
+              </label>
+            </div>
+
+            <div className={styles.customMealList}>
+              {customMealSummaries.map((meal) => (
+                <section key={meal.id} className={styles.customMeal}>
+                  <div className={styles.customMealHeader}>
+                    <div>
+                      <span>{meal.label}</span>
+                      <strong>{formatRsd(meal.totalRsd)}</strong>
+                    </div>
+                    <div className={styles.customMealActions}>
+                      <button
+                        type="button"
+                        className={styles.secondaryAction}
+                        onClick={() => handleResetCustomMeal(meal.id)}
+                        disabled={meal.selected.size === 0}
+                      >
+                        Očisti
+                      </button>
+                      {customMeals.length > 1 && (
+                        <button
+                          type="button"
+                          className={styles.dangerAction}
+                          onClick={() => handleRemoveCustomMeal(meal.id)}
+                        >
+                          Ukloni
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className={styles.customSections}>
+                    {CUSTOM_SECTIONS.map((section) => (
+                      <fieldset key={section.id} className={styles.customCard}>
+                        <legend>{section.title}</legend>
+                        <div className={styles.checkboxList}>
+                          {section.options.map((option) => (
+                            <label key={option.id} className={styles.checkboxOption}>
+                              <input
+                                type="checkbox"
+                                checked={meal.selected.has(option.id)}
+                                onChange={() => handleCustomToggle(meal.id, option.id)}
                               />
-                              <span>{dish.name}</span>
+                              <span>{option.name}</span>
+                              <strong>{formatRsd(option.priceRsdPerPerson)}</strong>
                             </label>
                           ))}
                         </div>
-                      </div>
+                      </fieldset>
                     ))}
                   </div>
-                </div>
-
-                <div className={styles.formSection}>
-                  <h3>Napomene</h3>
-                  
-                  <div className={styles.formGroup}>
-                    <label>Dodatne napomene i Å¾elje</label>
-                    <textarea 
-                      placeholder="Recite nam Å¡ta vam joÅ¡ treba..." 
-                      rows="4"
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                    ></textarea>
-                  </div>
-                </div>
-
-                <button type="submit" className={styles.submitBtn}>
-                  Nastavi na plaÄ‡anje
-                </button>
-              </form>
+                </section>
+              ))}
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Fixed Tab Switcher */}
-      <div className={styles.fixedTabs}>
-        <div className={styles.tabSwitcher}>
-          <button 
-            className={`${styles.tabBtn} ${activeTab === 0 ? styles.active : ''}`}
-            onClick={() => setActiveTab(0)}
-          >
-            <span>Pripremljeni menji</span>
-          </button>
-          <button 
-            className={`${styles.tabBtn} ${activeTab === 1 ? styles.active : ''}`}
-            onClick={() => setActiveTab(1)}
-          >
-            <span>Personalizovano</span>
-          </button>
-          <div className={styles.slidingBg} style={{ transform: `translateX(${activeTab * 100}%)` }} />
+            <button
+              type="button"
+              className={styles.addMealButton}
+              onClick={handleAddCustomMeal}
+              disabled={customMeals.length >= MAX_CUSTOM_MEALS}
+            >
+              {customMeals.length >= MAX_CUSTOM_MEALS
+                ? 'Dodato je maksimalno 10 obroka'
+                : 'Dodaj još jedan obrok'}
+            </button>
+
+            <div className={styles.customSummary}>
+              <div>
+                <span>Različitih obroka</span>
+                <strong>{customMeals.length}</strong>
+              </div>
+              <div>
+                <span>Ukupno</span>
+                <strong>{formatRsd(customTotal)}</strong>
+              </div>
+              <button type="submit" disabled={pendingChoice === 'custom'}>
+                {pendingChoice === 'custom' ? 'Pripremamo plaćanje...' : 'Nastavi na plaćanje'}
+              </button>
+            </div>
+          </form>
+        </section>
+      )}
+
+      {errorMessage && (
+        <div className={styles.errorBox} role="alert">
+          {errorMessage}
         </div>
-      </div>
+      )}
     </main>
   );
 }

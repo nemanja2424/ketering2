@@ -9,6 +9,14 @@ import styles from './page.module.css';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
+function formatRsd(value) {
+  return new Intl.NumberFormat('sr-RS', {
+    style: 'currency',
+    currency: 'RSD',
+    maximumFractionDigits: 0,
+  }).format(Number(value || 0));
+}
+
 export default function PlacanjePage() {
   return (
     <Elements stripe={stripePromise}>
@@ -25,20 +33,19 @@ function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
   const searchParams = useSearchParams();
+  const orderId = searchParams.get('orderId');
 
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [orderLoading, setOrderLoading] = useState(true);
-  const [message, setMessage] = useState('');
+  const [orderLoading, setOrderLoading] = useState(Boolean(orderId));
+  const [message, setMessage] = useState(
+    orderId ? '' : 'Narudzbina nije prosledjena. Vratite se na stranicu za narucivanje.'
+  );
   const [order, setOrder] = useState(null);
-
-  const orderId = searchParams.get('orderId');
 
   useEffect(() => {
     if (!orderId) {
-      setMessage('Narudzbina nije prosledjena. Vratite se na stranicu za narucivanje.');
-      setOrderLoading(false);
       return;
     }
 
@@ -247,6 +254,18 @@ function MenuSummary({ order }) {
         <span className={styles.label}>Opis:</span>
         <span className={styles.value}>{order.menu.description}</span>
       </div>
+      {order.menu.serviceDay && (
+        <div className={styles.summaryItem}>
+          <span className={styles.label}>Dan:</span>
+          <span className={styles.value}>{order.menu.serviceDay}</span>
+        </div>
+      )}
+      {order.menu.variant && (
+        <div className={styles.summaryItem}>
+          <span className={styles.label}>Varijanta:</span>
+          <span className={styles.value}>{order.menu.variant}</span>
+        </div>
+      )}
       <div className={styles.summaryItem}>
         <span className={styles.label}>Jela:</span>
         <ul className={styles.itemsList}>
@@ -271,15 +290,16 @@ function CustomSummary({ order }) {
         <span className={styles.value}>{order.eventType}</span>
       </div>
       <div className={styles.summaryItem}>
-        <span className={styles.label}>Broj osoba:</span>
+        <span className={styles.label}>Broj obroka:</span>
         <span className={styles.value}>{order.guestCount}</span>
       </div>
       <div className={styles.summaryItem}>
         <span className={styles.label}>Odabrana jela:</span>
         <ul className={styles.itemsList}>
           {order.selectedDishes.map((dish) => (
-            <li key={dish.id}>
-              {dish.name} - {formatRsd(dish.priceRsdPerPerson)} po osobi
+            <li key={`${dish.mealId || 'meal'}-${dish.id}`}>
+              {dish.mealLabel ? `${dish.mealLabel}: ` : ''}
+              {dish.name} - {formatRsd(dish.priceRsdPerPerson)}
             </li>
           ))}
         </ul>
@@ -291,7 +311,7 @@ function CustomSummary({ order }) {
         </div>
       )}
       <div className={styles.summaryItem}>
-        <span className={styles.label}>Cena po osobi:</span>
+        <span className={styles.label}>Ukupno za obroke:</span>
         <span className={styles.value}>{formatRsd(order.priceRsdPerPerson)}</span>
       </div>
     </div>
