@@ -82,7 +82,7 @@
 .hero p {
   max-width: 690px;
   margin: 0;
-  color: rgba(246, 225, 202, 0.9);
+  color: #2e1603;
   font-size: clamp(1rem, 2vw, 1.18rem);
   line-height: 1.7;
 }

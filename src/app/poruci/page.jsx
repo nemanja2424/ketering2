@@ -429,7 +429,9 @@ export default function OrderPage() {
       {mode === 'daily' ? (
         <section
           key="daily"
-          className={`${styles.menuSection} ${styles.panelEnter} ${styles.fromLeft}`}
+          className={`${styles.menuSection} ${styles.panelEnter} ${
+            mode === 'daily' ? styles.fromLeft : styles.fromRight
+          }`}
           aria-labelledby="daily-menu-title"
         >
           <div className={styles.sectionHeader}>
