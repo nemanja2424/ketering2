@@ -1,5 +1,47 @@
 [
   {
+    "id": "56ead3b5-04d1-47e4-88db-a321c7bad3a4",
+    "status": "created",
+    "paymentIntentId": null,
+    "createdAt": "2026-06-12T22:45:34.801Z",
+    "updatedAt": "2026-06-12T22:45:34.801Z",
+    "type": "menu",
+    "guestCount": 1,
+    "menu": {
+      "id": "ponedeljak-obrok-1-lean",
+      "name": "Obrok 1 - Lean",
+      "description": "Dnevni meni za Ponedeljak",
+      "items": [
+        "Piletina sa brokolijem i šargarepom, zelena salata"
+      ],
+      "variant": "Lean",
+      "serviceDay": "Ponedeljak",
+      "priceRsdPerPerson": 850
+    },
+    "totalRsd": 850
+  },
+  {
+    "id": "965fb350-2db7-4ce0-9216-8e8224d78501",
+    "status": "created",
+    "paymentIntentId": null,
+    "createdAt": "2026-06-12T22:39:19.021Z",
+    "updatedAt": "2026-06-12T22:39:19.021Z",
+    "type": "menu",
+    "guestCount": 1,
+    "menu": {
+      "id": "ponedeljak-obrok-1-lean",
+      "name": "Obrok 1 - Lean",
+      "description": "Dnevni meni za Ponedeljak",
+      "items": [
+        "Piletina sa brokolijem i šargarepom, zelena salata"
+      ],
+      "variant": "Lean",
+      "serviceDay": "Ponedeljak",
+      "priceRsdPerPerson": 850
+    },
+    "totalRsd": 850
+  },
+  {
     "id": "06d2b6b2-8353-4c3a-985d-c0e858847752",
     "status": "created",
     "paymentIntentId": null,
