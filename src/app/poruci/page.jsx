@@ -225,38 +225,39 @@ export default function OrderPage() {
   const selectedCustomDishes = customMealSummaries.flatMap((meal) => meal.selectedDishes);
   const customTotal = customMealSummaries.reduce((sum, meal) => sum + meal.totalRsd, 0);
 
-  const handleVariantOrder = async (meal, index, variant) => {
+  const saveDraftAndContinue = (order) => {
+    sessionStorage.setItem('pendingOrderDraft', JSON.stringify(order));
+    router.push('/placanje?draft=1');
+  };
+
+  const handleVariantOrder = (meal, index, variant) => {
     const pendingId = `${index}-${variant}`;
     setPendingChoice(pendingId);
     setErrorMessage('');
 
     try {
       const variantLabel = variant === 'clean' ? 'Clean' : 'Lean';
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'menu',
-          guestCount: 1,
-          menu: {
-            id: `${serviceDay}-obrok-${index + 1}-${variant}`,
-            name: `Obrok ${index + 1} - ${variantLabel}`,
-            description: `Dnevni meni za ${serviceDayLabel}`,
-            items: [meal[variant]],
-            variant: variantLabel,
-            serviceDay: serviceDayLabel,
-            priceRsdPerPerson: VARIANT_PRICES_RSD[variant],
-          },
-        }),
-      });
+      const now = new Date().toISOString();
+      const order = {
+        id: crypto.randomUUID(),
+        status: 'draft',
+        createdAt: now,
+        updatedAt: now,
+        type: 'menu',
+        guestCount: 1,
+        menu: {
+          id: `${serviceDay}-obrok-${index + 1}-${variant}`,
+          name: `Obrok ${index + 1} - ${variantLabel}`,
+          description: `Dnevni meni za ${serviceDayLabel}`,
+          items: [meal[variant]],
+          variant: variantLabel,
+          serviceDay: serviceDayLabel,
+          priceRsdPerPerson: VARIANT_PRICES_RSD[variant],
+        },
+        totalRsd: VARIANT_PRICES_RSD[variant],
+      };
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Narudžbina nije kreirana.');
-      }
-
-      router.push(`/placanje?orderId=${data.order.id}`);
+      saveDraftAndContinue(order);
     } catch (error) {
       setErrorMessage(error.message);
       setPendingChoice(null);
@@ -344,7 +345,7 @@ export default function OrderPage() {
     modeSwipe.current = null;
   };
 
-  const handleCustomOrder = async (event) => {
+  const handleCustomOrder = (event) => {
     event.preventDefault();
 
     if (selectedCustomDishes.length === 0) {
@@ -356,29 +357,24 @@ export default function OrderPage() {
     setErrorMessage('');
 
     try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'custom',
-          eventType: 'Personalizovani obrok',
-          guestCount: customMeals.length,
-          selectedDishes: selectedCustomDishes,
-          notes,
-          priceRsdPerPerson: customTotal,
-          totalRsd: customTotal,
-        }),
-      });
+      const now = new Date().toISOString();
+      const order = {
+        id: crypto.randomUUID(),
+        status: 'draft',
+        createdAt: now,
+        updatedAt: now,
+        type: 'custom',
+        eventType: 'Personalizovani obrok',
+        guestCount: customMeals.length,
+        selectedDishes: selectedCustomDishes,
+        notes,
+        priceRsdPerPerson: customTotal,
+        totalRsd: customTotal,
+      };
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Narudžbina nije kreirana.');
-      }
-
-      router.push(`/placanje?orderId=${data.order.id}`);
+      saveDraftAndContinue(order);
     } catch (error) {
-      setErrorMessage(error.message);
+      setErrorMessage(error.message || 'Narudzbina nije pripremljena.');
       setPendingChoice(null);
     }
   };

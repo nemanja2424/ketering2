@@ -383,26 +383,56 @@
 }
 
 .totalBox {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  display: grid;
+  gap: 0.9rem;
   padding: 1rem;
   color: #f8eadb;
   background: #11170f;
   border-radius: 8px;
 }
 
-.totalBox span {
+.totalPrice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.totalPrice span {
   font-size: 0.8rem;
   font-weight: 900;
   text-transform: uppercase;
 }
 
-.totalBox strong {
+.totalPrice strong {
   text-align: right;
   font-size: clamp(1.25rem, 3vw, 1.7rem);
   font-weight: 950;
+}
+
+.totalBox button {
+  width: 100%;
+  min-height: 50px;
+  padding: 0.75rem 1rem;
+  color: #011209;
+  background: #d4a574;
+  border: 1px solid #d4a574;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.totalBox button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+}
+
+.totalBox button:disabled {
+  cursor: not-allowed;
+  opacity: 0.54;
 }
 
 .paymentSlot {
@@ -471,6 +501,15 @@
   .manualBox,
   .submitRow {
     grid-template-columns: 1fr;
+  }
+
+  .totalPrice {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .totalPrice strong {
+    text-align: left;
   }
 
   .hero h1 {

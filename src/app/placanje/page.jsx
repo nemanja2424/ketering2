@@ -26,6 +26,8 @@ const INITIAL_FORM = {
   napomena: '',
 };
 
+const ORDER_FORM_ID = 'placanje-order-form';
+
 function formatRsd(value) {
   return `${Number(value || 0).toLocaleString('sr-RS')} RSD`;
 }
@@ -69,6 +71,64 @@ function getOrderItems(order) {
   return [];
 }
 
+function buildStandardItems(order, manualDescription, manualTotalRsd) {
+  if (!order) {
+    const totalPriceRsd = Number(manualTotalRsd || 0);
+
+    return [
+      {
+        id: 'manual-item',
+        name: manualDescription.trim(),
+        category: 'Rucni unos',
+        variant: null,
+        quantity: 1,
+        unitPriceRsd: totalPriceRsd,
+        totalPriceRsd,
+        meta: {},
+      },
+    ];
+  }
+
+  if (order.type === 'menu') {
+    return [
+      {
+        id: order.menu?.id || order.id,
+        name: order.menu?.name || 'Dnevni meni',
+        category: 'Dnevni meni',
+        variant: order.menu?.variant || null,
+        quantity: Number(order.guestCount || 1),
+        unitPriceRsd: Number(order.menu?.priceRsdPerPerson || order.totalRsd || 0),
+        totalPriceRsd: Number(order.totalRsd || 0),
+        meta: {
+          description: order.menu?.description || '',
+          serviceDay: order.menu?.serviceDay || '',
+          dishes: Array.isArray(order.menu?.items) ? order.menu.items : [],
+        },
+      },
+    ];
+  }
+
+  if (order.type === 'custom') {
+    return Array.isArray(order.selectedDishes)
+      ? order.selectedDishes.map((dish) => ({
+          id: `${dish.mealId || 'meal'}-${dish.id}`,
+          name: dish.name,
+          category: dish.category || 'Personalizovano',
+          variant: null,
+          quantity: 1,
+          unitPriceRsd: Number(dish.priceRsdPerPerson || 0),
+          totalPriceRsd: Number(dish.priceRsdPerPerson || 0),
+          meta: {
+            mealId: dish.mealId || null,
+            mealLabel: dish.mealLabel || '',
+          },
+        }))
+      : [];
+  }
+
+  return [];
+}
+
 export default function PlacanjePage() {
   return (
     <main className={styles.page}>
@@ -89,57 +149,62 @@ function LoadingState() {
 
 function PaymentDraft() {
   const searchParams = useSearchParams();
-  const orderId = searchParams.get('orderId');
+  const hasDraft = searchParams.get('draft') === '1';
   const dateInputRef = useRef(null);
+  const bottomOrderRef = useRef(null);
 
   const [form, setForm] = useState(INITIAL_FORM);
   const [order, setOrder] = useState(null);
-  const [orderLoading, setOrderLoading] = useState(Boolean(orderId));
+  const [orderLoading, setOrderLoading] = useState(hasDraft);
   const [submitting, setSubmitting] = useState(false);
   const [manualTotal, setManualTotal] = useState('');
   const [manualDescription, setManualDescription] = useState('');
   const [status, setStatus] = useState({ type: '', message: '' });
   const [createdOrder, setCreatedOrder] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (!orderId) {
+    if (!hasDraft) {
       return;
     }
 
-    let active = true;
-
-    async function loadOrder() {
+    const timeoutId = window.setTimeout(() => {
       setOrderLoading(true);
       setStatus({ type: '', message: '' });
 
       try {
-        const response = await fetch(`/api/orders/${orderId}`);
-        const data = await response.json();
+        const storedDraft = sessionStorage.getItem('pendingOrderDraft');
 
-        if (!response.ok) {
-          throw new Error(data.error || 'Narudzbina nije pronadjena.');
+        if (!storedDraft) {
+          throw new Error('Narudzbina nije pronadjena. Vratite se na porucivanje.');
         }
 
-        if (active) {
-          setOrder(data.order);
-        }
+        setOrder(JSON.parse(storedDraft));
       } catch (error) {
-        if (active) {
-          setStatus({ type: 'error', message: error.message });
-        }
+        setStatus({ type: 'error', message: error.message });
       } finally {
-        if (active) {
-          setOrderLoading(false);
-        }
+        setOrderLoading(false);
       }
-    }
-
-    loadOrder();
+    }, 0);
 
     return () => {
-      active = false;
+      window.clearTimeout(timeoutId);
     };
-  }, [orderId]);
+  }, [hasDraft]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 920px)');
+    const updateIsMobile = () => {
+      setIsMobile(mediaQuery.matches);
+    };
+
+    updateIsMobile();
+    mediaQuery.addEventListener('change', updateIsMobile);
+
+    return () => {
+      mediaQuery.removeEventListener('change', updateIsMobile);
+    };
+  }, []);
 
   const orderItems = useMemo(() => getOrderItems(order), [order]);
   const totalRsd = order ? Number(order.totalRsd || 0) : Number(manualTotal || 0);
@@ -182,6 +247,17 @@ function PaymentDraft() {
     }
   };
 
+  const handleTopOrderClick = () => {
+    if (!isMobile) {
+      return;
+    }
+
+    bottomOrderRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setStatus({ type: '', message: '' });
@@ -203,26 +279,36 @@ function PaymentDraft() {
         mesto: form.mesto.trim() || null,
         cena: totalRsd,
         porudzbina: {
-          tip: order ? 'online-narudzbina' : 'rucni-unos',
-          kanal: '/placanje',
-          orderId: order?.id || null,
-          naslov: getOrderTitle(order),
-          stavke: orderItems,
-          napomena: form.napomena.trim(),
-          originalnaNarudzbina: order,
-          placanje: {
-            status: 'nije-pokrenuto',
+          schemaVersion: 1,
+          source: 'placanje',
+          type: order ? (order.type === 'custom' ? 'custom_meal_order' : 'meal_order') : 'manual_order',
+          title: getOrderTitle(order),
+          status: 'new',
+          items: buildStandardItems(order, manualDescription, totalRsd),
+          totals: {
+            subtotalRsd: totalRsd,
+            deliveryRsd: 0,
+            discountRsd: 0,
+            totalRsd,
+          },
+          customerNote: form.napomena.trim(),
+          internalNote: '',
+          payment: {
+            status: 'not_started',
             provider: null,
+            providerPaymentId: null,
             amountRsd: totalRsd,
             currency: 'RSD',
-            readyForProvider: true,
+            paidAt: null,
+          },
+          fulfillment: {
+            method: 'delivery',
+            status: 'pending',
+            confirmedAt: null,
+            completedAt: null,
           },
         },
       };
-
-      if (!order) {
-        payload.porudzbina.opis = manualDescription.trim();
-      }
 
       const response = await fetch('/api/narudzbine', {
         method: 'POST',
@@ -243,6 +329,7 @@ function PaymentDraft() {
       setForm(INITIAL_FORM);
       setManualDescription('');
       setManualTotal('');
+      sessionStorage.removeItem('pendingOrderDraft');
     } catch (error) {
       setStatus({ type: 'error', message: error.message });
     } finally {
@@ -268,7 +355,7 @@ function PaymentDraft() {
       </div>
 
       <div className={styles.grid}>
-        <form className={styles.formPanel} onSubmit={handleSubmit}>
+        <form id={ORDER_FORM_ID} className={styles.formPanel} onSubmit={handleSubmit}>
           <div className={styles.panelHeader}>
             <div>
               <span>Kontakt</span>
@@ -417,8 +504,13 @@ function PaymentDraft() {
           </label>
 
           <div className={styles.submitRow}>
-            <button type="submit" disabled={!canSubmit}>
-              {submitting ? 'Cuvanje...' : 'Sacuvaj narudzbinu'}
+            <button
+              type={isMobile ? 'button' : 'submit'}
+              form={isMobile ? undefined : ORDER_FORM_ID}
+              disabled={isMobile ? false : !canSubmit}
+              onClick={handleTopOrderClick}
+            >
+              {submitting ? 'Slanje...' : 'Poruci'}
             </button>
             <span>Placanje se ne naplacuje na ovom koraku.</span>
           </div>
@@ -477,9 +569,14 @@ function PaymentDraft() {
                 </div>
               </div>
 
-              <div className={styles.totalBox}>
-                <span>Ukupno</span>
-                <strong>{formatRsd(totalRsd)}</strong>
+              <div ref={bottomOrderRef} className={styles.totalBox}>
+                <div className={styles.totalPrice}>
+                  <span>Ukupno</span>
+                  <strong>{formatRsd(totalRsd)}</strong>
+                </div>
+                <button type="submit" form={ORDER_FORM_ID} disabled={!canSubmit}>
+                  {submitting ? 'Slanje...' : 'Poruci'}
+                </button>
               </div>
             </>
           )}
