@@ -1,8 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import {
   FaCalendarAlt,
+  FaChevronDown,
   FaClock,
   FaEnvelope,
   FaFilter,
@@ -26,6 +28,7 @@ const PAYMENT_LABELS = {
 
 const TYPE_LABELS = {
   meal_order: 'Pripremljen meni',
+  subscription_order: 'Pretplata',
   custom_meal_order: 'Personalizovan meni',
   catering_inquiry: 'Ketering',
   manual_order: 'Rucni unos',
@@ -98,6 +101,19 @@ function getOrderDateKey(order) {
   }
 
   return getLocalDateKey(order.datum);
+}
+
+function getOrderLastDateKey(order) {
+  if (order.details?.type !== 'subscription_order') {
+    return getOrderDateKey(order);
+  }
+
+  const deliveryDates = order.details.items
+    .map((item) => item.meta?.deliveryDate)
+    .filter(Boolean)
+    .sort((first, second) => first.localeCompare(second));
+
+  return deliveryDates.at(-1) || getOrderDateKey(order);
 }
 
 function getSearchText(order) {
@@ -253,7 +269,7 @@ export default function AdminPage() {
 
     return normalizedOrders
       .filter((order) => {
-        const orderDateKey = getOrderDateKey(order);
+        const orderDateKey = getOrderLastDateKey(order);
         const isPast = orderDateKey && orderDateKey < todayKey;
 
         if (!showPastOrders && isPast) {
@@ -384,6 +400,9 @@ export default function AdminPage() {
           <h1>Narudzbine</h1>
         </div>
         <div className={styles.headerActions}>
+          <Link href="/admin/pretplate" className={styles.refreshButton}>
+            Pretplate
+          </Link>
           <button type="button" onClick={fetchNarudzbine} className={styles.refreshButton}>
             <FaSyncAlt aria-hidden="true" />
             Osvezi
@@ -421,6 +440,7 @@ export default function AdminPage() {
             Vrsta
             <select value={typeFilter} onChange={(event) => setTypeFilter(event.target.value)}>
               <option value="all">Sve vrste</option>
+              <option value="subscription_order">Pretplata</option>
               <option value="catering_inquiry">Ketering</option>
               <option value="meal_order">Pripremljen meni</option>
               <option value="custom_meal_order">Personalizovan meni</option>
@@ -478,6 +498,7 @@ export default function AdminPage() {
 }
 
 function OrderCard({ narudzbina }) {
+  const [isOpen, setIsOpen] = useState(true);
   const details = narudzbina.details;
   const paymentLabel = PAYMENT_LABELS[details.paymentStatus] || details.paymentStatus;
   const typeLabel = TYPE_LABELS[details.type] || details.type;
@@ -489,66 +510,81 @@ function OrderCard({ narudzbina }) {
           <span className={styles.orderType}>{typeLabel}</span>
           <h2>{details.title}</h2>
         </div>
+        <button
+          type="button"
+          className={`${styles.collapseButton} ${isOpen ? styles.collapseButtonOpen : ''}`}
+          onClick={() => setIsOpen((current) => !current)}
+          aria-expanded={isOpen}
+        >
+          <span>{isOpen ? 'Skupi' : 'Otvori'}</span>
+          <FaChevronDown aria-hidden="true" />
+        </button>
       </div>
 
-      <div className={styles.infoGrid}>
-        <InfoItem icon={<FaUser />} label="Kupac" value={narudzbina.ime} />
-        <InfoItem icon={<FaPhoneAlt />} label="Telefon" value={narudzbina.br_tel || '-'} />
-        <InfoItem icon={<FaEnvelope />} label="Email" value={narudzbina.email || '-'} />
-        <InfoItem icon={<FaCalendarAlt />} label="Datum" value={formatDate(narudzbina.datum)} />
-        <InfoItem icon={<FaClock />} label="Vreme" value={formatTime(narudzbina.vreme)} />
-        <InfoItem icon={<FaMapMarkerAlt />} label="Mesto" value={narudzbina.mesto || '-'} />
-        <InfoItem icon={<FaUsers />} label="Broj osoba" value={details.guestCount || '-'} />
-      </div>
+      <div
+        className={`${styles.collapsibleContent} ${isOpen ? styles.collapsibleContentOpen : ''}`}
+        aria-hidden={!isOpen}
+      >
+          <div className={styles.infoGrid}>
+            <InfoItem icon={<FaUser />} label="Kupac" value={narudzbina.ime} />
+            <InfoItem icon={<FaPhoneAlt />} label="Telefon" value={narudzbina.br_tel || '-'} />
+            <InfoItem icon={<FaEnvelope />} label="Email" value={narudzbina.email || '-'} />
+            <InfoItem icon={<FaCalendarAlt />} label="Datum" value={formatDate(narudzbina.datum)} />
+            <InfoItem icon={<FaClock />} label="Vreme" value={formatTime(narudzbina.vreme)} />
+            <InfoItem icon={<FaMapMarkerAlt />} label="Mesto" value={narudzbina.mesto || '-'} />
+            <InfoItem icon={<FaUsers />} label="Broj osoba" value={details.guestCount || '-'} />
+          </div>
 
-      <div className={styles.orderBody}>
-        <div className={styles.itemsPanel}>
-          <div className={styles.sectionTitle}>
-            <FaReceipt aria-hidden="true" />
-            Stavke
-          </div>
-          {details.items.length > 0 ? (
-            <ul className={styles.itemsList}>
-              {details.items.map((item) => (
-                <li key={item.id || item.name}>
-                  <div>
-                    <strong>{item.name}</strong>
-                    <span>
-                      {item.category || 'Stavka'}
-                      {item.variant ? ` / ${item.variant}` : ''}
-                      {item.meta?.mealLabel ? ` / ${item.meta.mealLabel}` : ''}
-                    </span>
-                    {Array.isArray(item.meta?.dishes) && item.meta.dishes.length > 0 && (
-                      <p>{item.meta.dishes.join(', ')}</p>
-                    )}
-                  </div>
-                  <em>{formatRsd(item.totalPriceRsd)}</em>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className={styles.emptySmall}>Nema stavki za prikaz.</p>
-          )}
-        </div>
+          <div className={styles.orderBody}>
+            <div className={styles.itemsPanel}>
+              <div className={styles.sectionTitle}>
+                <FaReceipt aria-hidden="true" />
+                Stavke
+              </div>
+              {details.items.length > 0 ? (
+                <ul className={styles.itemsList}>
+                  {details.items.map((item) => (
+                    <li key={item.id || item.name}>
+                      <div>
+                        <strong>{item.name}</strong>
+                        <span>
+                          {item.category || 'Stavka'}
+                          {item.variant ? ` / ${item.variant}` : ''}
+                          {item.meta?.mealLabel ? ` / ${item.meta.mealLabel}` : ''}
+                          {item.meta?.formattedDate ? ` / Isporuka ${item.meta.formattedDate}` : ''}
+                        </span>
+                        {Array.isArray(item.meta?.dishes) && item.meta.dishes.length > 0 && (
+                          <p>{item.meta.dishes.join(', ')}</p>
+                        )}
+                      </div>
+                      <em>{formatRsd(item.totalPriceRsd)}</em>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className={styles.emptySmall}>Nema stavki za prikaz.</p>
+              )}
+            </div>
 
-        <aside className={styles.sidePanel}>
-          <div className={styles.totalBox}>
-            <span>Ukupno</span>
-            <strong>{formatRsd(details.totalRsd)}</strong>
+            <aside className={styles.sidePanel}>
+              <div className={styles.totalBox}>
+                <span>Ukupno</span>
+                <strong>{formatRsd(details.totalRsd)}</strong>
+              </div>
+              <div className={styles.noteBox}>
+                <span>Napomena kupca</span>
+                <p>{details.customerNote || 'Nema napomene.'}</p>
+              </div>
+              <div className={styles.noteBox}>
+                <span>Naruceno</span>
+                <p>{formatDateTime(narudzbina.created_at)}</p>
+              </div>
+              <div className={styles.noteBox}>
+                <span>Placanje</span>
+                <p>{paymentLabel}</p>
+              </div>
+            </aside>
           </div>
-          <div className={styles.noteBox}>
-            <span>Napomena kupca</span>
-            <p>{details.customerNote || 'Nema napomene.'}</p>
-          </div>
-          <div className={styles.noteBox}>
-            <span>Naruceno</span>
-            <p>{formatDateTime(narudzbina.created_at)}</p>
-          </div>
-          <div className={styles.noteBox}>
-            <span>Placanje</span>
-            <p>{paymentLabel}</p>
-          </div>
-        </aside>
       </div>
     </article>
   );

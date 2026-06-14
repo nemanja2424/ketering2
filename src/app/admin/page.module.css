@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: calc(76px + 2rem) 2rem 2rem;
   background: linear-gradient(180deg, rgba(246, 225, 202, 0.94), rgba(246, 225, 202, 1));
 }
 
@@ -105,7 +105,7 @@
   min-height: 100vh;
   display: grid;
   gap: 1rem;
-  padding: 2rem;
+  padding: calc(76px + 2rem) 2rem 2rem;
   color: #011209;
   background:
     linear-gradient(140deg, rgba(86, 111, 45, 0.1), transparent 36rem),
@@ -185,7 +185,7 @@
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
 }
 
@@ -210,6 +210,109 @@
 .statsGrid strong {
   color: #011209;
   font-size: clamp(1.35rem, 3vw, 2rem);
+  font-weight: 950;
+}
+
+.productionPanel {
+  width: min(100%, 1240px);
+  margin: 0 auto;
+  padding: 1rem;
+  background: rgba(1, 18, 9, 0.92);
+  border: 1px solid rgba(246, 225, 202, 0.18);
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(1, 18, 9, 0.12);
+}
+
+.productionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(246, 225, 202, 0.16);
+}
+
+.productionHeader span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: rgba(246, 225, 202, 0.72);
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.productionHeader h2 {
+  margin: 0;
+  color: #f6e1ca;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  line-height: 1.1;
+  font-weight: 950;
+}
+
+.productionHeader > strong {
+  flex: 0 0 auto;
+  color: #011209;
+  background: #d4a574;
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.88rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.productionList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.productionCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  gap: 1rem;
+  padding: 0.9rem;
+  background: rgba(246, 225, 202, 0.08);
+  border: 1px solid rgba(246, 225, 202, 0.14);
+  border-radius: 8px;
+}
+
+.productionCard span {
+  display: block;
+  color: rgba(246, 225, 202, 0.74);
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.productionCard h3 {
+  margin: 0.35rem 0 0.35rem;
+  color: #f6e1ca;
+  font-size: 1rem;
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+.productionCard p {
+  margin: 0;
+  color: rgba(246, 225, 202, 0.78);
+  font-size: 0.86rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.productionCard aside {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: rgba(246, 225, 202, 0.08);
+  border: 1px solid rgba(246, 225, 202, 0.12);
+  border-radius: 8px;
+}
+
+.productionCard aside strong {
+  color: #f6e1ca;
+  font-size: 0.95rem;
   font-weight: 950;
 }
 
@@ -240,6 +343,13 @@
   gap: 0.85rem;
 }
 
+.subscriptionFiltersGrid {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.7fr) minmax(240px, 1.3fr);
+  align-items: end;
+  gap: 0.85rem;
+}
+
 .filtersGrid label {
   display: grid;
   gap: 0.4rem;
@@ -250,8 +360,20 @@
   text-transform: uppercase;
 }
 
+.subscriptionFiltersGrid label {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+  color: #566f2d;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 .filtersGrid input,
-.filtersGrid select {
+.filtersGrid select,
+.subscriptionFiltersGrid input,
+.subscriptionFiltersGrid select {
   width: 100%;
   min-height: 44px;
   padding: 0.65rem 0.75rem;
@@ -266,7 +388,9 @@
 }
 
 .filtersGrid input:focus,
-.filtersGrid select:focus {
+.filtersGrid select:focus,
+.subscriptionFiltersGrid input:focus,
+.subscriptionFiltersGrid select:focus {
   outline: none;
   background: white;
   border-color: #566f2d;
@@ -325,6 +449,57 @@
   gap: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(86, 111, 45, 0.14);
+}
+
+.collapseButton {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 38px;
+  padding: 0.5rem 0.75rem;
+  color: #566f2d;
+  background: rgba(246, 225, 202, 0.5);
+  border: 1px solid rgba(86, 111, 45, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.collapseButton:hover {
+  background: rgba(246, 225, 202, 0.78);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(1, 18, 9, 0.08);
+}
+
+.collapseButton svg {
+  flex: 0 0 auto;
+  transition: transform 0.2s ease;
+}
+
+.collapseButtonOpen svg {
+  transform: rotate(180deg);
+}
+
+.collapsibleContent {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(-6px);
+  transition:
+    max-height 0.32s cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 0.2s ease,
+    transform 0.28s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.collapsibleContentOpen {
+  max-height: 5000px;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .orderType {
@@ -457,6 +632,64 @@
   text-align: right;
 }
 
+.subscriptionItemsList {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.subscriptionItemsList li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: start;
+  min-width: 0;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.54);
+  border: 1px solid rgba(86, 111, 45, 0.14);
+  border-radius: 8px;
+}
+
+.subscriptionItemsList span {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  margin-bottom: 0.45rem;
+  padding: 0.25rem 0.5rem;
+  color: #f6e1ca;
+  background: #566f2d;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.subscriptionItemsList strong {
+  display: block;
+  color: #011209;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+.subscriptionItemsList p {
+  margin: 0.3rem 0 0;
+  color: #5d574d;
+  font-size: 0.82rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.subscriptionItemsList em {
+  color: #566f2d;
+  font-style: normal;
+  font-size: 0.9rem;
+  font-weight: 950;
+  text-align: right;
+}
+
 .sidePanel {
   display: grid;
   align-content: start;
@@ -524,7 +757,7 @@
 
 @media (max-width: 900px) {
   .dashboard {
-    padding: 1rem;
+    padding: calc(68px + 1rem) 1rem 1rem;
   }
 
   .header,
@@ -539,7 +772,9 @@
 
   .statsGrid,
   .filtersGrid,
+  .subscriptionFiltersGrid,
   .infoGrid,
+  .productionCard,
   .orderBody {
     grid-template-columns: 1fr;
   }
@@ -547,11 +782,20 @@
   .toggleFilter {
     justify-content: flex-start;
   }
+
+  .productionHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .productionHeader > strong {
+    width: fit-content;
+  }
 }
 
 @media (max-width: 560px) {
   .loginContainer {
-    padding: 1rem;
+    padding: calc(68px + 1rem) 1rem 1rem;
   }
 
   .headerActions {
@@ -569,15 +813,22 @@
     grid-template-columns: 1fr;
   }
 
-  .itemsList em {
+  .itemsList em,
+  .subscriptionItemsList em {
     text-align: left;
+  }
+
+  .subscriptionItemsList li {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .loginButton,
   .refreshButton,
-  .logoutButton {
+  .logoutButton,
+  .collapseButton,
+  .collapsibleContent {
     transition: none;
   }
 }

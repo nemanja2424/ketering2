@@ -1,21 +1,27 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { FaArrowDown, FaUtensils } from 'react-icons/fa';
 import styles from './page.module.css';
-import { FaCheck, FaLeaf, FaUtensils } from 'react-icons/fa';
 
 const VARIANT_PRICES_RSD = {
   clean: 750,
   lean: 850,
 };
 
+const SUBSCRIPTION_OPTIONS = [
+  { days: 5, label: '5 dana' },
+  { days: 10, label: '10 dana' },
+  { days: 22, label: '22 dana' },
+];
+
 const CUSTOM_SECTIONS = [
   {
     id: 'baza',
     title: 'Baza',
     options: [
-      { id: 'pirinac', name: 'Integralni pirinač', priceRsdPerPerson: 180 },
+      { id: 'pirinac', name: 'Integralni pirinac', priceRsdPerPerson: 180 },
       { id: 'proso', name: 'Proso', priceRsdPerPerson: 190 },
       { id: 'batat', name: 'Batat', priceRsdPerPerson: 240 },
       { id: 'pasta', name: 'Pasta', priceRsdPerPerson: 220 },
@@ -28,7 +34,7 @@ const CUSTOM_SECTIONS = [
       { id: 'brokoli', name: 'Brokoli', priceRsdPerPerson: 170 },
       { id: 'tikvice-paprika', name: 'Tikvice i paprika', priceRsdPerPerson: 190 },
       { id: 'boranija', name: 'Boranija', priceRsdPerPerson: 160 },
-      { id: 'mesano-povrce', name: 'Mešano povrće', priceRsdPerPerson: 210 },
+      { id: 'mesano-povrce', name: 'Mesano povrce', priceRsdPerPerson: 210 },
     ],
   },
   {
@@ -36,7 +42,7 @@ const CUSTOM_SECTIONS = [
     title: 'Glavno jelo',
     options: [
       { id: 'piletina', name: 'Grilovana piletina', priceRsdPerPerson: 420 },
-      { id: 'curetina', name: 'Ćuretina', priceRsdPerPerson: 480 },
+      { id: 'curetina', name: 'Curetina', priceRsdPerPerson: 480 },
       { id: 'junetina', name: 'Junetina', priceRsdPerPerson: 620 },
       { id: 'losos', name: 'Losos', priceRsdPerPerson: 760 },
       { id: 'file-minjon', name: 'File minjon', priceRsdPerPerson: 820 },
@@ -67,15 +73,15 @@ const CUSTOM_SECTIONS = [
 const DAILY_MENUS = {
   ponedeljak: [
     {
-      clean: 'Piletina sa pirinčem i boranijom, zelena salata',
-      lean: 'Piletina sa brokolijem i šargarepom, zelena salata',
+      clean: 'Piletina sa pirincem i boranijom, zelena salata',
+      lean: 'Piletina sa brokolijem i sargarepom, zelena salata',
     },
     {
-      clean: 'Ćuretina sa pirinčem i mešanim povrćem, zelena salata',
-      lean: 'Ćuretina sa mešanim povrćem, zelena salata',
+      clean: 'Curetina sa pirincem i mesanim povrcem, zelena salata',
+      lean: 'Curetina sa mesanim povrcem, zelena salata',
     },
     {
-      clean: 'Piletina sa pirinčem i pireom od spanaća',
+      clean: 'Piletina sa pirincem i pireom od spanaca',
       lean: 'Piletina sa avokadom i brokolijem',
     },
     {
@@ -85,56 +91,56 @@ const DAILY_MENUS = {
   ],
   utorak: [
     {
-      clean: 'Junetina sa celerom, krompirom i šargarepom',
+      clean: 'Junetina sa celerom, krompirom i sargarepom',
       lean: 'Junetina sa tikvicama i paprikom',
     },
     {
       clean: 'File minjon sa krompir pireom i zelenom salatom',
-      lean: 'File minjon sa tikvicama, paprikom i šargarepom',
+      lean: 'File minjon sa tikvicama, paprikom i sargarepom',
     },
     {
       clean: 'Junetina u paradajz sosu sa krompir pireom, vitaminska salata',
-      lean: 'Junetina u paradajz sosu sa tikvicama i šargarepom, vitaminska salata',
+      lean: 'Junetina u paradajz sosu sa tikvicama i sargarepom, vitaminska salata',
     },
     {
-      clean: 'Ćuretina pasta u kari sosu sa tikvicama i paprikom',
-      lean: 'Ćuretina sa tikvicama i paprikom, zeleni mix',
+      clean: 'Curetina pasta u kari sosu sa tikvicama i paprikom',
+      lean: 'Curetina sa tikvicama i paprikom, zeleni mix',
     },
   ],
   sreda: [
     {
-      clean: 'File minjon sa mešanim povrćem i prosom, zelena salata',
-      lean: 'File minjon sa mešanim povrćem, zeleni mix',
+      clean: 'File minjon sa mesanim povrcem i prosom, zelena salata',
+      lean: 'File minjon sa mesanim povrcem, zeleni mix',
     },
     {
       clean: 'Piletina pasta sa paradajz sosom i parmezanom',
-      lean: 'Piletina sa spanaćem i cveklom',
+      lean: 'Piletina sa spanacem i cveklom',
     },
     {
-      clean: 'Ćuretina sa prosom, boranijom i šargarepom',
-      lean: 'Ćuretina sa boranijom i šargarepom',
+      clean: 'Curetina sa prosom, boranijom i sargarepom',
+      lean: 'Curetina sa boranijom i sargarepom',
     },
     {
-      clean: 'Piletina sa pirinčem, boranijom, šargarepom i cveklom',
+      clean: 'Piletina sa pirincem, boranijom, sargarepom i cveklom',
       lean: 'Piletina sa tikvicama i paprikom',
     },
   ],
   cetvrtak: [
     {
-      clean: 'Ćuretina pasta u paradajz sosu sa tikvicama i paprikom',
-      lean: 'Ćuretina sa pirinčem, tikvicama i paprikom',
+      clean: 'Curetina pasta u paradajz sosu sa tikvicama i paprikom',
+      lean: 'Curetina sa pirincem, tikvicama i paprikom',
     },
     {
-      clean: 'Junetina sa pirinčem i boranijom, zelena salata',
-      lean: 'Junetina sa boranijom i šargarepom, zelena salata',
+      clean: 'Junetina sa pirincem i boranijom, zelena salata',
+      lean: 'Junetina sa boranijom i sargarepom, zelena salata',
     },
     {
       clean: 'File minjon sa pekarskim krompirom, zelena salata',
       lean: 'File minjon sa tikvicama i paprikom, zelena salata',
     },
     {
-      clean: 'Junetina sa celerom, šargarepom i krompirom',
-      lean: 'Junetina sa celerom i šargarepom, vitaminska salata',
+      clean: 'Junetina sa celerom, sargarepom i krompirom',
+      lean: 'Junetina sa celerom i sargarepom, vitaminska salata',
     },
   ],
   petak: [
@@ -151,8 +157,8 @@ const DAILY_MENUS = {
       lean: 'Pastrmka sa blitvom i vitaminskom salatom',
     },
     {
-      clean: 'Škarpina sa prosom i mešanim povrćem',
-      lean: 'Škarpina sa mešanim povrćem, zelena salata',
+      clean: 'Skarpina sa prosom i mesanim povrcem',
+      lean: 'Skarpina sa mesanim povrcem, zelena salata',
     },
   ],
 };
@@ -161,46 +167,141 @@ const DAY_LABELS = {
   ponedeljak: 'Ponedeljak',
   utorak: 'Utorak',
   sreda: 'Sreda',
-  cetvrtak: 'Četvrtak',
+  cetvrtak: 'Cetvrtak',
   petak: 'Petak',
 };
 
-const NEXT_SERVICE_DAY_BY_INDEX = {
-  0: 'ponedeljak',
-  1: 'utorak',
-  2: 'sreda',
-  3: 'cetvrtak',
-  4: 'petak',
-  5: 'ponedeljak',
-  6: 'ponedeljak',
+const DAY_ID_BY_INDEX = {
+  1: 'ponedeljak',
+  2: 'utorak',
+  3: 'sreda',
+  4: 'cetvrtak',
+  5: 'petak',
 };
 
-const CARD_IMAGES = ['/01card.webp', '/02card.webp', '/03card.webp', '/04card.webp'];
 const MAX_CUSTOM_MEALS = 10;
-
-function getNextServiceDay(date = new Date()) {
-  return NEXT_SERVICE_DAY_BY_INDEX[date.getDay()];
-}
 
 function formatRsd(value) {
   return `${value.toLocaleString('sr-RS')} RSD`;
 }
 
+function toDateInputValue(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function formatDateSr(date) {
+  return new Intl.DateTimeFormat('sr-RS', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(date);
+}
+
+function addDays(date, days) {
+  const nextDate = new Date(date);
+  nextDate.setDate(nextDate.getDate() + days);
+  return nextDate;
+}
+
+function isWorkday(date) {
+  const day = date.getDay();
+  return day >= 1 && day <= 5;
+}
+
+function buildSubscriptionDays(daysCount) {
+  const days = [];
+  let cursor = new Date();
+
+  while (days.length < daysCount) {
+    if (isWorkday(cursor)) {
+      const serviceDay = DAY_ID_BY_INDEX[cursor.getDay()];
+      days.push({
+        id: toDateInputValue(cursor),
+        date: toDateInputValue(cursor),
+        formattedDate: formatDateSr(cursor),
+        serviceDay,
+        serviceDayLabel: DAY_LABELS[serviceDay],
+      });
+    }
+
+    cursor = addDays(cursor, 1);
+  }
+
+  return days;
+}
+
 export default function OrderPage() {
+  return (
+    <Suspense fallback={<OrderLoading />}>
+      <OrderContent />
+    </Suspense>
+  );
+}
+
+function OrderLoading() {
+  return (
+    <main className={styles.orderPage}>
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <span className={styles.eyebrow}>Porucivanje</span>
+          <h1>Ucitavanje porudzbine</h1>
+          <p>Pripremamo izbor obroka.</p>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function OrderContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const modeSwipe = useRef(null);
+  const subscriptionSummaryRef = useRef(null);
+  const customSummaryRef = useRef(null);
   const [mode, setMode] = useState(
     searchParams.get('tip') === 'personalizovani' ? 'custom' : 'daily'
   );
   const [pendingChoice, setPendingChoice] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [subscriptionDays, setSubscriptionDays] = useState(5);
+  const [subscriptionChoices, setSubscriptionChoices] = useState({});
+  const [editingDayId, setEditingDayId] = useState(null);
   const [customMeals, setCustomMeals] = useState([{ id: 1, selected: new Set() }]);
   const [notes, setNotes] = useState('');
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
-  const serviceDay = useMemo(() => getNextServiceDay(), []);
-  const meals = DAILY_MENUS[serviceDay];
-  const serviceDayLabel = DAY_LABELS[serviceDay];
+  const subscriptionSchedule = useMemo(
+    () => buildSubscriptionDays(subscriptionDays),
+    [subscriptionDays]
+  );
+
+  const subscriptionPlan = useMemo(() => {
+    return subscriptionSchedule.map((day, dayIndex) => {
+      const selected = subscriptionChoices[day.id] || {
+        mealIndex: dayIndex % 4,
+        variant: 'clean',
+      };
+      const mealIndex = Number.isInteger(selected.mealIndex) ? selected.mealIndex : 0;
+      const meal = DAILY_MENUS[day.serviceDay][mealIndex] || DAILY_MENUS[day.serviceDay][0];
+      const variant = selected.variant === 'lean' ? 'lean' : 'clean';
+      const variantLabel = variant === 'clean' ? 'Clean' : 'Lean';
+
+      return {
+        ...day,
+        mealIndex,
+        mealNumber: mealIndex + 1,
+        variant,
+        variantLabel,
+        description: meal[variant],
+        priceRsd: VARIANT_PRICES_RSD[variant],
+      };
+    });
+  }, [subscriptionChoices, subscriptionSchedule]);
+
+  const subscriptionTotal = subscriptionPlan.reduce((sum, day) => sum + day.priceRsd, 0);
 
   const customMealSummaries = useMemo(() => {
     return customMeals.map((meal, mealIndex) => {
@@ -233,36 +334,106 @@ export default function OrderPage() {
     router.push('/placanje?draft=1');
   };
 
-  const handleVariantOrder = (meal, index, variant) => {
-    const pendingId = `${index}-${variant}`;
-    setPendingChoice(pendingId);
+  useEffect(() => {
+    const target = mode === 'daily' ? subscriptionSummaryRef.current : customSummaryRef.current;
+
+    if (!target) {
+      setShowScrollButton(false);
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia('(max-width: 1024px)');
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowScrollButton(mediaQuery.matches && !entry.isIntersecting);
+      },
+      {
+        threshold: 0.15,
+      }
+    );
+
+    observer.observe(target);
+
+    const handleMediaChange = () => {
+      const rect = target.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+      setShowScrollButton(mediaQuery.matches && !isVisible);
+    };
+
+    handleMediaChange();
+    mediaQuery.addEventListener('change', handleMediaChange);
+
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', handleMediaChange);
+    };
+  }, [mode]);
+
+  const scrollToOrderSummary = () => {
+    const target = mode === 'daily' ? subscriptionSummaryRef.current : customSummaryRef.current;
+
+    target?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  };
+
+  const handleSubscriptionChoice = (dayId, mealIndex, variant) => {
+    setSubscriptionChoices((current) => ({
+      ...current,
+      [dayId]: {
+        mealIndex,
+        variant,
+      },
+    }));
+    setEditingDayId(null);
+  };
+
+  const handleResetSubscriptionChanges = () => {
+    setSubscriptionChoices({});
+    setEditingDayId(null);
+  };
+
+  const handleSubscriptionOrder = (event) => {
+    event.preventDefault();
+    setPendingChoice('subscription');
     setErrorMessage('');
 
     try {
-      const variantLabel = variant === 'clean' ? 'Clean' : 'Lean';
       const now = new Date().toISOString();
       const order = {
         id: crypto.randomUUID(),
         status: 'draft',
         createdAt: now,
         updatedAt: now,
-        type: 'menu',
+        type: 'subscription',
+        eventType: `Pretplata ${subscriptionDays} radnih dana`,
         guestCount: 1,
-        menu: {
-          id: `${serviceDay}-obrok-${index + 1}-${variant}`,
-          name: `Obrok ${index + 1} - ${variantLabel}`,
-          description: `Dnevni meni za ${serviceDayLabel}`,
-          items: [meal[variant]],
-          variant: variantLabel,
-          serviceDay: serviceDayLabel,
-          priceRsdPerPerson: VARIANT_PRICES_RSD[variant],
+        subscription: {
+          days: subscriptionDays,
+          workdaysOnly: true,
+          items: subscriptionPlan,
         },
-        totalRsd: VARIANT_PRICES_RSD[variant],
+        selectedDishes: subscriptionPlan.map((day) => ({
+          id: `${day.date}-obrok-${day.mealNumber}-${day.variant}`,
+          name: `${day.formattedDate} - Obrok ${day.mealNumber} ${day.variantLabel}`,
+          category: day.serviceDayLabel,
+          date: day.date,
+          formattedDate: day.formattedDate,
+          serviceDay: day.serviceDayLabel,
+          variant: day.variantLabel,
+          mealNumber: day.mealNumber,
+          description: day.description,
+          priceRsdPerPerson: day.priceRsd,
+        })),
+        priceRsdPerPerson: subscriptionTotal,
+        totalRsd: subscriptionTotal,
       };
 
       saveDraftAndContinue(order);
     } catch (error) {
-      setErrorMessage(error.message);
+      setErrorMessage(error.message || 'Pretplata nije pripremljena.');
       setPendingChoice(null);
     }
   };
@@ -393,23 +564,23 @@ export default function OrderPage() {
     >
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <span className={styles.eyebrow}>Poručivanje</span>
-          <h1>{mode === 'daily' ? `Obroci za ${serviceDayLabel}` : 'Personalizovani obrok'}</h1>
+          <span className={styles.eyebrow}>Porucivanje</span>
+          <h1>{mode === 'daily' ? 'Pretplata na obroke' : 'Personalizovani obrok'}</h1>
           <p>
-            Izaberi dnevni Clean ili Lean obrok, ili složi svoj tanjir kroz bazu, prilog,
-            glavno jelo, salate i dresing.
+            Izaberi plan za radne dane i prilagodi svaki datum, ili slozi svoj tanjir kroz bazu,
+            prilog, glavno jelo, salate i dresing.
           </p>
         </div>
       </section>
 
       <div className={styles.modeBar}>
-        <div className={styles.modeSwitch} role="tablist" aria-label="Tip narudžbine">
+        <div className={styles.modeSwitch} role="tablist" aria-label="Tip narudzbine">
           <button
             type="button"
             className={`${styles.modeButton} ${mode === 'daily' ? styles.activeMode : ''}`}
             onClick={() => setMode('daily')}
           >
-            Pripremljeni
+            Pretplata
           </button>
           <button
             type="button"
@@ -428,80 +599,153 @@ export default function OrderPage() {
       {mode === 'daily' ? (
         <section
           key="daily"
-          className={`${styles.menuSection} ${styles.panelEnter} ${
-            mode === 'daily' ? styles.fromLeft : styles.fromRight
-          }`}
+          className={`${styles.menuSection} ${styles.panelEnter} ${styles.fromLeft}`}
           aria-labelledby="daily-menu-title"
         >
           <div className={styles.sectionHeader}>
-            <span className={styles.kicker}>4 sveže opcije</span>
-            <h2 id="daily-menu-title">Današnji izbor za poručivanje</h2>
+            <span className={styles.kicker}>Samo radni dani</span>
+            <h2 id="daily-menu-title">Plan obroka za naredne dane</h2>
           </div>
 
-          <div className={styles.menusGrid}>
-            {meals.map((meal, index) => (
-              <article key={`${serviceDay}-${index}`} className={styles.menuCard}>
-                <div
-                  className={styles.menuImage}
-                  style={{ backgroundImage: `url(${CARD_IMAGES[index]})` }}
+          <form className={styles.subscriptionForm} onSubmit={handleSubscriptionOrder}>
+            <div className={styles.planPicker} role="radiogroup" aria-label="Duzina pretplate">
+              {SUBSCRIPTION_OPTIONS.map((option) => (
+                <button
+                  key={option.days}
+                  type="button"
+                  className={`${styles.planButton} ${
+                    subscriptionDays === option.days ? styles.activePlan : ''
+                  }`}
+                  onClick={() => setSubscriptionDays(option.days)}
                 >
-                  <span>Obrok {index + 1}</span>
-                </div>
+                  <span>{option.label}</span>
+                  <strong>{formatRsd(option.days * VARIANT_PRICES_RSD.clean)}</strong>
+                </button>
+              ))}
+            </div>
 
-                <div className={styles.menuContent}>
-                  <div className={styles.cardTopline}>
-                    <FaUtensils />
-                    <span>{serviceDayLabel}</span>
-                  </div>
+            <div className={styles.planActions}>
+              <button
+                type="button"
+                className={styles.resetPlanButton}
+                onClick={handleResetSubscriptionChanges}
+                disabled={Object.keys(subscriptionChoices).length === 0}
+              >
+                Resetuj izmene
+              </button>
+            </div>
 
-                  <h3>Obrok {index + 1}</h3>
-
-                  <div className={styles.variantList}>
-                    <div className={styles.variant}>
-                      <div className={styles.variantTitle}>
-                        <FaCheck />
-                        <span>Clean</span>
-                      </div>
-                      <p>{meal.clean}</p>
+            <div className={styles.subscriptionLayout}>
+              <div className={styles.calendarList}>
+                {subscriptionPlan.map((day) => (
+                  <article key={day.id} className={styles.calendarCard}>
+                    <div className={styles.calendarDate}>
+                      <span>{day.serviceDayLabel}</span>
+                      <strong>{day.formattedDate}</strong>
                     </div>
 
-                    <div className={styles.variant}>
-                      <div className={styles.variantTitle}>
-                        <FaLeaf />
-                        <span>Lean</span>
+                    <div className={styles.calendarMeals}>
+                      <div className={styles.selectedMealCard}>
+                        <div className={styles.selectedMealTop}>
+                          <div>
+                            <span>
+                              Obrok {day.mealNumber} / {day.variantLabel}
+                            </span>
+                            <strong>{day.description}</strong>
+                          </div>
+                          <em>{formatRsd(day.priceRsd)}</em>
+                        </div>
+                        <button
+                          type="button"
+                          className={styles.editMealButton}
+                          onClick={() =>
+                            setEditingDayId((current) => (current === day.id ? null : day.id))
+                          }
+                        >
+                          {editingDayId === day.id ? 'Zatvori izbor' : 'Izmeni obrok'}
+                        </button>
                       </div>
-                      <p>{meal.lean}</p>
+
+                      <div
+                        className={`${styles.mealPickerPanel} ${
+                          editingDayId === day.id ? styles.mealPickerOpen : ''
+                        }`}
+                        aria-hidden={editingDayId !== day.id}
+                      >
+                        {DAILY_MENUS[day.serviceDay].map((meal, index) => (
+                          <section
+                            key={`${day.id}-${index}`}
+                            className={`${styles.dayMealOption} ${
+                              day.mealIndex === index ? styles.selectedDayMeal : ''
+                            }`}
+                          >
+                            <div className={styles.dayMealHeader}>
+                              <FaUtensils />
+                              <span>Obrok {index + 1}</span>
+                            </div>
+
+                            <div className={styles.dayVariants}>
+                              <button
+                                type="button"
+                                className={`${styles.dayVariantButton} ${
+                                  day.mealIndex === index && day.variant === 'clean'
+                                    ? styles.selectedVariant
+                                    : ''
+                                }`}
+                                onClick={() => handleSubscriptionChoice(day.id, index, 'clean')}
+                                tabIndex={editingDayId === day.id ? 0 : -1}
+                              >
+                                <span>Clean</span>
+                                <p>{meal.clean}</p>
+                                <strong>{formatRsd(VARIANT_PRICES_RSD.clean)}</strong>
+                              </button>
+
+                              <button
+                                type="button"
+                                className={`${styles.dayVariantButton} ${
+                                  day.mealIndex === index && day.variant === 'lean'
+                                    ? styles.selectedVariant
+                                    : ''
+                                }`}
+                                onClick={() => handleSubscriptionChoice(day.id, index, 'lean')}
+                                tabIndex={editingDayId === day.id ? 0 : -1}
+                              >
+                                <span>Lean</span>
+                                <p>{meal.lean}</p>
+                                <strong>{formatRsd(VARIANT_PRICES_RSD.lean)}</strong>
+                              </button>
+                            </div>
+                          </section>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  </article>
+                ))}
+              </div>
 
-                  <div className={styles.variantActions}>
-                    <button
-                      type="button"
-                      className={styles.variantButton}
-                      disabled={Boolean(pendingChoice)}
-                      onClick={() => handleVariantOrder(meal, index, 'clean')}
-                    >
-                      <span>Clean</span>
-                      <strong>{formatRsd(VARIANT_PRICES_RSD.clean)}</strong>
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.variantButton}
-                      disabled={Boolean(pendingChoice)}
-                      onClick={() => handleVariantOrder(meal, index, 'lean')}
-                    >
-                      <span>Lean</span>
-                      <strong>{formatRsd(VARIANT_PRICES_RSD.lean)}</strong>
-                    </button>
+              <aside ref={subscriptionSummaryRef} className={styles.subscriptionSummary}>
+                <span>Pregled pretplate</span>
+                <h3>{subscriptionDays} radnih dana</h3>
+                <div className={styles.summaryRows}>
+                  <div>
+                    <span>Prva isporuka</span>
+                    <strong>{subscriptionPlan[0]?.formattedDate}</strong>
                   </div>
-
-                  {pendingChoice === `${index}-clean` || pendingChoice === `${index}-lean` ? (
-                    <p className={styles.loadingText}>Pripremamo plaćanje...</p>
-                  ) : null}
+                  <div>
+                    <span>Poslednja isporuka</span>
+                    <strong>{subscriptionPlan.at(-1)?.formattedDate}</strong>
+                  </div>
+                  <div>
+                    <span>Ukupno</span>
+                    <strong>{formatRsd(subscriptionTotal)}</strong>
+                  </div>
                 </div>
-              </article>
-            ))}
-          </div>
+                <button type="submit" disabled={pendingChoice === 'subscription'}>
+                  {pendingChoice === 'subscription' ? 'Pripremamo placanje...' : 'Nastavi na placanje'}
+                </button>
+              </aside>
+            </div>
+          </form>
         </section>
       ) : (
         <section
@@ -510,7 +754,7 @@ export default function OrderPage() {
           aria-labelledby="custom-menu-title"
         >
           <div className={styles.sectionHeader}>
-            <span className={styles.kicker}>Složi po meri</span>
+            <span className={styles.kicker}>Slozi po meri</span>
             <h2 id="custom-menu-title">Personalizovani obrok</h2>
           </div>
 
@@ -521,7 +765,7 @@ export default function OrderPage() {
                 <textarea
                   rows="3"
                   value={notes}
-                  placeholder="Alergije, posebne želje, bez luka..."
+                  placeholder="Alergije, posebne zelje, bez luka..."
                   onChange={(event) => setNotes(event.target.value)}
                 />
               </label>
@@ -542,7 +786,7 @@ export default function OrderPage() {
                         onClick={() => handleResetCustomMeal(meal.id)}
                         disabled={meal.selected.size === 0}
                       >
-                        Očisti
+                        Ocisti
                       </button>
                       {customMeals.length > 1 && (
                         <button
@@ -588,12 +832,12 @@ export default function OrderPage() {
             >
               {customMeals.length >= MAX_CUSTOM_MEALS
                 ? 'Dodato je maksimalno 10 obroka'
-                : 'Dodaj još jedan obrok'}
+                : 'Dodaj jos jedan obrok'}
             </button>
 
-            <div className={styles.customSummary}>
+            <div ref={customSummaryRef} className={styles.customSummary}>
               <div>
-                <span>Različitih obroka</span>
+                <span>Razlicitih obroka</span>
                 <strong>{customMeals.length}</strong>
               </div>
               <div>
@@ -601,7 +845,7 @@ export default function OrderPage() {
                 <strong>{formatRsd(customTotal)}</strong>
               </div>
               <button type="submit" disabled={pendingChoice === 'custom'}>
-                {pendingChoice === 'custom' ? 'Pripremamo plaćanje...' : 'Nastavi na plaćanje'}
+                {pendingChoice === 'custom' ? 'Pripremamo placanje...' : 'Nastavi na placanje'}
               </button>
             </div>
           </form>
@@ -613,6 +857,20 @@ export default function OrderPage() {
           {errorMessage}
         </div>
       )}
+
+      <button
+        type="button"
+        className={`${styles.mobileScrollButton} ${
+          showScrollButton ? styles.mobileScrollButtonVisible : ''
+        }`}
+        onClick={scrollToOrderSummary}
+        aria-label="Idi do nastavka porudzbine"
+        aria-hidden={!showScrollButton}
+        tabIndex={showScrollButton ? 0 : -1}
+      >
+        <span>Nastavi</span>
+        <FaArrowDown aria-hidden="true" />
+      </button>
     </main>
   );
 }

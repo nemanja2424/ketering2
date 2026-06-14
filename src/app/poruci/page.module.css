@@ -199,6 +199,12 @@
   .modeIndicator,
   .menuCard,
   .variantButton,
+  .planButton,
+  .resetPlanButton,
+  .editMealButton,
+  .dayVariantButton,
+  .subscriptionSummary button,
+  .mobileScrollButton,
   .checkboxOption,
   .customSummary button,
   .secondaryAction,
@@ -429,6 +435,400 @@
   color: #566f2d;
   font-size: 0.86rem;
   font-weight: 800;
+}
+
+.subscriptionForm {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.planPicker {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.planButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 64px;
+  padding: 0.85rem 1rem;
+  color: #566f2d;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid rgba(86, 111, 45, 0.22);
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 14px 30px rgba(1, 18, 9, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.planButton span {
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.planButton strong {
+  color: inherit;
+  font-size: 0.92rem;
+  font-weight: 900;
+  text-align: right;
+}
+
+.planButton:hover,
+.activePlan {
+  color: #f6e1ca;
+  background: #566f2d;
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(86, 111, 45, 0.18);
+}
+
+.planActions {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.resetPlanButton {
+  min-height: 40px;
+  padding: 0.55rem 0.85rem;
+  color: #566f2d;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(86, 111, 45, 0.22);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.resetPlanButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(1, 18, 9, 0.1);
+}
+
+.resetPlanButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.subscriptionLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  align-items: start;
+  gap: 1rem;
+}
+
+.calendarList {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.calendarCard {
+  display: grid;
+  grid-template-columns: minmax(150px, 190px) minmax(0, 1fr);
+  gap: 1rem;
+  min-width: 0;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(86, 111, 45, 0.18);
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(1, 18, 9, 0.07);
+}
+
+.calendarDate {
+  position: sticky;
+  top: 150px;
+  align-self: start;
+  min-width: 0;
+  padding: 0.9rem;
+  background: rgba(246, 225, 202, 0.72);
+  border: 1px solid rgba(86, 111, 45, 0.18);
+  border-radius: 10px;
+}
+
+.calendarDate span,
+.subscriptionSummary > span,
+.summaryRows span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #566f2d;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.calendarDate strong {
+  color: #011209;
+  font-size: 1.2rem;
+  font-weight: 950;
+}
+
+.calendarMeals {
+  display: grid;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.selectedMealCard {
+  display: grid;
+  gap: 0.8rem;
+  min-width: 0;
+  padding: 0.85rem;
+  background: rgba(246, 225, 202, 0.58);
+  border: 1px solid rgba(86, 111, 45, 0.18);
+  border-radius: 10px;
+}
+
+.selectedMealTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.selectedMealTop div {
+  min-width: 0;
+}
+
+.selectedMealTop span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #566f2d;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.selectedMealTop strong {
+  display: block;
+  color: #011209;
+  font-size: 1rem;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.selectedMealTop em {
+  flex: 0 0 auto;
+  color: #566f2d;
+  font-size: 0.95rem;
+  font-style: normal;
+  font-weight: 950;
+  text-align: right;
+}
+
+.editMealButton {
+  justify-self: start;
+  min-height: 38px;
+  padding: 0.5rem 0.8rem;
+  color: #f6e1ca;
+  background: #566f2d;
+  border: 1px solid #566f2d;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.editMealButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(86, 111, 45, 0.16);
+}
+
+.mealPickerPanel {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  max-height: 0;
+  padding: 0 0.75rem;
+  background: rgba(255, 255, 255, 0.34);
+  border: 1px dashed rgba(86, 111, 45, 0.28);
+  border-radius: 10px;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    max-height 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+    gap 0.26s cubic-bezier(0.23, 1, 0.32, 1),
+    padding 0.26s cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 0.18s ease,
+    transform 0.26s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.mealPickerOpen {
+  gap: 0.75rem;
+  max-height: 1400px;
+  padding: 0.75rem;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dayMealOption {
+  min-width: 0;
+  padding: 0.8rem;
+  background: rgba(246, 225, 202, 0.48);
+  border: 1px solid rgba(86, 111, 45, 0.14);
+  border-radius: 10px;
+}
+
+.selectedDayMeal {
+  border-color: rgba(86, 111, 45, 0.42);
+  box-shadow: inset 0 0 0 1px rgba(86, 111, 45, 0.1);
+}
+
+.dayMealHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.65rem;
+  color: #566f2d;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dayMealHeader svg {
+  flex: 0 0 auto;
+  font-size: 0.82rem;
+}
+
+.dayVariants {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.dayVariantButton {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  min-width: 0;
+  min-height: 132px;
+  padding: 0.75rem;
+  color: #2d2a24;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid rgba(86, 111, 45, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.dayVariantButton:hover,
+.selectedVariant {
+  background: #566f2d;
+  border-color: #566f2d;
+  color: #f6e1ca;
+  transform: translateY(-1px);
+}
+
+.dayVariantButton span {
+  color: inherit;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dayVariantButton p {
+  margin: 0;
+  color: inherit;
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.dayVariantButton strong {
+  align-self: end;
+  color: inherit;
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+.subscriptionSummary {
+  position: sticky;
+  top: 150px;
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+  padding: 1rem;
+  color: #f6e1ca;
+  background: rgba(86, 111, 45, 0.95);
+  border: 1px solid rgba(246, 225, 202, 0.22);
+  border-radius: 12px;
+  box-shadow: 0 18px 44px rgba(1, 18, 9, 0.18);
+  backdrop-filter: blur(14px);
+}
+
+.subscriptionSummary > span,
+.summaryRows span {
+  color: rgba(246, 225, 202, 0.72);
+}
+
+.subscriptionSummary h3 {
+  margin: 0;
+  color: #f6e1ca;
+  font-size: 1.7rem;
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.summaryRows {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.summaryRows div {
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(246, 225, 202, 0.18);
+}
+
+.summaryRows strong {
+  color: #f6e1ca;
+  font-size: 1.05rem;
+  font-weight: 950;
+}
+
+.subscriptionSummary button {
+  min-height: 50px;
+  padding: 0.75rem 1rem;
+  color: #011209;
+  background: #d4a574;
+  border: 1px solid #d4a574;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.subscriptionSummary button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(1, 18, 9, 0.18);
+}
+
+.subscriptionSummary button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+  box-shadow: none;
 }
 
 .errorBox {
@@ -725,7 +1125,86 @@
   box-shadow: none;
 }
 
+.mobileScrollButton {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  z-index: 9999;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-width: 52px;
+  height: 52px;
+  padding: 0 0.95rem;
+  color: #f6e1ca;
+  background: #011209;
+  border: 1px solid rgba(246, 225, 202, 0.28);
+  border-radius: 999px;
+  box-shadow: 0 16px 38px rgba(1, 18, 9, 0.28);
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 950;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.94);
+  text-transform: uppercase;
+  transition:
+    opacity 0.2s ease,
+    transform 0.24s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.2s ease;
+}
+
+.mobileScrollButtonVisible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  animation: mobileScrollPulse 1.6s ease-out 0.18s 1;
+}
+
+.mobileScrollButton svg {
+  flex: 0 0 auto;
+}
+
+.mobileScrollButton:active {
+  transform: translateY(1px);
+}
+
+@keyframes mobileScrollPulse {
+  0% {
+    box-shadow: 0 16px 38px rgba(1, 18, 9, 0.28);
+  }
+  45% {
+    box-shadow: 0 16px 38px rgba(1, 18, 9, 0.28), 0 0 0 10px rgba(1, 18, 9, 0.1);
+  }
+  100% {
+    box-shadow: 0 16px 38px rgba(1, 18, 9, 0.28), 0 0 0 18px rgba(1, 18, 9, 0);
+  }
+}
+
+@media (min-width: 1025px) {
+  .mobileScrollButton {
+    display: none;
+  }
+}
+
 @media (max-width: 1180px) {
+  .subscriptionLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .subscriptionSummary {
+    position: sticky;
+    bottom: 1rem;
+    top: auto;
+    z-index: 10;
+  }
+
+  .summaryRows {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .customSections {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -749,6 +1228,22 @@
     grid-template-columns: 1fr;
   }
 
+  .planPicker {
+    grid-template-columns: 1fr;
+  }
+
+  .calendarCard {
+    grid-template-columns: 1fr;
+  }
+
+  .calendarDate {
+    position: static;
+  }
+
+  .summaryRows {
+    grid-template-columns: 1fr;
+  }
+
   .customSummary {
     grid-template-columns: 1fr;
     justify-content: stretch;
@@ -769,6 +1264,22 @@
   .variantActions {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .dayVariants {
+    grid-template-columns: 1fr;
+  }
+
+  .dayVariantButton {
+    min-height: auto;
+  }
+
+  .selectedMealTop {
+    flex-direction: column;
+  }
+
+  .selectedMealTop em {
+    text-align: left;
   }
 
   .modeBar {
@@ -848,5 +1359,27 @@
 
   .variantButton strong {
     text-align: left;
+  }
+
+  .planButton {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .planButton strong {
+    text-align: left;
+  }
+
+  .calendarCard,
+  .customMeal {
+    padding: 0.85rem;
+  }
+
+  .editMealButton {
+    width: 100%;
+  }
+
+  .subscriptionSummary {
+    bottom: 0.75rem;
   }
 }

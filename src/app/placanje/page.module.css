@@ -174,7 +174,8 @@
 .field input,
 .field select,
 .field textarea,
-.pickerButton {
+.pickerButton,
+.readOnlyValue {
   width: 100%;
   min-height: 48px;
   padding: 0.75rem 0.85rem;
@@ -186,6 +187,15 @@
   font-weight: 650;
   text-transform: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.readOnlyValue {
+  display: flex;
+  align-items: center;
+  color: #566f2d;
+  background: rgba(86, 111, 45, 0.08);
+  border-color: rgba(86, 111, 45, 0.18);
+  font-weight: 850;
 }
 
 .pickerButton {
@@ -683,7 +693,7 @@
   text-transform: uppercase;
 }
 
-@media (max-width: 920px) {
+@media (max-width: 1024px) {
   .page {
     padding-top: 68px;
   }
@@ -744,4 +754,5 @@
   .field textarea {
     transition: none;
   }
+
 }

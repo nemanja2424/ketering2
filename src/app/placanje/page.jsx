@@ -81,6 +81,10 @@ function getOrderTitle(order) {
     return order.menu?.name || 'Dnevni meni';
   }
 
+  if (order.type === 'subscription') {
+    return order.eventType || 'Pretplata na obroke';
+  }
+
   return order.eventType || 'Personalizovani obrok';
 }
 
@@ -99,7 +103,28 @@ function getOrderItems(order) {
       : [];
   }
 
+  if (order.type === 'subscription') {
+    return Array.isArray(order.selectedDishes)
+      ? order.selectedDishes.map((dish) => `${dish.formattedDate}: ${dish.description}`)
+      : [];
+  }
+
   return [];
+}
+
+function getSubscriptionFirstDate(order) {
+  if (order?.type !== 'subscription') {
+    return '';
+  }
+
+  const subscriptionItems = Array.isArray(order.subscription?.items) ? order.subscription.items : [];
+  const selectedDishes = Array.isArray(order.selectedDishes) ? order.selectedDishes : [];
+  const firstDate =
+    subscriptionItems.find((item) => item.date)?.date ||
+    selectedDishes.find((item) => item.date)?.date ||
+    '';
+
+  return firstDate;
 }
 
 function buildAddOnItems(addOns) {
@@ -179,6 +204,28 @@ function buildStandardItems(order, manualDescription, manualTotalRsd, addOns = [
     return [...customItems, ...addOnItems];
   }
 
+  if (order.type === 'subscription') {
+    const subscriptionItems = Array.isArray(order.selectedDishes)
+      ? order.selectedDishes.map((dish) => ({
+          id: dish.id,
+          name: `${dish.formattedDate ? `${dish.formattedDate} - ` : ''}${dish.description || dish.name}`,
+          category: 'Pretplata',
+          variant: dish.variant || null,
+          quantity: 1,
+          unitPriceRsd: Number(dish.priceRsdPerPerson || 0),
+          totalPriceRsd: Number(dish.priceRsdPerPerson || 0),
+          meta: {
+            deliveryDate: dish.date || null,
+            formattedDate: dish.formattedDate || '',
+            serviceDay: dish.serviceDay || '',
+            mealNumber: dish.mealNumber || null,
+          },
+        }))
+      : [];
+
+    return [...subscriptionItems, ...addOnItems];
+  }
+
   return addOnItems;
 }
 
@@ -234,7 +281,17 @@ function PaymentDraft() {
           throw new Error('Narudzbina nije pronadjena. Vratite se na porucivanje.');
         }
 
-        setOrder(JSON.parse(storedDraft));
+        const parsedDraft = JSON.parse(storedDraft);
+        const subscriptionFirstDate = getSubscriptionFirstDate(parsedDraft);
+
+        setOrder(parsedDraft);
+
+        if (subscriptionFirstDate) {
+          setForm((current) => ({
+            ...current,
+            datum: subscriptionFirstDate,
+          }));
+        }
       } catch (error) {
         setStatus({ type: 'error', message: error.message });
       } finally {
@@ -336,15 +393,19 @@ function PaymentDraft() {
     });
   };
 
+  const scrollToBottomOrder = () => {
+    bottomOrderRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  };
+
   const handleTopOrderClick = () => {
     if (!isMobile) {
       return;
     }
 
-    bottomOrderRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-    });
+    scrollToBottomOrder();
   };
 
   const handleSubmit = async (event) => {
@@ -370,7 +431,13 @@ function PaymentDraft() {
         porudzbina: {
           schemaVersion: 1,
           source: 'placanje',
-          type: order ? (order.type === 'custom' ? 'custom_meal_order' : 'meal_order') : 'manual_order',
+          type: order
+            ? order.type === 'custom'
+              ? 'custom_meal_order'
+              : order.type === 'subscription'
+                ? 'subscription_order'
+                : 'meal_order'
+            : 'manual_order',
           title: getOrderTitle(order),
           status: 'new',
           items: buildStandardItems(order, manualDescription, baseTotalRsd, addOns),
@@ -429,8 +496,9 @@ function PaymentDraft() {
   };
 
   return (
-    <section className={styles.shell}>
-      <div className={styles.hero}>
+    <>
+      <section className={styles.shell}>
+        <div className={styles.hero}>
         <Link href="/poruci" className={styles.backLink}>
           <FaArrowLeft aria-hidden="true" />
           Porucivanje
@@ -503,21 +571,27 @@ function PaymentDraft() {
             </label>
 
             <label className={styles.field}>
-              Datum *
-              <div className={styles.datePickerWrap}>
-                <button type="button" className={styles.pickerButton} onClick={openDatePicker}>
-                  {form.datum ? formatDate(form.datum) : 'dd.mm.yyyy'}
-                </button>
-                <input
-                  ref={dateInputRef}
-                  className={styles.hiddenDateInput}
-                  name="datum"
-                  type="date"
-                  value={form.datum}
-                  onChange={handleChange}
-                  tabIndex={-1}
-                />
-              </div>
+              {order?.type === 'subscription' ? 'Prva isporuka' : 'Datum *'}
+              {order?.type === 'subscription' ? (
+                <div className={styles.readOnlyValue}>
+                  {form.datum ? formatDate(form.datum) : 'Datum iz pretplate'}
+                </div>
+              ) : (
+                <div className={styles.datePickerWrap}>
+                  <button type="button" className={styles.pickerButton} onClick={openDatePicker}>
+                    {form.datum ? formatDate(form.datum) : 'dd.mm.yyyy'}
+                  </button>
+                  <input
+                    ref={dateInputRef}
+                    className={styles.hiddenDateInput}
+                    name="datum"
+                    type="date"
+                    value={form.datum}
+                    onChange={handleChange}
+                    tabIndex={-1}
+                  />
+                </div>
+              )}
             </label>
 
             <label className={styles.field}>
@@ -713,71 +787,73 @@ function PaymentDraft() {
             </div>
           )}
         </aside>
-      </div>
+        </div>
 
-      {activeAddOnCategory && (
-        <div
-          className={styles.modalBackdrop}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="add-on-modal-title"
-        >
-          <div className={styles.addOnModal}>
-            <div className={styles.modalHeader}>
-              <div>
-                <span>Dopuna korpe</span>
-                <h2 id="add-on-modal-title">{activeAddOnCategory.label}</h2>
+        {activeAddOnCategory && (
+          <div
+            className={styles.modalBackdrop}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="add-on-modal-title"
+          >
+            <div className={styles.addOnModal}>
+              <div className={styles.modalHeader}>
+                <div>
+                  <span>Dopuna korpe</span>
+                  <h2 id="add-on-modal-title">{activeAddOnCategory.label}</h2>
+                </div>
+                <button
+                  type="button"
+                  className={styles.closeModalButton}
+                  onClick={() => setActiveAddOnCategoryId(null)}
+                  aria-label="Zatvori"
+                >
+                  <FaTimes aria-hidden="true" />
+                </button>
               </div>
-              <button
-                type="button"
-                className={styles.closeModalButton}
-                onClick={() => setActiveAddOnCategoryId(null)}
-                aria-label="Zatvori"
-              >
-                <FaTimes aria-hidden="true" />
-              </button>
-            </div>
 
-            <div className={styles.addOnProductList}>
-              {activeAddOnCategory.products.map((product) => {
-                const quantity = getAddOnQuantity(product.id);
+              <div className={styles.addOnProductList}>
+                {activeAddOnCategory.products.map((product) => {
+                  const quantity = getAddOnQuantity(product.id);
 
-                return (
-                  <article key={product.id} className={styles.addOnProduct}>
-                    <div>
-                      <h3>{product.name}</h3>
-                      <span>{formatRsd(product.priceRsd)}</span>
-                    </div>
-                    <div className={styles.quantityControls}>
-                      <button
-                        type="button"
-                        onClick={() => updateAddOnQuantity(activeAddOnCategory, product, -1)}
-                        disabled={quantity === 0}
-                      >
-                        -
-                      </button>
-                      <strong>{quantity}</strong>
-                      <button
-                        type="button"
-                        onClick={() => updateAddOnQuantity(activeAddOnCategory, product, 1)}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
+                  return (
+                    <article key={product.id} className={styles.addOnProduct}>
+                      <div>
+                        <h3>{product.name}</h3>
+                        <span>{formatRsd(product.priceRsd)}</span>
+                      </div>
+                      <div className={styles.quantityControls}>
+                        <button
+                          type="button"
+                          onClick={() => updateAddOnQuantity(activeAddOnCategory, product, -1)}
+                          disabled={quantity === 0}
+                        >
+                          -
+                        </button>
+                        <strong>{quantity}</strong>
+                        <button
+                          type="button"
+                          onClick={() => updateAddOnQuantity(activeAddOnCategory, product, 1)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
 
-            <div className={styles.modalFooter}>
-              <span>Dopuna ukupno: {formatRsd(addOnTotalRsd)}</span>
-              <button type="button" onClick={() => setActiveAddOnCategoryId(null)}>
-                Sacuvaj dopunu
-              </button>
+              <div className={styles.modalFooter}>
+                <span>Dopuna ukupno: {formatRsd(addOnTotalRsd)}</span>
+                <button type="button" onClick={() => setActiveAddOnCategoryId(null)}>
+                  Sacuvaj dopunu
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </section>
+        )}
+      </section>
+
+    </>
   );
 }
