@@ -185,6 +185,14 @@ function formatRsd(value) {
   return `${value.toLocaleString('sr-RS')} RSD`;
 }
 
+function createDraftId() {
+  if (globalThis.crypto?.randomUUID) {
+    return globalThis.crypto.randomUUID();
+  }
+
+  return `draft-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 function toDateInputValue(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -403,7 +411,7 @@ function OrderContent() {
     try {
       const now = new Date().toISOString();
       const order = {
-        id: crypto.randomUUID(),
+        id: createDraftId(),
         status: 'draft',
         createdAt: now,
         updatedAt: now,
@@ -533,7 +541,7 @@ function OrderContent() {
     try {
       const now = new Date().toISOString();
       const order = {
-        id: crypto.randomUUID(),
+        id: createDraftId(),
         status: 'draft',
         createdAt: now,
         updatedAt: now,
