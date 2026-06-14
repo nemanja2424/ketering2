@@ -58,9 +58,11 @@ export default function KeteringPage() {
     ime: '',
     email: '',
     br_tel: '',
+    broj_osoba: '',
     datum: '',
     vreme: '',
     mesto: '',
+    napomena: '',
   });
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -114,6 +116,8 @@ export default function KeteringPage() {
         throw new Error('Izaberite vreme u 24h formatu.');
       }
 
+      const guestCount = Math.max(1, Number(formData.broj_osoba || 1));
+
       const response = await fetch('/api/narudzbine', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -126,6 +130,7 @@ export default function KeteringPage() {
             type: 'catering_inquiry',
             title: selectedOffer.name,
             status: 'new',
+            guestCount,
             items: [
               {
                 id: selectedOffer.id,
@@ -138,6 +143,7 @@ export default function KeteringPage() {
                 meta: {
                   description: selectedOffer.description,
                   dishes: selectedOffer.items,
+                  guestCount,
                 },
               },
             ],
@@ -147,7 +153,7 @@ export default function KeteringPage() {
               discountRsd: 0,
               totalRsd: selectedOffer.price,
             },
-            customerNote: '',
+            customerNote: formData.napomena.trim(),
             internalNote: '',
             payment: {
               status: 'not_started',
@@ -182,9 +188,11 @@ export default function KeteringPage() {
         ime: '',
         email: '',
         br_tel: '',
+        broj_osoba: '',
         datum: '',
         vreme: '',
         mesto: '',
+        napomena: '',
       });
     } catch (error) {
       setStatus({ type: 'error', message: error.message });
@@ -260,6 +268,18 @@ export default function KeteringPage() {
               <input name="br_tel" value={formData.br_tel} onChange={handleChange} />
             </label>
             <label>
+              Broj osoba
+              <input
+                name="broj_osoba"
+                type="number"
+                min="1"
+                step="1"
+                value={formData.broj_osoba}
+                onChange={handleChange}
+                placeholder="Npr. 50"
+              />
+            </label>
+            <label>
               Datum
               <div className={styles.datePickerWrap}>
                 <button type="button" className={styles.pickerButton} onClick={openDatePicker}>
@@ -320,6 +340,16 @@ export default function KeteringPage() {
                 value={formData.mesto}
                 onChange={handleChange}
                 placeholder="Adresa ili lokacija događaja"
+              />
+            </label>
+            <label className={styles.fullWidth}>
+              Napomena kupca
+              <textarea
+                name="napomena"
+                rows="3"
+                value={formData.napomena}
+                onChange={handleChange}
+                placeholder="Posebni zahtevi, alergije, vreme postavke..."
               />
             </label>
           </div>

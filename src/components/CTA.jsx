@@ -1,7 +1,8 @@
 'use client';
 
-import styles from './CTA.module.css';
+import Link from 'next/link';
 import { useEffect, useRef } from 'react';
+import styles from './CTA.module.css';
 
 export default function CTA() {
   const ctaRef = useRef(null);
@@ -9,7 +10,7 @@ export default function CTA() {
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+      rootMargin: '0px 0px -50px 0px',
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -39,21 +40,24 @@ export default function CTA() {
       <div className={styles.overlay}></div>
       <div className={styles.container}>
         <div className={styles.content}>
-          <h2 className={styles.title}>Spreman za pravi ketering?</h2>
+          <h2 className={styles.title}>Spreman za sledeci obrok?</h2>
           <p className={styles.subtitle}>
-            Izaberite iz naših kurisnih menija ili kreirajte vlastiti.
+            Izaberi personalizovani meni, mesecni plan ili ketering za dogadjaj.
           </p>
           <p className={styles.description}>
-            Naši stručnjaci će vas voditi kroz ceo proces. Bilo da volite klasiku ili tražite nešto sasvim novo, imamo rešenje za vas.
+            Slozi obrok po meri, poruci pripremljeni plan ili posalji upit za veci dogadjaj.
           </p>
 
           <div className={styles.buttons}>
-            <button className={`${styles.button} ${styles.primary}`}>
-              Kreiraj prilagođeni meni
-            </button>
-            <a href="#" className={`${styles.button} ${styles.secondary}`}>
-              Pogledaj naše menije
-            </a>
+            <Link href="/poruci?tip=personalizovani" className={`${styles.button} ${styles.primary}`}>
+              Kreiraj svoj meni
+            </Link>
+            <Link href="/poruci" className={`${styles.button} ${styles.secondary}`}>
+              Mesecni plan
+            </Link>
+            <Link href="/ketering" className={`${styles.button} ${styles.secondary}`}>
+              Ketering
+            </Link>
           </div>
         </div>
       </div>

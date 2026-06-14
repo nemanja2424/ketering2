@@ -32,12 +32,15 @@ export default function Hero() {
 
           {/* Buttons */}
           <div className={styles.buttons}>
-            <button className={`${styles.button} ${styles.primary}`}>
+            <Link href="/poruci?tip=personalizovani" className={`${styles.button} ${styles.primary}`}>
               Kreiraj svoj meni
-            </button>
-            <button className={`${styles.button} ${styles.secondary}`}>
-              Vidi spremne menije
-            </button>
+            </Link>
+            <Link href="/poruci" className={`${styles.button} ${styles.secondary}`}>
+              Mesecni plan
+            </Link>
+            <Link href="/ketering" className={`${styles.button} ${styles.secondary}`}>
+              Ketering
+            </Link>
           </div>
         </div>
       </div>

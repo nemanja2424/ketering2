@@ -5,23 +5,16 @@ import {
   FaCalendarAlt,
   FaClock,
   FaEnvelope,
+  FaFilter,
   FaMapMarkerAlt,
   FaPhoneAlt,
   FaReceipt,
   FaSignOutAlt,
   FaSyncAlt,
   FaUser,
+  FaUsers,
 } from 'react-icons/fa';
 import styles from './page.module.css';
-
-const STATUS_LABELS = {
-  new: 'Novo',
-  confirmed: 'Potvrdjeno',
-  in_preparation: 'U pripremi',
-  ready: 'Spremno',
-  completed: 'Zavrseno',
-  cancelled: 'Otkazano',
-};
 
 const PAYMENT_LABELS = {
   not_started: 'Nije pokrenuto',
@@ -85,6 +78,49 @@ function formatDateTime(value) {
   }).format(date);
 }
 
+function getLocalDateKey(value = new Date()) {
+  const date = value instanceof Date ? value : new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+function getOrderDateKey(order) {
+  if (typeof order.datum === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(order.datum)) {
+    return order.datum;
+  }
+
+  return getLocalDateKey(order.datum);
+}
+
+function getSearchText(order) {
+  const details = order.details;
+  const itemText = details.items.map((item) => `${item.name} ${item.category || ''}`).join(' ');
+
+  return [
+    order.id,
+    order.ime,
+    order.email,
+    order.br_tel,
+    order.mesto,
+    details.title,
+    details.type,
+    details.guestCount,
+    details.customerNote,
+    itemText,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+}
+
 function normalizeItems(porudzbina) {
   if (Array.isArray(porudzbina?.items)) {
     return porudzbina.items;
@@ -123,6 +159,12 @@ function normalizeOrder(narudzbina) {
   const items = normalizeItems(porudzbina);
   const totalRsd = Number(porudzbina.totals?.totalRsd || narudzbina.cena || 0);
   const paymentStatus = porudzbina.payment?.status || (narudzbina.placeno ? 'paid' : 'not_started');
+  const guestCount = Number(
+    porudzbina.guestCount ||
+      porudzbina.brOsoba ||
+      items.find((item) => item.meta?.guestCount)?.meta?.guestCount ||
+      0
+  );
 
   return {
     id: narudzbina.id,
@@ -137,6 +179,7 @@ function normalizeOrder(narudzbina) {
     source: porudzbina.source || porudzbina.kanal || 'legacy',
     items,
     totalRsd,
+    guestCount: Number.isFinite(guestCount) && guestCount > 0 ? guestCount : null,
     paymentStatus,
     customerNote: porudzbina.customerNote || porudzbina.napomena || '',
     internalNote: porudzbina.internalNote || '',
@@ -154,6 +197,10 @@ export default function AdminPage() {
   const [error, setError] = useState('');
   const [narudzbine, setNarudzbine] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [paymentFilter, setPaymentFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showPastOrders, setShowPastOrders] = useState(false);
 
   const fetchNarudzbine = useCallback(async () => {
     setLoadingData(true);
@@ -200,13 +247,50 @@ export default function AdminPage() {
     [narudzbine]
   );
 
+  const visibleOrders = useMemo(() => {
+    const todayKey = getLocalDateKey();
+    const normalizedSearch = searchQuery.trim().toLowerCase();
+
+    return normalizedOrders
+      .filter((order) => {
+        const orderDateKey = getOrderDateKey(order);
+        const isPast = orderDateKey && orderDateKey < todayKey;
+
+        if (!showPastOrders && isPast) {
+          return false;
+        }
+
+        if (typeFilter !== 'all' && order.details.type !== typeFilter) {
+          return false;
+        }
+
+        if (paymentFilter !== 'all' && order.details.paymentStatus !== paymentFilter) {
+          return false;
+        }
+
+        if (normalizedSearch && !getSearchText(order).includes(normalizedSearch)) {
+          return false;
+        }
+
+        return true;
+      })
+      .sort((first, second) => {
+        const firstDate = `${getOrderDateKey(first)} ${formatTime(first.vreme)}`;
+        const secondDate = `${getOrderDateKey(second)} ${formatTime(second.vreme)}`;
+
+        return showPastOrders
+          ? secondDate.localeCompare(firstDate)
+          : firstDate.localeCompare(secondDate);
+      });
+  }, [normalizedOrders, paymentFilter, searchQuery, showPastOrders, typeFilter]);
+
   const stats = useMemo(() => {
-    const total = normalizedOrders.length;
-    const unpaid = normalizedOrders.filter((order) => order.details.paymentStatus !== 'paid').length;
-    const revenue = normalizedOrders.reduce((sum, order) => sum + order.details.totalRsd, 0);
+    const total = visibleOrders.length;
+    const unpaid = visibleOrders.filter((order) => order.details.paymentStatus !== 'paid').length;
+    const revenue = visibleOrders.reduce((sum, order) => sum + order.details.totalRsd, 0);
 
     return { total, unpaid, revenue };
-  }, [normalizedOrders]);
+  }, [visibleOrders]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -313,7 +397,7 @@ export default function AdminPage() {
 
       <section className={styles.statsGrid} aria-label="Pregled narudzbina">
         <div>
-          <span>Ukupno</span>
+          <span>Prikazano</span>
           <strong>{stats.total}</strong>
         </div>
         <div>
@@ -326,14 +410,64 @@ export default function AdminPage() {
         </div>
       </section>
 
+      <section className={styles.filtersPanel} aria-label="Filteri narudzbina">
+        <div className={styles.filtersTitle}>
+          <FaFilter aria-hidden="true" />
+          <span>Filteri</span>
+        </div>
+
+        <div className={styles.filtersGrid}>
+          <label>
+            Vrsta
+            <select value={typeFilter} onChange={(event) => setTypeFilter(event.target.value)}>
+              <option value="all">Sve vrste</option>
+              <option value="catering_inquiry">Ketering</option>
+              <option value="meal_order">Pripremljen meni</option>
+              <option value="custom_meal_order">Personalizovan meni</option>
+              <option value="manual_order">Rucni unos</option>
+            </select>
+          </label>
+
+          <label>
+            Placanje
+            <select value={paymentFilter} onChange={(event) => setPaymentFilter(event.target.value)}>
+              <option value="all">Sva placanja</option>
+              <option value="not_started">Nije pokrenuto</option>
+              <option value="pending">Na cekanju</option>
+              <option value="paid">Placeno</option>
+              <option value="failed">Neuspesno</option>
+              <option value="refunded">Refundirano</option>
+            </select>
+          </label>
+
+          <label>
+            Pretraga
+            <input
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Ime, telefon, adresa, stavka..."
+            />
+          </label>
+
+          <label className={styles.toggleFilter}>
+            <input
+              type="checkbox"
+              checked={showPastOrders}
+              onChange={(event) => setShowPastOrders(event.target.checked)}
+            />
+            <span>Prikazi istoriju</span>
+          </label>
+        </div>
+      </section>
+
       <section className={styles.container}>
         {loadingData ? (
           <p className={styles.emptyState}>Ucitavanje narudzbina...</p>
-        ) : normalizedOrders.length === 0 ? (
+        ) : visibleOrders.length === 0 ? (
           <p className={styles.emptyState}>Nema narudzbina.</p>
         ) : (
           <div className={styles.ordersList}>
-            {normalizedOrders.map((narudzbina) => (
+            {visibleOrders.map((narudzbina) => (
               <OrderCard key={narudzbina.id} narudzbina={narudzbina} />
             ))}
           </div>
@@ -364,6 +498,7 @@ function OrderCard({ narudzbina }) {
         <InfoItem icon={<FaCalendarAlt />} label="Datum" value={formatDate(narudzbina.datum)} />
         <InfoItem icon={<FaClock />} label="Vreme" value={formatTime(narudzbina.vreme)} />
         <InfoItem icon={<FaMapMarkerAlt />} label="Mesto" value={narudzbina.mesto || '-'} />
+        <InfoItem icon={<FaUsers />} label="Broj osoba" value={details.guestCount || '-'} />
       </div>
 
       <div className={styles.orderBody}>

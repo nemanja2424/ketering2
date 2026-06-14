@@ -8,10 +8,11 @@ import {
   FaCalendarAlt,
   FaCheck,
   FaClock,
-  FaCreditCard,
   FaMapMarkerAlt,
   FaPhoneAlt,
+  FaPlus,
   FaReceipt,
+  FaTimes,
   FaUser,
 } from 'react-icons/fa';
 import styles from './page.module.css';
@@ -27,6 +28,36 @@ const INITIAL_FORM = {
 };
 
 const ORDER_FORM_ID = 'placanje-order-form';
+
+const ADD_ON_CATEGORIES = [
+  {
+    id: 'potaz',
+    label: 'Potaz',
+    products: [
+      { id: 'potaz-bundeva', name: 'Potaz od bundeve', priceRsd: 320 },
+      { id: 'potaz-brokoli', name: 'Potaz od brokolija', priceRsd: 340 },
+      { id: 'potaz-pecurke', name: 'Potaz od pecuraka', priceRsd: 360 },
+    ],
+  },
+  {
+    id: 'deserti',
+    label: 'Deserti',
+    products: [
+      { id: 'desert-protein-kuglice', name: 'Protein kuglice', priceRsd: 290 },
+      { id: 'desert-cia-puding', name: 'Cia puding', priceRsd: 360 },
+      { id: 'desert-cheesecake', name: 'Mini cheesecake', priceRsd: 420 },
+    ],
+  },
+  {
+    id: 'smuti',
+    label: 'Smuti',
+    products: [
+      { id: 'smuti-zeleni', name: 'Zeleni smuti', priceRsd: 390 },
+      { id: 'smuti-bobice', name: 'Smuti sa bobicama', priceRsd: 420 },
+      { id: 'smuti-protein', name: 'Protein smuti', priceRsd: 480 },
+    ],
+  },
+];
 
 function formatRsd(value) {
   return `${Number(value || 0).toLocaleString('sr-RS')} RSD`;
@@ -71,7 +102,25 @@ function getOrderItems(order) {
   return [];
 }
 
-function buildStandardItems(order, manualDescription, manualTotalRsd) {
+function buildAddOnItems(addOns) {
+  return addOns.map((item) => ({
+    id: item.id,
+    name: item.name,
+    category: item.categoryLabel,
+    variant: null,
+    quantity: item.quantity,
+    unitPriceRsd: item.priceRsd,
+    totalPriceRsd: item.priceRsd * item.quantity,
+    meta: {
+      source: 'dopuna',
+      categoryId: item.categoryId,
+    },
+  }));
+}
+
+function buildStandardItems(order, manualDescription, manualTotalRsd, addOns = []) {
+  const addOnItems = buildAddOnItems(addOns);
+
   if (!order) {
     const totalPriceRsd = Number(manualTotalRsd || 0);
 
@@ -86,6 +135,7 @@ function buildStandardItems(order, manualDescription, manualTotalRsd) {
         totalPriceRsd,
         meta: {},
       },
+      ...addOnItems,
     ];
   }
 
@@ -105,11 +155,12 @@ function buildStandardItems(order, manualDescription, manualTotalRsd) {
           dishes: Array.isArray(order.menu?.items) ? order.menu.items : [],
         },
       },
+      ...addOnItems,
     ];
   }
 
   if (order.type === 'custom') {
-    return Array.isArray(order.selectedDishes)
+    const customItems = Array.isArray(order.selectedDishes)
       ? order.selectedDishes.map((dish) => ({
           id: `${dish.mealId || 'meal'}-${dish.id}`,
           name: dish.name,
@@ -124,9 +175,11 @@ function buildStandardItems(order, manualDescription, manualTotalRsd) {
           },
         }))
       : [];
+
+    return [...customItems, ...addOnItems];
   }
 
-  return [];
+  return addOnItems;
 }
 
 export default function PlacanjePage() {
@@ -162,6 +215,8 @@ function PaymentDraft() {
   const [status, setStatus] = useState({ type: '', message: '' });
   const [createdOrder, setCreatedOrder] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [activeAddOnCategoryId, setActiveAddOnCategoryId] = useState(null);
+  const [addOns, setAddOns] = useState([]);
 
   useEffect(() => {
     if (!hasDraft) {
@@ -207,7 +262,10 @@ function PaymentDraft() {
   }, []);
 
   const orderItems = useMemo(() => getOrderItems(order), [order]);
-  const totalRsd = order ? Number(order.totalRsd || 0) : Number(manualTotal || 0);
+  const activeAddOnCategory = ADD_ON_CATEGORIES.find((category) => category.id === activeAddOnCategoryId);
+  const addOnTotalRsd = addOns.reduce((sum, item) => sum + item.priceRsd * item.quantity, 0);
+  const baseTotalRsd = order ? Number(order.totalRsd || 0) : Number(manualTotal || 0);
+  const totalRsd = baseTotalRsd + addOnTotalRsd;
   const canSubmit = Boolean(
     !submitting &&
       !orderLoading &&
@@ -247,6 +305,37 @@ function PaymentDraft() {
     }
   };
 
+  const getAddOnQuantity = (productId) => {
+    return addOns.find((item) => item.id === productId)?.quantity || 0;
+  };
+
+  const updateAddOnQuantity = (category, product, change) => {
+    setAddOns((current) => {
+      const existing = current.find((item) => item.id === product.id);
+      const nextQuantity = Math.max(0, (existing?.quantity || 0) + change);
+
+      if (nextQuantity === 0) {
+        return current.filter((item) => item.id !== product.id);
+      }
+
+      if (existing) {
+        return current.map((item) =>
+          item.id === product.id ? { ...item, quantity: nextQuantity } : item
+        );
+      }
+
+      return [
+        ...current,
+        {
+          ...product,
+          quantity: nextQuantity,
+          categoryId: category.id,
+          categoryLabel: category.label,
+        },
+      ];
+    });
+  };
+
   const handleTopOrderClick = () => {
     if (!isMobile) {
       return;
@@ -284,7 +373,7 @@ function PaymentDraft() {
           type: order ? (order.type === 'custom' ? 'custom_meal_order' : 'meal_order') : 'manual_order',
           title: getOrderTitle(order),
           status: 'new',
-          items: buildStandardItems(order, manualDescription, totalRsd),
+          items: buildStandardItems(order, manualDescription, baseTotalRsd, addOns),
           totals: {
             subtotalRsd: totalRsd,
             deliveryRsd: 0,
@@ -329,6 +418,8 @@ function PaymentDraft() {
       setForm(INITIAL_FORM);
       setManualDescription('');
       setManualTotal('');
+      setAddOns([]);
+      setActiveAddOnCategoryId(null);
       sessionStorage.removeItem('pendingOrderDraft');
     } catch (error) {
       setStatus({ type: 'error', message: error.message });
@@ -550,6 +641,22 @@ function PaymentDraft() {
                 <p className={styles.emptyState}>Unesite opis narudzbine u formi.</p>
               )}
 
+              {addOns.length > 0 && (
+                <div className={styles.addOnSummary}>
+                  <span>Dopuna narudzbine</span>
+                  <ul>
+                    {addOns.map((item) => (
+                      <li key={item.id}>
+                        <span>
+                          {item.quantity}x {item.name}
+                        </span>
+                        <strong>{formatRsd(item.priceRsd * item.quantity)}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               <div className={styles.metaList}>
                 <div>
                   <FaCalendarAlt aria-hidden="true" />
@@ -581,12 +688,22 @@ function PaymentDraft() {
             </>
           )}
 
-          <div className={styles.paymentSlot}>
-            <div>
-              <FaCreditCard aria-hidden="true" />
-              <strong>Online placanje kasnije</strong>
+          <div className={styles.addOnPanel}>
+            <div className={styles.addOnPanelHeader}>
+              <FaPlus aria-hidden="true" />
+              <strong>Dopuni narudzbinu</strong>
             </div>
-            <p>Podaci se cuvaju sa payment statusom, providerom i valutom, spremno za Stripe ili drugi servis.</p>
+            <div className={styles.addOnButtons}>
+              {ADD_ON_CATEGORIES.map((category) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => setActiveAddOnCategoryId(category.id)}
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {createdOrder && (
@@ -597,6 +714,70 @@ function PaymentDraft() {
           )}
         </aside>
       </div>
+
+      {activeAddOnCategory && (
+        <div
+          className={styles.modalBackdrop}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="add-on-modal-title"
+        >
+          <div className={styles.addOnModal}>
+            <div className={styles.modalHeader}>
+              <div>
+                <span>Dopuna korpe</span>
+                <h2 id="add-on-modal-title">{activeAddOnCategory.label}</h2>
+              </div>
+              <button
+                type="button"
+                className={styles.closeModalButton}
+                onClick={() => setActiveAddOnCategoryId(null)}
+                aria-label="Zatvori"
+              >
+                <FaTimes aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className={styles.addOnProductList}>
+              {activeAddOnCategory.products.map((product) => {
+                const quantity = getAddOnQuantity(product.id);
+
+                return (
+                  <article key={product.id} className={styles.addOnProduct}>
+                    <div>
+                      <h3>{product.name}</h3>
+                      <span>{formatRsd(product.priceRsd)}</span>
+                    </div>
+                    <div className={styles.quantityControls}>
+                      <button
+                        type="button"
+                        onClick={() => updateAddOnQuantity(activeAddOnCategory, product, -1)}
+                        disabled={quantity === 0}
+                      >
+                        -
+                      </button>
+                      <strong>{quantity}</strong>
+                      <button
+                        type="button"
+                        onClick={() => updateAddOnQuantity(activeAddOnCategory, product, 1)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className={styles.modalFooter}>
+              <span>Dopuna ukupno: {formatRsd(addOnTotalRsd)}</span>
+              <button type="button" onClick={() => setActiveAddOnCategoryId(null)}>
+                Sacuvaj dopunu
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

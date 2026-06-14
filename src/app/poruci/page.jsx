@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './page.module.css';
 import { FaCheck, FaLeaf, FaUtensils } from 'react-icons/fa';
 
@@ -188,8 +188,11 @@ function formatRsd(value) {
 
 export default function OrderPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const modeSwipe = useRef(null);
-  const [mode, setMode] = useState('daily');
+  const [mode, setMode] = useState(
+    searchParams.get('tip') === 'personalizovani' ? 'custom' : 'daily'
+  );
   const [pendingChoice, setPendingChoice] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [customMeals, setCustomMeals] = useState([{ id: 1, selected: new Set() }]);

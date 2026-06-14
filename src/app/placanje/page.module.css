@@ -351,6 +351,46 @@
   line-height: 1.4;
 }
 
+.addOnSummary {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.8rem;
+  background: rgba(86, 111, 45, 0.1);
+  border: 1px solid rgba(86, 111, 45, 0.18);
+  border-radius: 8px;
+}
+
+.addOnSummary > span {
+  color: #566f2d;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.addOnSummary ul {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.addOnSummary li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #2f2c26;
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.addOnSummary strong {
+  color: #566f2d;
+  text-align: right;
+  white-space: nowrap;
+}
+
 .emptyState {
   margin: 0;
   padding: 1rem;
@@ -435,7 +475,7 @@
   opacity: 0.54;
 }
 
-.paymentSlot {
+.addOnPanel {
   display: grid;
   gap: 0.65rem;
   padding: 1rem;
@@ -444,24 +484,43 @@
   border-radius: 8px;
 }
 
-.paymentSlot div {
+.addOnPanelHeader {
   display: flex;
   align-items: center;
   gap: 0.55rem;
   color: #566f2d;
 }
 
-.paymentSlot strong {
+.addOnPanelHeader strong {
   font-size: 0.94rem;
   font-weight: 950;
 }
 
-.paymentSlot p {
-  margin: 0;
-  color: #4e4a40;
-  font-size: 0.88rem;
-  font-weight: 700;
-  line-height: 1.5;
+.addOnButtons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.addOnButtons button {
+  min-height: 42px;
+  padding: 0.6rem 0.7rem;
+  color: #566f2d;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(86, 111, 45, 0.22);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.addOnButtons button:hover {
+  color: #f8eadb;
+  background: #566f2d;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(86, 111, 45, 0.16);
 }
 
 .savedBox {
@@ -475,6 +534,153 @@
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 900;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(1, 18, 9, 0.52);
+}
+
+.addOnModal {
+  width: min(100%, 560px);
+  max-height: min(720px, calc(100vh - 2rem));
+  overflow: auto;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  color: #11170f;
+  background: #f8eadb;
+  border: 1px solid rgba(86, 111, 45, 0.22);
+  border-radius: 8px;
+  box-shadow: 0 24px 80px rgba(1, 18, 9, 0.28);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(86, 111, 45, 0.16);
+}
+
+.modalHeader span {
+  display: block;
+  margin-bottom: 0.22rem;
+  color: #566f2d;
+  font-size: 0.74rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  line-height: 1.1;
+  font-weight: 950;
+}
+
+.closeModalButton {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  color: #566f2d;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(86, 111, 45, 0.22);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.addOnProductList {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.addOnProduct {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(86, 111, 45, 0.14);
+  border-radius: 8px;
+}
+
+.addOnProduct h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.addOnProduct span {
+  color: #566f2d;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.quantityControls {
+  display: grid;
+  grid-template-columns: 36px 34px 36px;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.quantityControls button {
+  width: 36px;
+  height: 36px;
+  color: #f8eadb;
+  background: #566f2d;
+  border: 1px solid #566f2d;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 950;
+}
+
+.quantityControls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.quantityControls strong {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 950;
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(86, 111, 45, 0.16);
+}
+
+.modalFooter span {
+  color: #11170f;
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+.modalFooter button {
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  color: #11170f;
+  background: #d4a574;
+  border: 1px solid #d4a574;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 950;
+  text-transform: uppercase;
 }
 
 @media (max-width: 920px) {
@@ -512,6 +718,19 @@
     text-align: left;
   }
 
+  .addOnButtons {
+    grid-template-columns: 1fr;
+  }
+
+  .modalFooter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .modalFooter button {
+    width: 100%;
+  }
+
   .hero h1 {
     font-size: clamp(2rem, 12vw, 3rem);
   }
@@ -519,6 +738,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .submitRow button,
+  .addOnButtons button,
+  .totalBox button,
   .field input,
   .field textarea {
     transition: none;

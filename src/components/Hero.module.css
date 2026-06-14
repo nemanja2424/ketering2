@@ -100,6 +100,9 @@
 }
 
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 50px;
   padding: 0 1.35rem;
   border: 1px solid transparent;
