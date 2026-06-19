@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { FaPlus, FaTimes } from 'react-icons/fa';
 import styles from './page.module.css';
 
 const OFFERS = [
@@ -38,6 +39,36 @@ const OFFERS = [
   },
 ];
 
+const ADD_ON_CATEGORIES = [
+  {
+    id: 'potaz',
+    label: 'Potaz',
+    products: [
+      { id: 'potaz-bundeva', name: 'Potaz od bundeve', priceRsd: 320 },
+      { id: 'potaz-brokoli', name: 'Potaz od brokolija', priceRsd: 340 },
+      { id: 'potaz-pecurke', name: 'Potaz od pecuraka', priceRsd: 360 },
+    ],
+  },
+  {
+    id: 'deserti',
+    label: 'Deserti',
+    products: [
+      { id: 'desert-protein-kuglice', name: 'Protein kuglice', priceRsd: 290 },
+      { id: 'desert-cia-puding', name: 'Cia puding', priceRsd: 360 },
+      { id: 'desert-cheesecake', name: 'Mini cheesecake', priceRsd: 420 },
+    ],
+  },
+  {
+    id: 'smuti',
+    label: 'Smuti',
+    products: [
+      { id: 'smuti-zeleni', name: 'Zeleni smuti', priceRsd: 390 },
+      { id: 'smuti-bobice', name: 'Smuti sa bobicama', priceRsd: 420 },
+      { id: 'smuti-protein', name: 'Protein smuti', priceRsd: 480 },
+    ],
+  },
+];
+
 function formatRsd(value) {
   return `${value.toLocaleString('sr-RS')} RSD`;
 }
@@ -66,8 +97,18 @@ export default function KeteringPage() {
   });
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeAddOnCategoryId, setActiveAddOnCategoryId] = useState(null);
+  const [addOns, setAddOns] = useState([]);
 
   const selectedOffer = OFFERS.find((offer) => offer.id === selectedOfferId) || OFFERS[0];
+  const activeAddOnCategory = ADD_ON_CATEGORIES.find(
+    (category) => category.id === activeAddOnCategoryId
+  );
+  const addOnTotalRsd = addOns.reduce(
+    (sum, item) => sum + item.priceRsd * item.quantity,
+    0
+  );
+  const totalRsd = selectedOffer.price + addOnTotalRsd;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -102,6 +143,37 @@ export default function KeteringPage() {
     }
   };
 
+  const getAddOnQuantity = (productId) => {
+    return addOns.find((item) => item.id === productId)?.quantity || 0;
+  };
+
+  const updateAddOnQuantity = (category, product, change) => {
+    setAddOns((current) => {
+      const existing = current.find((item) => item.id === product.id);
+      const nextQuantity = Math.max(0, (existing?.quantity || 0) + change);
+
+      if (nextQuantity === 0) {
+        return current.filter((item) => item.id !== product.id);
+      }
+
+      if (existing) {
+        return current.map((item) =>
+          item.id === product.id ? { ...item, quantity: nextQuantity } : item
+        );
+      }
+
+      return [
+        ...current,
+        {
+          ...product,
+          quantity: nextQuantity,
+          categoryId: category.id,
+          categoryLabel: category.label,
+        },
+      ];
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -123,7 +195,7 @@ export default function KeteringPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          cena: selectedOffer.price,
+          cena: totalRsd,
           porudzbina: {
             schemaVersion: 1,
             source: 'ketering',
@@ -146,12 +218,25 @@ export default function KeteringPage() {
                   guestCount,
                 },
               },
+              ...addOns.map((item) => ({
+                id: item.id,
+                name: item.name,
+                category: item.categoryLabel,
+                variant: null,
+                quantity: item.quantity,
+                unitPriceRsd: item.priceRsd,
+                totalPriceRsd: item.priceRsd * item.quantity,
+                meta: {
+                  source: 'dopuna',
+                  categoryId: item.categoryId,
+                },
+              })),
             ],
             totals: {
-              subtotalRsd: selectedOffer.price,
+              subtotalRsd: totalRsd,
               deliveryRsd: 0,
               discountRsd: 0,
-              totalRsd: selectedOffer.price,
+              totalRsd,
             },
             customerNote: formData.napomena.trim(),
             internalNote: '',
@@ -159,7 +244,7 @@ export default function KeteringPage() {
               status: 'not_started',
               provider: null,
               providerPaymentId: null,
-              amountRsd: selectedOffer.price,
+              amountRsd: totalRsd,
               currency: 'RSD',
               paidAt: null,
             },
@@ -194,6 +279,8 @@ export default function KeteringPage() {
         mesto: '',
         napomena: '',
       });
+      setAddOns([]);
+      setActiveAddOnCategoryId(null);
     } catch (error) {
       setStatus({ type: 'error', message: error.message });
     } finally {
@@ -354,6 +441,40 @@ export default function KeteringPage() {
             </label>
           </div>
 
+          <div className={styles.addOnPanel}>
+            <div className={styles.addOnPanelHeader}>
+              <FaPlus aria-hidden="true" />
+              <strong>Dopuni narudzbinu</strong>
+            </div>
+            <div className={styles.addOnButtons}>
+              {ADD_ON_CATEGORIES.map((category) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => setActiveAddOnCategoryId(category.id)}
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {addOns.length > 0 && (
+            <div className={styles.addOnSummary}>
+              <span>Dodato u narudzbinu</span>
+              <ul>
+                {addOns.map((item) => (
+                  <li key={item.id}>
+                    <span>
+                      {item.quantity}x {item.name}
+                    </span>
+                    <strong>{formatRsd(item.priceRsd * item.quantity)}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
             {isSubmitting ? 'Šaljemo upit...' : 'Pošalji upit'}
           </button>
@@ -362,6 +483,70 @@ export default function KeteringPage() {
             <p className={`${styles.status} ${styles[status.type]}`}>{status.message}</p>
           )}
         </form>
+
+        {activeAddOnCategory && (
+          <div
+            className={styles.modalBackdrop}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="add-on-modal-title"
+          >
+            <div className={styles.addOnModal}>
+              <div className={styles.modalHeader}>
+                <div>
+                  <span>Dopuna korpe</span>
+                  <h2 id="add-on-modal-title">{activeAddOnCategory.label}</h2>
+                </div>
+                <button
+                  type="button"
+                  className={styles.closeModalButton}
+                  onClick={() => setActiveAddOnCategoryId(null)}
+                  aria-label="Zatvori"
+                >
+                  <FaTimes aria-hidden="true" />
+                </button>
+              </div>
+
+              <div className={styles.addOnProductList}>
+                {activeAddOnCategory.products.map((product) => {
+                  const quantity = getAddOnQuantity(product.id);
+
+                  return (
+                    <article key={product.id} className={styles.addOnProduct}>
+                      <div>
+                        <h3>{product.name}</h3>
+                        <span>{formatRsd(product.priceRsd)}</span>
+                      </div>
+                      <div className={styles.quantityControls}>
+                        <button
+                          type="button"
+                          onClick={() => updateAddOnQuantity(activeAddOnCategory, product, -1)}
+                          disabled={quantity === 0}
+                        >
+                          -
+                        </button>
+                        <strong>{quantity}</strong>
+                        <button
+                          type="button"
+                          onClick={() => updateAddOnQuantity(activeAddOnCategory, product, 1)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+
+              <div className={styles.modalFooter}>
+                <span>Dopuna ukupno: {formatRsd(addOnTotalRsd)}</span>
+                <button type="button" onClick={() => setActiveAddOnCategoryId(null)}>
+                  Sacuvaj dopunu
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
     </main>
   );

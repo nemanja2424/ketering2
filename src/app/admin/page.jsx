@@ -548,7 +548,7 @@ function OrderCard({ narudzbina }) {
                       <div>
                         <strong>{item.name}</strong>
                         <span>
-                          {item.category || 'Stavka'}
+                          {Number(item.quantity || 1)}x / {item.category || 'Stavka'}
                           {item.variant ? ` / ${item.variant}` : ''}
                           {item.meta?.mealLabel ? ` / ${item.meta.mealLabel}` : ''}
                           {item.meta?.formattedDate ? ` / Isporuka ${item.meta.formattedDate}` : ''}

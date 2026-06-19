@@ -696,6 +696,24 @@ function PaymentDraft() {
             <FaReceipt aria-hidden="true" />
           </div>
 
+          <div className={styles.addOnPanel}>
+            <div className={styles.addOnPanelHeader}>
+              <FaPlus aria-hidden="true" />
+              <strong>Dopuni narudzbinu</strong>
+            </div>
+            <div className={styles.addOnButtons}>
+              {ADD_ON_CATEGORIES.map((category) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => setActiveAddOnCategoryId(category.id)}
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {orderLoading ? (
             <div className={styles.emptyState}>Ucitavanje izabrane narudzbine...</div>
           ) : (
@@ -761,24 +779,6 @@ function PaymentDraft() {
               </div>
             </>
           )}
-
-          <div className={styles.addOnPanel}>
-            <div className={styles.addOnPanelHeader}>
-              <FaPlus aria-hidden="true" />
-              <strong>Dopuni narudzbinu</strong>
-            </div>
-            <div className={styles.addOnButtons}>
-              {ADD_ON_CATEGORIES.map((category) => (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => setActiveAddOnCategoryId(category.id)}
-                >
-                  {category.label}
-                </button>
-              ))}
-            </div>
-          </div>
 
           {createdOrder && (
             <div className={styles.savedBox}>
