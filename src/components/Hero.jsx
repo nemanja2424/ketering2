@@ -19,11 +19,8 @@ export default function Hero() {
       {/* Content */}
       <div className={styles.content}>
         <div className={styles.contentInner}>
-          {/* Eyebrow Text */}
-          <span className={styles.eyebrow}>PREMIUM KETERING</span>
-
           {/* Main Heading */}
-          <h1 className={styles.heading}>Menije koji oslikavaju vašu viziju</h1>
+          <h1 className={styles.heading}>Meniji koji oslikavaju vašu viziju</h1>
 
           {/* Subheading */}
           <p className={styles.subheading}>
@@ -33,10 +30,10 @@ export default function Hero() {
           {/* Buttons */}
           <div className={styles.buttons}>
             <Link href="/poruci?tip=personalizovani" className={`${styles.button} ${styles.primary}`}>
-              Kreiraj svoj meni
+              Fuel builder
             </Link>
             <Link href="/poruci" className={`${styles.button} ${styles.secondary}`}>
-              Mesecni plan
+              Daily fuel
             </Link>
             <Link href="/ketering" className={`${styles.button} ${styles.secondary}`}>
               Ketering

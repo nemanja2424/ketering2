@@ -3,7 +3,7 @@ import styles from './page.module.css';
 
 export const metadata = {
   title: 'O nama - Premium Ketering Servis',
-  description: 'Upoznajte našu priču, vrednosti i iskustvo sa više od 10 godina u industriji keteringa.',
+  description: 'Upoznajte našu priču, vrednosti i iskustvo sa više od 20 godina u industriji keteringa.',
 };
 
 export default function AboutPage() {
@@ -26,8 +26,8 @@ export default function AboutPage() {
             <div className={styles.introduction}>
               <h2>Naša priča</h2>
               <p>
-                Ketering je više od pripremanja hrane — to je umetnost kombinovanja kvalitete, 
-                kreativnosti i profesionalizma. Naša priča počela je 2015. godine kada smo odlučili 
+                Ketering je više od pripremanja hrane - to je umetnost kombinovanja kvalitete, 
+                kreativnosti i profesionalizma. Naša priča počela je 2003. godine kada smo odlučili 
                 da promijenimo kako se događaji doživljavaju kroz hranu.
               </p>
               <p>
@@ -73,13 +73,13 @@ export default function AboutPage() {
               <div className={styles.storyContent}>
                 <h2>Kako je sve počelo</h2>
                 <p>
-                  Pekarica2003 Ketering je nastao iz jednostavne ideje — da dobra hrana i pažljivo organizovan servis mogu svaki događaj da pretvore u prijatno i bezbrižno iskustvo.
+                  Pekarica2003 Ketering je nastao iz jednostavne ideje - da dobra hrana i pažljivo organizovan servis mogu svaki događaj da pretvore u prijatno i bezbrižno iskustvo.
                 </p>
                 <p>
                   Od samog početka fokus je bio na kvaliteti, svežim namirnicama i pažljivo pripremljenim jelima, bez kompromisa.
                 </p>
                 <p>
-                  Vremenom smo proširili ponudu i uslugu kako bismo mogli da odgovorimo na različite potrebe — od manjih privatnih okupljanja do većih poslovnih i svečanih događaja.
+                  Vremenom smo proširili ponudu i uslugu kako bismo mogli da odgovorimo na različite potrebe - od manjih privatnih okupljanja do većih poslovnih i svečanih događaja.
                 </p>
                 <p>
                   Danas radimo kao tim koji objedinjuje iskustvo u pripremi hrane i organizaciji keteringa, sa ciljem da svaki događaj bude jednostavan za domaćina, a kvalitetan i prijatan za goste.
@@ -101,7 +101,7 @@ export default function AboutPage() {
             {/* Stats Section */}
             <div className={styles.stats}>
               <div className={styles.statItem}>
-                <h3>10+</h3>
+                <h3>20+</h3>
                 <p>Godina iskustva</p>
               </div>
               <div className={styles.statItem}>
@@ -142,7 +142,7 @@ export default function AboutPage() {
             <div className={styles.teamSection}>
               <h2>Naš tim</h2>
               <p>
-                Naš tim se sastoji od stručnjaka iz raznih oblasti — iskusnih kuvara 
+                Naš tim se sastoji od stručnjaka iz raznih oblasti - iskusnih kuvara 
                 sa međunarodnom treningom, event managera sa oštrim okom za detalje, 
                 i profesionalnih servera koji znaju kako da učini događaj besprekoran.
               </p>

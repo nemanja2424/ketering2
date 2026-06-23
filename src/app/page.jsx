@@ -18,9 +18,9 @@ export default function Home() {
             <span className={styles.eyebrow}>Kako funkcioniše</span>
             <h2 className={styles.title}>Proces je jednostavan i fleksibilan</h2>
             <p className={styles.description}>
-              Organizujemo ketering za sve vrste događaja — od poslovnih sastanaka i manjih privatnih okupljanja, do većih proslava i svečanih prijema.
+              Organizujemo ketering za sve vrste događaja - od poslovnih sastanaka i manjih privatnih okupljanja, do većih proslava i svečanih prijema.
               Naša ponuda je fleksibilna i prilagođena vama. Možete izabrati jedan od postojećih menija ili zajedno sa nama kreirati potpuno personalizovan meni prema vašim željama, broju gostiju i tipu događaja.
-              Proces naručivanja je jednostavan — pošaljete upit, mi vam predložimo rešenje i dogovaramo sve detalje kako bi hrana, količina i stil posluženja savršeno odgovarali vašem događaju.
+              Proces naručivanja je jednostavan - pošaljete upit, mi vam predložimo rešenje i dogovaramo sve detalje kako bi hrana, količina i stil posluženja savršeno odgovarali vašem događaju.
             </p>
 
           </div>

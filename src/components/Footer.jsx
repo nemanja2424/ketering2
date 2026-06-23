@@ -16,13 +16,25 @@ export default function Footer() {
           <div className={styles.section}>
             <h3 className={styles.sectionTitle}>O nama</h3>
             <p className={styles.description}>
-              Profesionalni ketering servis sa više od 10 godina iskustva. Specialisovani smo za sve vrste događaja.
+              Profesionalni ketering servis sa više od 20 godina iskustva. Specialisovani smo za sve vrste događaja.
             </p>
             <div className={styles.socials}>
-              <a href="#" className={styles.socialLink} aria-label="Instagram">
+              <a
+                href="https://www.instagram.com/pekarica2003?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                className={styles.socialLink}
+                aria-label="Instagram"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <FaInstagram />
               </a>
-              <a href="#" className={styles.socialLink} aria-label="Facebook">
+              <a
+                href="https://www.facebook.com/PekaricaNis"
+                className={styles.socialLink}
+                aria-label="Facebook"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <FaFacebook />
               </a>
             </div>
@@ -34,6 +46,7 @@ export default function Footer() {
             <ul className={styles.links}>
               <li><Link href="/">Početna</Link></li>
               <li><Link href="/poruci">Naruči</Link></li>
+              <li><Link href="/ketering">Ketering</Link></li>
               <li><Link href="/o-nama">O nama</Link></li>
             </ul>
           </div>
@@ -43,11 +56,11 @@ export default function Footer() {
             <h3 className={styles.sectionTitle}>Kontakt</h3>
             <div className={styles.contactItem}>
               <FaPhone className={styles.icon} />
-              <a href="tel:+381123456789">+381 (0)1 234-5678</a>
+              <a href="tel:+381641963677">+381 64 196 36 77</a>
             </div>
             <div className={styles.contactItem}>
               <FaEnvelope className={styles.icon} />
-              <a href="mailto:info@ketering.rs">info@ketering.rs</a>
+              <a href="mailto:pekarica03@gmail.com">pekarica03@gmail.com</a>
             </div>
             <div className={styles.contactItem}>
               <FaMapMarkerAlt className={styles.icon} />

@@ -16,56 +16,139 @@ const SUBSCRIPTION_OPTIONS = [
   { days: 22, label: '22 dana' },
 ];
 
+const SUBSCRIPTION_EXTRAS = [
+  {
+    id: 'dnevni-kolac',
+    label: 'Dnevni kolac',
+    priceRsd: 350,
+    rotation: {
+      ponedeljak: 'Protein kuglice',
+      utorak: 'Mini cheesecake',
+      sreda: 'Cia puding',
+      cetvrtak: 'Kolac sa jabukom',
+      petak: 'Cokoladni mus',
+    },
+  },
+  {
+    id: 'dnevni-potaz',
+    label: 'Dnevni potaz',
+    priceRsd: 340,
+    rotation: {
+      ponedeljak: 'Potaz od bundeve',
+      utorak: 'Potaz od brokolija',
+      sreda: 'Potaz od pecuraka',
+      cetvrtak: 'Potaz od karfiola',
+      petak: 'Potaz od paradajza',
+    },
+  },
+  {
+    id: 'dnevni-smuti',
+    label: 'Dnevni smuti',
+    priceRsd: 430,
+    rotation: {
+      ponedeljak: 'Zeleni smuti',
+      utorak: 'Smuti sa bobicama',
+      sreda: 'Protein smuti',
+      cetvrtak: 'Mango smuti',
+      petak: 'Kakao-banana smuti',
+    },
+  },
+];
+
+const CUSTOM_ADD_ON_CATEGORIES = [
+  {
+    id: 'kolaci',
+    title: 'Kolaci',
+    products: [
+      { id: 'kolac-protein-kuglice', name: 'Protein kuglice', priceRsd: 290 },
+      { id: 'kolac-cia-puding', name: 'Cia puding', priceRsd: 360 },
+      { id: 'kolac-cheesecake', name: 'Mini cheesecake', priceRsd: 420 },
+    ],
+  },
+  {
+    id: 'potazi',
+    title: 'Potazi',
+    products: [
+      { id: 'potaz-bundeva', name: 'Potaz od bundeve', priceRsd: 320 },
+      { id: 'potaz-brokoli', name: 'Potaz od brokolija', priceRsd: 340 },
+      { id: 'potaz-pecurke', name: 'Potaz od pecuraka', priceRsd: 360 },
+    ],
+  },
+  {
+    id: 'smutiji',
+    title: 'Smutiji',
+    products: [
+      { id: 'smuti-zeleni', name: 'Zeleni smuti', priceRsd: 390 },
+      { id: 'smuti-bobice', name: 'Smuti sa bobicama', priceRsd: 420 },
+      { id: 'smuti-protein', name: 'Protein smuti', priceRsd: 480 },
+    ],
+  },
+];
+
 const CUSTOM_SECTIONS = [
   {
     id: 'baza',
     title: 'Baza',
+    maxSelections: 1,
     options: [
-      { id: 'pirinac', name: 'Integralni pirinac', priceRsdPerPerson: 180 },
-      { id: 'proso', name: 'Proso', priceRsdPerPerson: 190 },
-      { id: 'batat', name: 'Batat', priceRsdPerPerson: 240 },
-      { id: 'pasta', name: 'Pasta', priceRsdPerPerson: 220 },
+      { id: 'pirinac-dugo-zrno', name: 'Pirinač dugo zrno', priceRsdPerPerson: 0 },
+      { id: 'integralni-pirinac', name: 'Integralni pirinač', priceRsdPerPerson: 0 },
+      { id: 'kinoa', name: 'Kinoa', priceRsdPerPerson: 0 },
+      { id: 'bulgur', name: 'Bulgur', priceRsdPerPerson: 0 },
+      { id: 'heljda', name: 'Heljda', priceRsdPerPerson: 0 },
     ],
   },
   {
     id: 'prilog',
     title: 'Prilog',
+    maxSelections: 2,
     options: [
-      { id: 'brokoli', name: 'Brokoli', priceRsdPerPerson: 170 },
-      { id: 'tikvice-paprika', name: 'Tikvice i paprika', priceRsdPerPerson: 190 },
-      { id: 'boranija', name: 'Boranija', priceRsdPerPerson: 160 },
-      { id: 'mesano-povrce', name: 'Mesano povrce', priceRsdPerPerson: 210 },
+      { id: 'batat-zacini', name: 'Batat sa začinima', priceRsdPerPerson: 0 },
+      { id: 'sargarepa-mirodjija', name: 'Šargarepa sa mirođijom', priceRsdPerPerson: 0 },
+      { id: 'brokoli', name: 'Brokoli', priceRsdPerPerson: 0 },
+      { id: 'mesano-povrce', name: 'Mešano povrće', priceRsdPerPerson: 0 },
+      { id: 'krompir', name: 'Krompir', priceRsdPerPerson: 0 },
+      { id: 'blitva', name: 'Blitva', priceRsdPerPerson: 0 },
+      { id: 'boranija', name: 'Boranija', priceRsdPerPerson: 0 },
     ],
   },
   {
     id: 'glavno',
     title: 'Glavno jelo',
+    maxSelections: 1,
     options: [
-      { id: 'piletina', name: 'Grilovana piletina', priceRsdPerPerson: 420 },
-      { id: 'curetina', name: 'Curetina', priceRsdPerPerson: 480 },
-      { id: 'junetina', name: 'Junetina', priceRsdPerPerson: 620 },
-      { id: 'losos', name: 'Losos', priceRsdPerPerson: 760 },
-      { id: 'file-minjon', name: 'File minjon', priceRsdPerPerson: 820 },
+      { id: 'cureci-file', name: 'Ćureći file sa začinima', priceRsdPerPerson: 950 },
+      { id: 'junetina-saft', name: 'Junetina u saftu', priceRsdPerPerson: 950 },
+      { id: 'losos-file', name: 'Losos file', priceRsdPerPerson: 950 },
+      { id: 'pileci-file', name: 'Pileći file sa začinima', priceRsdPerPerson: 750 },
+      { id: 'butkica', name: 'Butkica', priceRsdPerPerson: 750 },
+      { id: 'skarpina', name: 'Škarpina', priceRsdPerPerson: 750 },
+      { id: 'varivo-socivo', name: 'Varivo od crvenog sočiva', priceRsdPerPerson: 650 },
+      { id: 'ragu-leblebije', name: 'Ragu sa leblebijama', priceRsdPerPerson: 650 },
+      { id: 'tofu', name: 'Grilovani tofu sir', priceRsdPerPerson: 650 },
     ],
   },
   {
     id: 'salate',
-    title: 'Salate',
+    title: 'Salata',
+    maxSelections: 2,
     options: [
-      { id: 'zelena-salata', name: 'Zelena salata', priceRsdPerPerson: 140 },
-      { id: 'vitaminska', name: 'Vitaminska salata', priceRsdPerPerson: 170 },
-      { id: 'cvekla', name: 'Cvekla', priceRsdPerPerson: 150 },
-      { id: 'zeleni-mix', name: 'Zeleni mix', priceRsdPerPerson: 190 },
+      { id: 'zeleni-mix', name: 'Zeleni mix', priceRsdPerPerson: 0 },
+      { id: 'vitaminska', name: 'Vitaminska', priceRsdPerPerson: 0 },
+      { id: 'grcka', name: 'Grčka', priceRsdPerPerson: 0 },
+      { id: 'crveni-luk', name: 'Crveni luk', priceRsdPerPerson: 0 },
     ],
   },
   {
     id: 'dresing',
     title: 'Dresing',
+    maxSelections: 1,
     options: [
-      { id: 'jogurt', name: 'Jogurt dresing', priceRsdPerPerson: 80 },
-      { id: 'limun-maslinovo', name: 'Limun i maslinovo ulje', priceRsdPerPerson: 90 },
-      { id: 'senf-med', name: 'Senf i med', priceRsdPerPerson: 95 },
-      { id: 'avokado', name: 'Avokado krem', priceRsdPerPerson: 140 },
+      { id: 'in-dresing', name: 'IN dresing (bosiljak, peršun, ulje)', priceRsdPerPerson: 0 },
+      { id: 'cezar-dresing', name: 'Cezar dresing (majonez, jogurt, senf, limun, začin)', priceRsdPerPerson: 0 },
+      { id: 'tzatziki', name: 'Tzatziki (jogurt, krastavac, mirođija, beli luk)', priceRsdPerPerson: 0 },
+      { id: 'ss-dresing', name: 'S&S dresing (senf, med, balsamico, začini)', priceRsdPerPerson: 0 },
+      { id: 'monte-dresing', name: 'Monte dresing (grčki jogurt, ren, začini)', priceRsdPerPerson: 0 },
     ],
   },
 ];
@@ -181,8 +264,21 @@ const DAY_ID_BY_INDEX = {
 
 const MAX_CUSTOM_MEALS = 10;
 
+const INITIAL_UNIQUE_FORM = {
+  ime: '',
+  email: '',
+  br_tel: '',
+  mesto: '',
+  opis: '',
+};
+
 function formatRsd(value) {
   return `${value.toLocaleString('sr-RS')} RSD`;
+}
+
+function normalizeQuantity(value) {
+  const quantity = Number(value);
+  return Number.isFinite(quantity) ? Math.max(0, Math.min(999, Math.floor(quantity))) : 0;
 }
 
 function createDraftId() {
@@ -221,7 +317,7 @@ function isWorkday(date) {
 
 function buildSubscriptionDays(daysCount) {
   const days = [];
-  let cursor = new Date();
+  let cursor = addDays(new Date(), 1);
 
   while (days.length < daysCount) {
     if (isWorkday(cursor)) {
@@ -269,16 +365,32 @@ function OrderContent() {
   const modeSwipe = useRef(null);
   const subscriptionSummaryRef = useRef(null);
   const customSummaryRef = useRef(null);
-  const [mode, setMode] = useState(
-    searchParams.get('tip') === 'personalizovani' ? 'custom' : 'daily'
-  );
+  const [mode, setMode] = useState(() => {
+    const requestedType = searchParams.get('tip');
+
+    if (requestedType === 'personalizovani') {
+      return 'custom';
+    }
+
+    if (requestedType === 'unique') {
+      return 'unique';
+    }
+
+    return 'daily';
+  });
   const [pendingChoice, setPendingChoice] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [subscriptionDays, setSubscriptionDays] = useState(5);
+  const [subscriptionVariant, setSubscriptionVariant] = useState('clean');
   const [subscriptionChoices, setSubscriptionChoices] = useState({});
+  const [subscriptionExtraIds, setSubscriptionExtraIds] = useState([]);
   const [editingDayId, setEditingDayId] = useState(null);
   const [customMeals, setCustomMeals] = useState([{ id: 1, selected: new Set() }]);
+  const [customAddOns, setCustomAddOns] = useState([]);
   const [notes, setNotes] = useState('');
+  const [uniqueForm, setUniqueForm] = useState(INITIAL_UNIQUE_FORM);
+  const [uniqueStatus, setUniqueStatus] = useState({ type: '', message: '' });
+  const [uniqueSubmitting, setUniqueSubmitting] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
   const subscriptionSchedule = useMemo(
@@ -290,11 +402,10 @@ function OrderContent() {
     return subscriptionSchedule.map((day, dayIndex) => {
       const selected = subscriptionChoices[day.id] || {
         mealIndex: dayIndex % 4,
-        variant: 'clean',
       };
       const mealIndex = Number.isInteger(selected.mealIndex) ? selected.mealIndex : 0;
       const meal = DAILY_MENUS[day.serviceDay][mealIndex] || DAILY_MENUS[day.serviceDay][0];
-      const variant = selected.variant === 'lean' ? 'lean' : 'clean';
+      const variant = subscriptionVariant;
       const variantLabel = variant === 'clean' ? 'Clean' : 'Lean';
 
       return {
@@ -307,9 +418,17 @@ function OrderContent() {
         priceRsd: VARIANT_PRICES_RSD[variant],
       };
     });
-  }, [subscriptionChoices, subscriptionSchedule]);
+  }, [subscriptionChoices, subscriptionSchedule, subscriptionVariant]);
 
-  const subscriptionTotal = subscriptionPlan.reduce((sum, day) => sum + day.priceRsd, 0);
+  const selectedSubscriptionExtras = SUBSCRIPTION_EXTRAS.filter((extra) =>
+    subscriptionExtraIds.includes(extra.id)
+  );
+  const subscriptionExtrasTotal = selectedSubscriptionExtras.reduce(
+    (sum, extra) => sum + extra.priceRsd * subscriptionDays,
+    0
+  );
+  const subscriptionTotal =
+    subscriptionPlan.reduce((sum, day) => sum + day.priceRsd, 0) + subscriptionExtrasTotal;
 
   const customMealSummaries = useMemo(() => {
     return customMeals.map((meal, mealIndex) => {
@@ -335,7 +454,12 @@ function OrderContent() {
   }, [customMeals]);
 
   const selectedCustomDishes = customMealSummaries.flatMap((meal) => meal.selectedDishes);
-  const customTotal = customMealSummaries.reduce((sum, meal) => sum + meal.totalRsd, 0);
+  const customAddOnTotal = customAddOns.reduce(
+    (sum, item) => sum + item.priceRsd * item.quantity,
+    0
+  );
+  const customTotal =
+    customMealSummaries.reduce((sum, meal) => sum + meal.totalRsd, 0) + customAddOnTotal;
 
   const saveDraftAndContinue = (order) => {
     sessionStorage.setItem('pendingOrderDraft', JSON.stringify(order));
@@ -343,7 +467,12 @@ function OrderContent() {
   };
 
   useEffect(() => {
-    const target = mode === 'daily' ? subscriptionSummaryRef.current : customSummaryRef.current;
+    const target =
+      mode === 'daily'
+        ? subscriptionSummaryRef.current
+        : mode === 'custom'
+          ? customSummaryRef.current
+          : null;
 
     if (!target) {
       setShowScrollButton(false);
@@ -379,7 +508,12 @@ function OrderContent() {
   }, [mode]);
 
   const scrollToOrderSummary = () => {
-    const target = mode === 'daily' ? subscriptionSummaryRef.current : customSummaryRef.current;
+    const target =
+      mode === 'daily'
+        ? subscriptionSummaryRef.current
+        : mode === 'custom'
+          ? customSummaryRef.current
+          : null;
 
     target?.scrollIntoView({
       behavior: 'smooth',
@@ -387,15 +521,46 @@ function OrderContent() {
     });
   };
 
-  const handleSubscriptionChoice = (dayId, mealIndex, variant) => {
+  const handleSubscriptionChoice = (dayId, mealIndex) => {
     setSubscriptionChoices((current) => ({
       ...current,
       [dayId]: {
         mealIndex,
-        variant,
       },
     }));
     setEditingDayId(null);
+  };
+
+  const handleSubscriptionExtraToggle = (extraId) => {
+    setSubscriptionExtraIds((current) =>
+      current.includes(extraId)
+        ? current.filter((id) => id !== extraId)
+        : [...current, extraId]
+    );
+  };
+
+  const updateCustomAddOnQuantity = (category, product, value, absolute = false) => {
+    setCustomAddOns((current) => {
+      const existing = current.find((item) => item.id === product.id);
+      const nextQuantity = normalizeQuantity(
+        absolute ? value : (existing?.quantity || 0) + value
+      );
+
+      if (nextQuantity === 0) {
+        return current.filter((item) => item.id !== product.id);
+      }
+
+      if (existing) {
+        return current.map((item) =>
+          item.id === product.id ? { ...item, quantity: nextQuantity } : item
+        );
+      }
+
+      return [
+        ...current,
+        { ...product, quantity: nextQuantity, category: category.title, source: 'dopuna' },
+      ];
+    });
   };
 
   const handleResetSubscriptionChanges = () => {
@@ -421,20 +586,42 @@ function OrderContent() {
         subscription: {
           days: subscriptionDays,
           workdaysOnly: true,
+          variant: subscriptionVariant,
+          addOns: selectedSubscriptionExtras.map((extra) => ({
+            id: extra.id,
+            name: extra.label,
+            priceRsdPerDay: extra.priceRsd,
+            rotation: extra.rotation,
+          })),
           items: subscriptionPlan,
         },
-        selectedDishes: subscriptionPlan.map((day) => ({
-          id: `${day.date}-obrok-${day.mealNumber}-${day.variant}`,
-          name: `${day.formattedDate} - Obrok ${day.mealNumber} ${day.variantLabel}`,
-          category: day.serviceDayLabel,
-          date: day.date,
-          formattedDate: day.formattedDate,
-          serviceDay: day.serviceDayLabel,
-          variant: day.variantLabel,
-          mealNumber: day.mealNumber,
-          description: day.description,
-          priceRsdPerPerson: day.priceRsd,
-        })),
+        selectedDishes: subscriptionPlan.flatMap((day) => [
+          {
+            id: `${day.date}-obrok-${day.mealNumber}-${day.variant}`,
+            name: `${day.formattedDate} - Obrok ${day.mealNumber} ${day.variantLabel}`,
+            category: day.serviceDayLabel,
+            date: day.date,
+            formattedDate: day.formattedDate,
+            serviceDay: day.serviceDayLabel,
+            variant: day.variantLabel,
+            mealNumber: day.mealNumber,
+            description: day.description,
+            priceRsdPerPerson: day.priceRsd,
+          },
+          ...selectedSubscriptionExtras.map((extra) => ({
+            id: `${day.date}-${extra.id}`,
+            name: extra.rotation[day.serviceDay],
+            category: extra.label,
+            date: day.date,
+            formattedDate: day.formattedDate,
+            serviceDay: day.serviceDayLabel,
+            variant: null,
+            mealNumber: null,
+            description: extra.rotation[day.serviceDay],
+            priceRsdPerPerson: extra.priceRsd,
+            source: 'dopuna',
+          })),
+        ]),
         priceRsdPerPerson: subscriptionTotal,
         totalRsd: subscriptionTotal,
       };
@@ -446,7 +633,13 @@ function OrderContent() {
     }
   };
 
-  const handleCustomToggle = (mealId, optionId) => {
+  const handleCustomToggle = (mealId, sectionId, optionId) => {
+    const section = CUSTOM_SECTIONS.find((item) => item.id === sectionId);
+
+    if (!section) {
+      return;
+    }
+
     setCustomMeals((current) =>
       current.map((meal) => {
         if (meal.id !== mealId) {
@@ -457,6 +650,14 @@ function OrderContent() {
         if (selected.has(optionId)) {
           selected.delete(optionId);
         } else {
+          const selectedInSection = section.options.filter((option) =>
+            selected.has(option.id)
+          ).length;
+
+          if (selectedInSection >= section.maxSelections) {
+            return meal;
+          }
+
           selected.add(optionId);
         }
 
@@ -521,7 +722,13 @@ function OrderContent() {
     const deltaY = touch.clientY - modeSwipe.current.y;
 
     if (Math.abs(deltaX) > 64 && Math.abs(deltaX) > Math.abs(deltaY) * 1.35) {
-      setMode(deltaX < 0 ? 'custom' : 'daily');
+      const modes = ['daily', 'custom', 'unique'];
+      const currentIndex = modes.indexOf(mode);
+      const nextIndex = Math.max(
+        0,
+        Math.min(modes.length - 1, currentIndex + (deltaX < 0 ? 1 : -1))
+      );
+      setMode(modes[nextIndex]);
     }
 
     modeSwipe.current = null;
@@ -548,7 +755,21 @@ function OrderContent() {
         type: 'custom',
         eventType: 'Personalizovani obrok',
         guestCount: customMeals.length,
-        selectedDishes: selectedCustomDishes,
+        selectedDishes: [
+          ...selectedCustomDishes,
+          ...customAddOns.map((item) => ({
+            id: item.id,
+            name: item.name,
+            category: item.category,
+            quantity: item.quantity,
+            priceRsdPerPerson: item.priceRsd,
+            totalPriceRsd: item.priceRsd * item.quantity,
+            mealId: 'dopuna',
+            mealLabel: 'Dopuna',
+            source: 'dopuna',
+          })),
+        ],
+        addOns: customAddOns,
         notes,
         priceRsdPerPerson: customTotal,
         totalRsd: customTotal,
@@ -558,6 +779,89 @@ function OrderContent() {
     } catch (error) {
       setErrorMessage(error.message || 'Narudzbina nije pripremljena.');
       setPendingChoice(null);
+    }
+  };
+
+  const handleUniqueChange = (event) => {
+    const { name, value } = event.target;
+    setUniqueForm((current) => ({ ...current, [name]: value }));
+  };
+
+  const handleUniqueSubmit = async (event) => {
+    event.preventDefault();
+    setUniqueSubmitting(true);
+    setUniqueStatus({ type: '', message: '' });
+
+    try {
+      const now = new Date();
+      const technicalDate = toDateInputValue(now);
+
+      const response = await fetch('/api/narudzbine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ime: uniqueForm.ime.trim(),
+          email: uniqueForm.email.trim() || null,
+          br_tel: uniqueForm.br_tel.trim() || null,
+          datum: technicalDate,
+          vreme: '00:00',
+          mesto: uniqueForm.mesto.trim() || null,
+          cena: 0,
+          porudzbina: {
+            schemaVersion: 1,
+            source: 'unique-fuel',
+            type: 'unique_fuel_inquiry',
+            title: 'Unique Fuel upit',
+            status: 'new',
+            items: [
+              {
+                id: `unique-fuel-${Date.now()}`,
+                name: 'Plan ishrane po meri',
+                category: 'Unique Fuel',
+                variant: null,
+                quantity: 1,
+                unitPriceRsd: 0,
+                totalPriceRsd: 0,
+                meta: { description: uniqueForm.opis.trim() },
+              },
+            ],
+            totals: {
+              subtotalRsd: 0,
+              deliveryRsd: 0,
+              discountRsd: 0,
+              totalRsd: 0,
+            },
+            customerNote: uniqueForm.opis.trim(),
+            internalNote: '',
+            payment: {
+              status: 'not_started',
+              provider: null,
+              providerPaymentId: null,
+              amountRsd: 0,
+              currency: 'RSD',
+              paidAt: null,
+            },
+            fulfillment: {
+              method: 'consultation',
+              status: 'pending',
+              confirmedAt: null,
+              completedAt: null,
+            },
+          },
+        }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Upit nije poslat.');
+      }
+
+      setUniqueStatus({ type: 'success', message: 'Unique Fuel upit je uspesno poslat.' });
+      setUniqueForm(INITIAL_UNIQUE_FORM);
+    } catch (error) {
+      setUniqueStatus({ type: 'error', message: error.message });
+    } finally {
+      setUniqueSubmitting(false);
     }
   };
 
@@ -573,11 +877,30 @@ function OrderContent() {
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <span className={styles.eyebrow}>Porucivanje</span>
-          <h1>{mode === 'daily' ? 'Pretplata na obroke' : 'Personalizovani obrok'}</h1>
-          <p>
-            Izaberi plan za radne dane i prilagodi svaki datum, ili slozi svoj tanjir kroz bazu,
-            prilog, glavno jelo, salate i dresing.
-          </p>
+          <h1>
+            {mode === 'daily'
+              ? 'Pretplata na obroke'
+              : mode === 'custom'
+                ? 'Personalizovani obrok'
+                : 'Unique Fuel'}
+          </h1>
+          {mode === 'daily' ? (
+            <div className={styles.heroIntro}>
+              <p>Svaki obrok je pažljivo pripremljen od namirnica iz domaćeg uzgoja.</p>
+              <ul className={styles.heroBenefits}>
+                <li>Bez industrijskih biljnih ulja</li>
+                <li>Bez dodatog rafinisanog šećera</li>
+                <li>Bez prženja u fritezi</li>
+                <li>Bez upotrebe mikrotalasne peći</li>
+              </ul>
+            </div>
+          ) : mode === 'custom' ? (
+            <p>
+              Sastavi svoj obrok u nekoliko klikova.
+            </p>
+          ) : (
+            <p>Pošaljite nam svoj plan ishrane ili opišite obrok koji želite.</p>
+          )}
         </div>
       </section>
 
@@ -588,18 +911,27 @@ function OrderContent() {
             className={`${styles.modeButton} ${mode === 'daily' ? styles.activeMode : ''}`}
             onClick={() => setMode('daily')}
           >
-            Pretplata
+            Daily Fuel
           </button>
           <button
             type="button"
             className={`${styles.modeButton} ${mode === 'custom' ? styles.activeMode : ''}`}
             onClick={() => setMode('custom')}
           >
-            Personalizovano
+            Fuel Builder
+          </button>
+          <button
+            type="button"
+            className={`${styles.modeButton} ${mode === 'unique' ? styles.activeMode : ''}`}
+            onClick={() => setMode('unique')}
+          >
+            Unique Fuel
           </button>
           <span
             className={styles.modeIndicator}
-            style={{ transform: `translateX(${mode === 'daily' ? 0 : 100}%)` }}
+            style={{
+              transform: `translateX(${mode === 'daily' ? 0 : mode === 'custom' ? 100 : 200}%)`,
+            }}
           />
         </div>
       </div>
@@ -627,10 +959,63 @@ function OrderContent() {
                   onClick={() => setSubscriptionDays(option.days)}
                 >
                   <span>{option.label}</span>
-                  <strong>{formatRsd(option.days * VARIANT_PRICES_RSD.clean)}</strong>
+                  <strong>{formatRsd(option.days * VARIANT_PRICES_RSD[subscriptionVariant])}</strong>
                 </button>
               ))}
             </div>
+
+            <div className={styles.variantPicker} role="radiogroup" aria-label="Tip obroka">
+              <div>
+                <span>Tip obroka za celu pretplatu</span>
+                <p>Izbor vazi za svaki dan, pa ga ne morate ponavljati u dnevnom meniju.</p>
+              </div>
+              {['clean', 'lean'].map((variant) => (
+                <button
+                  key={variant}
+                  type="button"
+                  className={subscriptionVariant === variant ? styles.activeVariant : ''}
+                  onClick={() => setSubscriptionVariant(variant)}
+                >
+                  <strong>{variant === 'clean' ? 'Clean' : 'Lean'}</strong>
+                  <span>{formatRsd(VARIANT_PRICES_RSD[variant])} / dan</span>
+                </button>
+              ))}
+            </div>
+
+            <section className={styles.subscriptionExtras}>
+              <div className={styles.extrasHeader}>
+                <span>Dnevne dopune</span>
+                <p>Stiklirajte dopune koje zelite uz svaku isporuku.</p>
+              </div>
+              <div className={styles.extraOptions}>
+                {SUBSCRIPTION_EXTRAS.map((extra) => (
+                  <label key={extra.id} className={styles.extraOption}>
+                    <input
+                      type="checkbox"
+                      checked={subscriptionExtraIds.includes(extra.id)}
+                      onChange={() => handleSubscriptionExtraToggle(extra.id)}
+                    />
+                    <span>{extra.label}</span>
+                    <strong>{formatRsd(extra.priceRsd)} / dan</strong>
+                  </label>
+                ))}
+              </div>
+              {selectedSubscriptionExtras.length > 0 && (
+                <div className={styles.rotationList}>
+                  <strong>Nedeljna rotacija</strong>
+                  {selectedSubscriptionExtras.map((extra) => (
+                    <div key={extra.id}>
+                      <span>{extra.label}</span>
+                      <p>
+                        {Object.entries(extra.rotation)
+                          .map(([day, product]) => `${DAY_LABELS[day]}: ${product}`)
+                          .join(' / ')}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
 
             <div className={styles.planActions}>
               <button
@@ -696,31 +1081,14 @@ function OrderContent() {
                               <button
                                 type="button"
                                 className={`${styles.dayVariantButton} ${
-                                  day.mealIndex === index && day.variant === 'clean'
-                                    ? styles.selectedVariant
-                                    : ''
+                                  day.mealIndex === index ? styles.selectedVariant : ''
                                 }`}
-                                onClick={() => handleSubscriptionChoice(day.id, index, 'clean')}
+                                onClick={() => handleSubscriptionChoice(day.id, index)}
                                 tabIndex={editingDayId === day.id ? 0 : -1}
                               >
-                                <span>Clean</span>
-                                <p>{meal.clean}</p>
-                                <strong>{formatRsd(VARIANT_PRICES_RSD.clean)}</strong>
-                              </button>
-
-                              <button
-                                type="button"
-                                className={`${styles.dayVariantButton} ${
-                                  day.mealIndex === index && day.variant === 'lean'
-                                    ? styles.selectedVariant
-                                    : ''
-                                }`}
-                                onClick={() => handleSubscriptionChoice(day.id, index, 'lean')}
-                                tabIndex={editingDayId === day.id ? 0 : -1}
-                              >
-                                <span>Lean</span>
-                                <p>{meal.lean}</p>
-                                <strong>{formatRsd(VARIANT_PRICES_RSD.lean)}</strong>
+                                <span>{day.variantLabel}</span>
+                                <p>{meal[subscriptionVariant]}</p>
+                                <strong>{formatRsd(VARIANT_PRICES_RSD[subscriptionVariant])}</strong>
                               </button>
                             </div>
                           </section>
@@ -747,6 +1115,12 @@ function OrderContent() {
                     <span>Ukupno</span>
                     <strong>{formatRsd(subscriptionTotal)}</strong>
                   </div>
+                  {selectedSubscriptionExtras.length > 0 && (
+                    <div>
+                      <span>Dnevne dopune</span>
+                      <strong>{selectedSubscriptionExtras.map((extra) => extra.label).join(', ')}</strong>
+                    </div>
+                  )}
                 </div>
                 <button type="submit" disabled={pendingChoice === 'subscription'}>
                   {pendingChoice === 'subscription' ? 'Pripremamo placanje...' : 'Nastavi na placanje'}
@@ -755,7 +1129,7 @@ function OrderContent() {
             </div>
           </form>
         </section>
-      ) : (
+      ) : mode === 'custom' ? (
         <section
           key="custom"
           className={`${styles.customSection} ${styles.panelEnter} ${styles.fromRight}`}
@@ -794,7 +1168,7 @@ function OrderContent() {
                         onClick={() => handleResetCustomMeal(meal.id)}
                         disabled={meal.selected.size === 0}
                       >
-                        Ocisti
+                        Očisti
                       </button>
                       {customMeals.length > 1 && (
                         <button
@@ -810,20 +1184,51 @@ function OrderContent() {
 
                   <div className={styles.customSections}>
                     {CUSTOM_SECTIONS.map((section) => (
-                      <fieldset key={section.id} className={styles.customCard}>
-                        <legend>{section.title}</legend>
+                      <fieldset
+                        key={section.id}
+                        className={`${styles.customCard} ${
+                          section.id === 'glavno' ? styles.mainDishCard : ''
+                        }`}
+                      >
+                        <legend>
+                          {section.title}
+                          <span>
+                            {section.maxSelections === 1
+                              ? 'Izaberi jednu opciju'
+                              : `Izaberi do ${section.maxSelections} opcije`}
+                          </span>
+                        </legend>
                         <div className={styles.checkboxList}>
-                          {section.options.map((option) => (
-                            <label key={option.id} className={styles.checkboxOption}>
-                              <input
-                                type="checkbox"
-                                checked={meal.selected.has(option.id)}
-                                onChange={() => handleCustomToggle(meal.id, option.id)}
-                              />
-                              <span>{option.name}</span>
-                              <strong>{formatRsd(option.priceRsdPerPerson)}</strong>
-                            </label>
-                          ))}
+                          {section.options.map((option) => {
+                            const isSelected = meal.selected.has(option.id);
+                            const selectedCount = section.options.filter((item) =>
+                              meal.selected.has(item.id)
+                            ).length;
+                            const isDisabled =
+                              !isSelected && selectedCount >= section.maxSelections;
+
+                            return (
+                              <label
+                                key={option.id}
+                                className={`${styles.checkboxOption} ${
+                                  isDisabled ? styles.disabledOption : ''
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  disabled={isDisabled}
+                                  onChange={() =>
+                                    handleCustomToggle(meal.id, section.id, option.id)
+                                  }
+                                />
+                                <span>{option.name}</span>
+                                {option.priceRsdPerPerson > 0 && (
+                                  <strong>{formatRsd(option.priceRsdPerPerson)}</strong>
+                                )}
+                              </label>
+                            );
+                          })}
                         </div>
                       </fieldset>
                     ))}
@@ -831,6 +1236,66 @@ function OrderContent() {
                 </section>
               ))}
             </div>
+
+            <section className={styles.customAddOns}>
+              <div className={styles.extrasHeader}>
+                <span>Dopuni personalizovane obroke</span>
+                <p>Dodajte kolace, potaze ili smutije pre nastavka na placanje.</p>
+              </div>
+              <div className={styles.customAddOnGrid}>
+                {CUSTOM_ADD_ON_CATEGORIES.map((category) => (
+                  <div key={category.id} className={styles.customAddOnCategory}>
+                    <h3>{category.title}</h3>
+                    {category.products.map((product) => {
+                      const quantity =
+                        customAddOns.find((item) => item.id === product.id)?.quantity || 0;
+
+                      return (
+                        <div key={product.id} className={styles.customAddOnProduct}>
+                          <div>
+                            <strong>{product.name}</strong>
+                            <span>{formatRsd(product.priceRsd)}</span>
+                          </div>
+                          <div className={styles.addOnQuantity}>
+                            <button
+                              type="button"
+                              onClick={() => updateCustomAddOnQuantity(category, product, -1)}
+                              disabled={quantity === 0}
+                              aria-label={`Ukloni ${product.name}`}
+                            >
+                              -
+                            </button>
+                            <input
+                              type="number"
+                              min="0"
+                              max="999"
+                              step="1"
+                              value={quantity}
+                              onChange={(event) =>
+                                updateCustomAddOnQuantity(
+                                  category,
+                                  product,
+                                  event.target.value,
+                                  true
+                                )
+                              }
+                              aria-label={`Količina za ${product.name}`}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => updateCustomAddOnQuantity(category, product, 1)}
+                              aria-label={`Dodaj ${product.name}`}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </section>
 
             <button
               type="button"
@@ -856,6 +1321,78 @@ function OrderContent() {
                 {pendingChoice === 'custom' ? 'Pripremamo placanje...' : 'Nastavi na placanje'}
               </button>
             </div>
+          </form>
+        </section>
+      ) : (
+        <section
+          key="unique"
+          className={`${styles.uniqueSection} ${styles.panelEnter} ${styles.fromRight}`}
+          aria-labelledby="unique-fuel-title"
+        >
+          <div className={styles.sectionHeader}>
+            <span className={styles.kicker}>Plan po vašoj meri</span>
+            <h2 id="unique-fuel-title">Pošaljite Unique Fuel upit</h2>
+          </div>
+
+          <form className={styles.uniqueForm} onSubmit={handleUniqueSubmit}>
+            <div className={styles.uniqueFields}>
+              <label>
+                Ime
+                <input
+                  name="ime"
+                  value={uniqueForm.ime}
+                  onChange={handleUniqueChange}
+                  required
+                />
+              </label>
+              <label>
+                Email
+                <input
+                  name="email"
+                  type="email"
+                  value={uniqueForm.email}
+                  onChange={handleUniqueChange}
+                />
+              </label>
+              <label>
+                Broj telefona
+                <input
+                  name="br_tel"
+                  value={uniqueForm.br_tel}
+                  onChange={handleUniqueChange}
+                />
+              </label>
+              <label className={styles.uniqueFullWidth}>
+                Adresa
+                <textarea
+                  name="mesto"
+                  rows="3"
+                  value={uniqueForm.mesto}
+                  onChange={handleUniqueChange}
+                />
+              </label>
+              <label className={styles.uniqueFullWidth}>
+                Opis željenog obroka ili plana ishrane
+                <textarea
+                  name="opis"
+                  rows="6"
+                  value={uniqueForm.opis}
+                  onChange={handleUniqueChange}
+                  placeholder="Opišite obroke, ciljeve ishrane, alergije i posebne zahteve..."
+                  required
+                />
+              </label>
+            </div>
+
+            <button type="submit" className={styles.uniqueSubmit} disabled={uniqueSubmitting}>
+              {uniqueSubmitting ? 'Šaljemo upit...' : 'Pošalji upit'}
+            </button>
+
+            {uniqueStatus.message && (
+              <p className={`${styles.uniqueStatus} ${styles[uniqueStatus.type]}`} role="alert">
+                {uniqueStatus.message}
+              </p>
+            )}
           </form>
         </section>
       )}

@@ -607,6 +607,12 @@
   border-radius: 8px;
 }
 
+.itemsList .addOnItem {
+  background: rgba(212, 165, 116, 0.14);
+  border-color: rgba(212, 165, 116, 0.42);
+  box-shadow: inset 4px 0 0 #d4a574;
+}
+
 .itemsList strong {
   display: block;
   color: #011209;

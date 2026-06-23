@@ -20,7 +20,7 @@ const features = [
     id: 3,
     icon: <FaCheckCircle />,
     title: 'Garantovano',
-    description: 'Više od 10 godina iskustva u industriji garantuje pouzdanost, preciznost i profesionalan pristup svakom projektu, bez kompromisa.'
+    description: 'Više od 20 godina iskustva u industriji garantuje pouzdanost, preciznost i profesionalan pristup svakom projektu, bez kompromisa.'
     }
 ];
 

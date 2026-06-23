@@ -50,10 +50,10 @@ export default function CTA() {
 
           <div className={styles.buttons}>
             <Link href="/poruci?tip=personalizovani" className={`${styles.button} ${styles.primary}`}>
-              Kreiraj svoj meni
+              Fuel builder
             </Link>
             <Link href="/poruci" className={`${styles.button} ${styles.secondary}`}>
-              Mesecni plan
+              Daily fuel
             </Link>
             <Link href="/ketering" className={`${styles.button} ${styles.secondary}`}>
               Ketering

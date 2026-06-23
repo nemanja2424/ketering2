@@ -31,6 +31,7 @@ const TYPE_LABELS = {
   subscription_order: 'Pretplata',
   custom_meal_order: 'Personalizovan meni',
   catering_inquiry: 'Ketering',
+  unique_fuel_inquiry: 'Unique Fuel',
   manual_order: 'Rucni unos',
 };
 
@@ -270,7 +271,10 @@ export default function AdminPage() {
     return normalizedOrders
       .filter((order) => {
         const orderDateKey = getOrderLastDateKey(order);
-        const isPast = orderDateKey && orderDateKey < todayKey;
+        const isPast =
+          order.details.type !== 'unique_fuel_inquiry' &&
+          orderDateKey &&
+          orderDateKey < todayKey;
 
         if (!showPastOrders && isPast) {
           return false;
@@ -442,6 +446,7 @@ export default function AdminPage() {
               <option value="all">Sve vrste</option>
               <option value="subscription_order">Pretplata</option>
               <option value="catering_inquiry">Ketering</option>
+              <option value="unique_fuel_inquiry">Unique Fuel</option>
               <option value="meal_order">Pripremljen meni</option>
               <option value="custom_meal_order">Personalizovan meni</option>
               <option value="manual_order">Rucni unos</option>
@@ -529,8 +534,12 @@ function OrderCard({ narudzbina }) {
             <InfoItem icon={<FaUser />} label="Kupac" value={narudzbina.ime} />
             <InfoItem icon={<FaPhoneAlt />} label="Telefon" value={narudzbina.br_tel || '-'} />
             <InfoItem icon={<FaEnvelope />} label="Email" value={narudzbina.email || '-'} />
-            <InfoItem icon={<FaCalendarAlt />} label="Datum" value={formatDate(narudzbina.datum)} />
-            <InfoItem icon={<FaClock />} label="Vreme" value={formatTime(narudzbina.vreme)} />
+            {details.type !== 'unique_fuel_inquiry' && (
+              <>
+                <InfoItem icon={<FaCalendarAlt />} label="Datum" value={formatDate(narudzbina.datum)} />
+                <InfoItem icon={<FaClock />} label="Vreme" value={formatTime(narudzbina.vreme)} />
+              </>
+            )}
             <InfoItem icon={<FaMapMarkerAlt />} label="Mesto" value={narudzbina.mesto || '-'} />
             <InfoItem icon={<FaUsers />} label="Broj osoba" value={details.guestCount || '-'} />
           </div>
@@ -544,18 +553,26 @@ function OrderCard({ narudzbina }) {
               {details.items.length > 0 ? (
                 <ul className={styles.itemsList}>
                   {details.items.map((item) => (
-                    <li key={item.id || item.name}>
+                    <li
+                      key={item.id || item.name}
+                      className={item.meta?.source === 'dopuna' ? styles.addOnItem : undefined}
+                    >
                       <div>
                         <strong>{item.name}</strong>
                         <span>
                           {Number(item.quantity || 1)}x / {item.category || 'Stavka'}
                           {item.variant ? ` / ${item.variant}` : ''}
-                          {item.meta?.mealLabel ? ` / ${item.meta.mealLabel}` : ''}
+                          {item.meta?.source === 'dopuna'
+                            ? ' / Dopuna'
+                            : item.meta?.mealLabel
+                              ? ` / ${item.meta.mealLabel}`
+                              : ''}
                           {item.meta?.formattedDate ? ` / Isporuka ${item.meta.formattedDate}` : ''}
                         </span>
                         {Array.isArray(item.meta?.dishes) && item.meta.dishes.length > 0 && (
                           <p>{item.meta.dishes.join(', ')}</p>
                         )}
+                        {item.meta?.description && <p>{item.meta.description}</p>}
                       </div>
                       <em>{formatRsd(item.totalPriceRsd)}</em>
                     </li>
@@ -572,7 +589,11 @@ function OrderCard({ narudzbina }) {
                 <strong>{formatRsd(details.totalRsd)}</strong>
               </div>
               <div className={styles.noteBox}>
-                <span>Napomena kupca</span>
+                <span>
+                  {details.type === 'unique_fuel_inquiry'
+                    ? 'Opis željenog obroka ili plana ishrane'
+                    : 'Napomena kupca'}
+                </span>
                 <p>{details.customerNote || 'Nema napomene.'}</p>
               </div>
               <div className={styles.noteBox}>

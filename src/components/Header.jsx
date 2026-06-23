@@ -44,9 +44,6 @@ export default function Header() {
           <Link href="/o-nama" className={styles.navLink}>
             O nama
           </Link>
-          <Link href="/placanje" className={styles.navLink}>
-            Plaćanje
-          </Link>
         </nav>
 
         <button

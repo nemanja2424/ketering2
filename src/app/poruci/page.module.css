@@ -87,6 +87,41 @@
   line-height: 1.7;
 }
 
+.heroIntro {
+  display: grid;
+  gap: 1rem;
+  max-width: 760px;
+}
+
+.heroBenefits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.heroBenefits li {
+  position: relative;
+  padding-left: 1.15rem;
+  color: #2e1603;
+  font-size: 0.94rem;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.heroBenefits li::before {
+  content: "";
+  position: absolute;
+  top: 0.55em;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background: #566f2d;
+  border-radius: 50%;
+}
+
 .menuSection {
   width: min(100%, 1220px);
   margin: 0 auto;
@@ -97,6 +132,109 @@
   width: min(100%, 1220px);
   margin: 0 auto;
   padding: clamp(2.5rem, 5vw, 4.75rem) 1.25rem 5rem;
+}
+
+.uniqueSection {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4.75rem) 1.25rem 5rem;
+}
+
+.uniqueForm {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(86, 111, 45, 0.18);
+  border-radius: 12px;
+  box-shadow: 0 18px 42px rgba(1, 18, 9, 0.09);
+}
+
+.uniqueFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.uniqueFields label {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #566f2d;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.uniqueFields input,
+.uniqueFields textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 0.9rem;
+  color: #011209;
+  background: rgba(246, 225, 202, 0.5);
+  border: 1px solid rgba(86, 111, 45, 0.22);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.uniqueFields textarea {
+  resize: vertical;
+}
+
+.uniqueFields input:focus,
+.uniqueFields textarea:focus {
+  outline: none;
+  border-color: #566f2d;
+  box-shadow: 0 0 0 4px rgba(86, 111, 45, 0.12);
+}
+
+.uniqueFullWidth {
+  grid-column: 1 / -1;
+}
+
+.uniqueSubmit {
+  justify-self: end;
+  min-width: min(100%, 260px);
+  min-height: 48px;
+  padding: 0.7rem 1rem;
+  color: #011209;
+  background: #d4a574;
+  border: 1px solid #d4a574;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.uniqueSubmit:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.uniqueStatus {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+.success {
+  color: #f6e1ca;
+  background: #566f2d;
+}
+
+.error {
+  color: #f6e1ca;
+  background: #8b2f22;
 }
 
 .panelEnter {
@@ -149,7 +287,7 @@
 .modeSwitch {
   position: relative;
   display: flex;
-  width: min(100%, 520px);
+  width: min(100%, 680px);
   margin: 0 auto;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.5);
@@ -185,7 +323,7 @@
   bottom: 4px;
   left: 4px;
   z-index: 1;
-  width: calc(50% - 4px);
+  width: calc(33.333% - 3px);
   background: #566f2d;
   border-radius: 999px;
   transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
@@ -486,6 +624,144 @@
   box-shadow: 0 18px 40px rgba(86, 111, 45, 0.18);
 }
 
+.variantPicker {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) repeat(2, minmax(150px, 220px));
+  align-items: stretch;
+  gap: 0.85rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(86, 111, 45, 0.18);
+  border-radius: 12px;
+}
+
+.variantPicker > div {
+  align-self: center;
+}
+
+.variantPicker > div span,
+.extrasHeader span {
+  display: block;
+  color: #566f2d;
+  font-size: 0.82rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.variantPicker p,
+.extrasHeader p {
+  margin: 0.35rem 0 0;
+  color: #5d574d;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.variantPicker button {
+  display: grid;
+  gap: 0.3rem;
+  min-height: 64px;
+  padding: 0.75rem;
+  color: #566f2d;
+  background: rgba(246, 225, 202, 0.6);
+  border: 1px solid rgba(86, 111, 45, 0.22);
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.variantPicker button strong {
+  font-size: 1rem;
+}
+
+.variantPicker button span {
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.variantPicker button:hover,
+.variantPicker .activeVariant {
+  color: #f6e1ca;
+  background: #566f2d;
+  border-color: #566f2d;
+}
+
+.subscriptionExtras,
+.customAddOns {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(86, 111, 45, 0.18);
+  border-radius: 12px;
+}
+
+.extraOptions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.extraOption {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.75rem;
+  background: rgba(246, 225, 202, 0.58);
+  border: 1px solid rgba(86, 111, 45, 0.18);
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.extraOption input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: #566f2d;
+}
+
+.extraOption span {
+  color: #2d2a24;
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+.extraOption strong {
+  grid-column: 2;
+  color: #566f2d;
+  font-size: 0.78rem;
+}
+
+.rotationList {
+  display: grid;
+  gap: 0.65rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(86, 111, 45, 0.16);
+}
+
+.rotationList > strong {
+  color: #011209;
+  font-size: 0.9rem;
+}
+
+.rotationList div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.rotationList span {
+  color: #566f2d;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.rotationList p {
+  margin: 0;
+  color: #4b463d;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
 .planActions {
   display: flex;
   justify-content: flex-end;
@@ -709,7 +985,7 @@
 
 .dayVariants {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 0.65rem;
 }
 
@@ -1003,11 +1279,44 @@
   box-shadow: 0 18px 42px rgba(1, 18, 9, 0.08);
 }
 
+@media (min-width: 821px) {
+  .mainDishCard {
+    max-height: 430px;
+    overflow-y: auto;
+    scrollbar-color: rgba(86, 111, 45, 0.6) rgba(246, 225, 202, 0.55);
+    scrollbar-width: thin;
+  }
+
+  .mainDishCard::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .mainDishCard::-webkit-scrollbar-track {
+    background: rgba(246, 225, 202, 0.55);
+    border-radius: 999px;
+  }
+
+  .mainDishCard::-webkit-scrollbar-thumb {
+    background: rgba(86, 111, 45, 0.6);
+    border-radius: 999px;
+  }
+}
+
 .customCard legend {
   padding: 0 0.35rem;
   color: #011209;
   font-size: 1.05rem;
   font-weight: 900;
+}
+
+.customCard legend span {
+  display: block;
+  margin-top: 0.2rem;
+  color: #566f2d;
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .checkboxList {
@@ -1125,6 +1434,115 @@
   box-shadow: none;
 }
 
+.disabledOption {
+  cursor: not-allowed;
+  opacity: 0.46;
+}
+
+.disabledOption:hover {
+  background: rgba(246, 225, 202, 0.5);
+  border-color: rgba(108, 126, 73, 0.14);
+  transform: none;
+}
+
+.customAddOnGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.customAddOnCategory {
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  min-width: 0;
+  padding: 0.85rem;
+  background: rgba(246, 225, 202, 0.5);
+  border: 1px solid rgba(86, 111, 45, 0.16);
+  border-radius: 10px;
+}
+
+.customAddOnCategory h3 {
+  margin: 0;
+  color: #011209;
+  font-size: 1rem;
+}
+
+.customAddOnProduct {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem;
+  background: rgba(255, 255, 255, 0.56);
+  border-radius: 8px;
+}
+
+.customAddOnProduct > div:first-child {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.customAddOnProduct > div:first-child strong {
+  font-size: 0.84rem;
+}
+
+.customAddOnProduct > div:first-child span {
+  color: #566f2d;
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.addOnQuantity {
+  display: grid;
+  grid-template-columns: 30px 54px 30px;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.addOnQuantity button {
+  width: 30px;
+  height: 30px;
+  color: #f6e1ca;
+  background: #566f2d;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 950;
+}
+
+.addOnQuantity button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.addOnQuantity input {
+  width: 54px;
+  height: 30px;
+  padding: 0.15rem;
+  color: #011209;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(86, 111, 45, 0.24);
+  border-radius: 7px;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 950;
+  text-align: center;
+  appearance: textfield;
+}
+
+.addOnQuantity input::-webkit-inner-spin-button,
+.addOnQuantity input::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+.addOnQuantity input:focus {
+  outline: none;
+  border-color: #566f2d;
+  box-shadow: 0 0 0 3px rgba(86, 111, 45, 0.12);
+}
+
 .mobileScrollButton {
   position: fixed;
   right: max(1rem, env(safe-area-inset-right));
@@ -1208,6 +1626,10 @@
   .customSections {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .customAddOnGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 820px) {
@@ -1228,7 +1650,25 @@
     grid-template-columns: 1fr;
   }
 
+  .uniqueFields {
+    grid-template-columns: 1fr;
+  }
+
+  .uniqueFullWidth {
+    grid-column: auto;
+  }
+
+  .uniqueSubmit {
+    justify-self: stretch;
+  }
+
   .planPicker {
+    grid-template-columns: 1fr;
+  }
+
+  .variantPicker,
+  .extraOptions,
+  .customAddOnGrid {
     grid-template-columns: 1fr;
   }
 
@@ -1251,6 +1691,10 @@
 }
 
 @media (max-width: 680px) {
+  .heroBenefits {
+    grid-template-columns: 1fr;
+  }
+
   .menuCard {
     display: flex;
     flex-direction: column;
@@ -1335,6 +1779,11 @@
   }
 
   .customSection {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  .uniqueSection {
     padding-right: 1rem;
     padding-left: 1rem;
   }
