@@ -263,6 +263,7 @@ const DAY_ID_BY_INDEX = {
 };
 
 const MAX_CUSTOM_MEALS = 10;
+const MAX_UNIQUE_DOCUMENT_BYTES = 20 * 1024 * 1024;
 
 const INITIAL_UNIQUE_FORM = {
   ime: '',
@@ -389,6 +390,7 @@ function OrderContent() {
   const [customAddOns, setCustomAddOns] = useState([]);
   const [notes, setNotes] = useState('');
   const [uniqueForm, setUniqueForm] = useState(INITIAL_UNIQUE_FORM);
+  const [uniqueDocument, setUniqueDocument] = useState(null);
   const [uniqueStatus, setUniqueStatus] = useState({ type: '', message: '' });
   const [uniqueSubmitting, setUniqueSubmitting] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -787,68 +789,97 @@ function OrderContent() {
     setUniqueForm((current) => ({ ...current, [name]: value }));
   };
 
+  const handleUniqueDocumentChange = (event) => {
+    const file = event.target.files?.[0] || null;
+
+    if (file && file.size > MAX_UNIQUE_DOCUMENT_BYTES) {
+      setUniqueDocument(null);
+      setUniqueStatus({ type: 'error', message: 'Dokument moze biti maksimalno 20MB.' });
+      event.target.value = '';
+      return;
+    }
+
+    setUniqueStatus({ type: '', message: '' });
+    setUniqueDocument(file);
+  };
+
   const handleUniqueSubmit = async (event) => {
     event.preventDefault();
     setUniqueSubmitting(true);
     setUniqueStatus({ type: '', message: '' });
 
     try {
+      const uniqueDescription = uniqueForm.opis.trim();
+
+      if (!uniqueDescription && !uniqueDocument) {
+        throw new Error('Unesite opis ili dodajte dokument plana ishrane.');
+      }
+
       const now = new Date();
       const technicalDate = toDateInputValue(now);
+      const payload = {
+        ime: uniqueForm.ime.trim(),
+        email: uniqueForm.email.trim() || null,
+        br_tel: uniqueForm.br_tel.trim() || null,
+        datum: technicalDate,
+        vreme: '00:00',
+        mesto: uniqueForm.mesto.trim() || null,
+        cena: 0,
+        porudzbina: {
+          schemaVersion: 1,
+          source: 'unique-fuel',
+          type: 'unique_fuel_inquiry',
+          title: 'Unique Fuel upit',
+          status: 'new',
+          items: [
+            {
+              id: `unique-fuel-${Date.now()}`,
+              name: 'Plan ishrane po meri',
+              category: 'Unique Fuel',
+              variant: null,
+              quantity: 1,
+              unitPriceRsd: 0,
+              totalPriceRsd: 0,
+              meta: { description: uniqueDescription },
+            },
+          ],
+          totals: {
+            subtotalRsd: 0,
+            deliveryRsd: 0,
+            discountRsd: 0,
+            totalRsd: 0,
+          },
+          customerNote: uniqueDescription,
+          internalNote: '',
+          payment: {
+            status: 'not_started',
+            provider: null,
+            providerPaymentId: null,
+            amountRsd: 0,
+            currency: 'RSD',
+            paidAt: null,
+          },
+          fulfillment: {
+            method: 'consultation',
+            status: 'pending',
+            confirmedAt: null,
+            completedAt: null,
+          },
+        },
+      };
+      const formData = new FormData();
+
+      Object.entries(payload).forEach(([key, value]) => {
+        formData.append(key, key === 'porudzbina' ? JSON.stringify(value) : value || '');
+      });
+
+      if (uniqueDocument) {
+        formData.append('document', uniqueDocument);
+      }
 
       const response = await fetch('/api/narudzbine', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ime: uniqueForm.ime.trim(),
-          email: uniqueForm.email.trim() || null,
-          br_tel: uniqueForm.br_tel.trim() || null,
-          datum: technicalDate,
-          vreme: '00:00',
-          mesto: uniqueForm.mesto.trim() || null,
-          cena: 0,
-          porudzbina: {
-            schemaVersion: 1,
-            source: 'unique-fuel',
-            type: 'unique_fuel_inquiry',
-            title: 'Unique Fuel upit',
-            status: 'new',
-            items: [
-              {
-                id: `unique-fuel-${Date.now()}`,
-                name: 'Plan ishrane po meri',
-                category: 'Unique Fuel',
-                variant: null,
-                quantity: 1,
-                unitPriceRsd: 0,
-                totalPriceRsd: 0,
-                meta: { description: uniqueForm.opis.trim() },
-              },
-            ],
-            totals: {
-              subtotalRsd: 0,
-              deliveryRsd: 0,
-              discountRsd: 0,
-              totalRsd: 0,
-            },
-            customerNote: uniqueForm.opis.trim(),
-            internalNote: '',
-            payment: {
-              status: 'not_started',
-              provider: null,
-              providerPaymentId: null,
-              amountRsd: 0,
-              currency: 'RSD',
-              paidAt: null,
-            },
-            fulfillment: {
-              method: 'consultation',
-              status: 'pending',
-              confirmedAt: null,
-              completedAt: null,
-            },
-          },
-        }),
+        body: formData,
       });
       const data = await response.json();
 
@@ -858,6 +889,8 @@ function OrderContent() {
 
       setUniqueStatus({ type: 'success', message: 'Unique Fuel upit je uspesno poslat.' });
       setUniqueForm(INITIAL_UNIQUE_FORM);
+      setUniqueDocument(null);
+      event.target.reset();
     } catch (error) {
       setUniqueStatus({ type: 'error', message: error.message });
     } finally {
@@ -1378,9 +1411,29 @@ function OrderContent() {
                   rows="6"
                   value={uniqueForm.opis}
                   onChange={handleUniqueChange}
-                  placeholder="Opišite obroke, ciljeve ishrane, alergije i posebne zahteve..."
-                  required
+                  placeholder={
+                    uniqueDocument
+                      ? 'Opis nije obavezan jer je dokument dodat.'
+                      : 'Opišite obroke, ciljeve ishrane, alergije i posebne zahteve...'
+                  }
                 />
+              </label>
+              <label className={`${styles.uniqueFullWidth} ${styles.uniqueUpload}`}>
+                Dokument plana ishrane
+                <input
+                  name="document"
+                  type="file"
+                  accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.webp,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*,text/plain"
+                  onChange={handleUniqueDocumentChange}
+                />
+                <span>
+                  Opcionalno dodajte dokument koji ste dobili od trenera. Maksimalna velicina je 20MB.
+                </span>
+                {uniqueDocument && (
+                  <strong>
+                    Izabran fajl: {uniqueDocument.name} ({(uniqueDocument.size / 1024 / 1024).toFixed(1)}MB)
+                  </strong>
+                )}
               </label>
             </div>
 

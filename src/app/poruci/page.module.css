@@ -199,6 +199,33 @@
   grid-column: 1 / -1;
 }
 
+.uniqueUpload {
+  padding: 0.9rem;
+  background: rgba(246, 225, 202, 0.34);
+  border: 1px dashed rgba(86, 111, 45, 0.34);
+  border-radius: 10px;
+}
+
+.uniqueUpload input {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.56);
+}
+
+.uniqueUpload span,
+.uniqueUpload strong {
+  color: #2d2a24;
+  font-size: 0.82rem;
+  font-weight: 750;
+  letter-spacing: 0;
+  line-height: 1.45;
+  text-transform: none;
+}
+
+.uniqueUpload strong {
+  color: #566f2d;
+  font-weight: 900;
+}
+
 .uniqueSubmit {
   justify-self: end;
   min-width: min(100%, 260px);

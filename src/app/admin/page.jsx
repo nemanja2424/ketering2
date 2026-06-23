@@ -6,6 +6,7 @@ import {
   FaCalendarAlt,
   FaChevronDown,
   FaClock,
+  FaDownload,
   FaEnvelope,
   FaFilter,
   FaMapMarkerAlt,
@@ -80,6 +81,37 @@ function formatDateTime(value) {
     minute: '2-digit',
     hour12: false,
   }).format(date);
+}
+
+function formatFileSize(value) {
+  const size = Number(value || 0);
+
+  if (size >= 1024 * 1024) {
+    return `${(size / 1024 / 1024).toFixed(1)} MB`;
+  }
+
+  if (size >= 1024) {
+    return `${Math.round(size / 1024)} KB`;
+  }
+
+  return `${size} B`;
+}
+
+function normalizeAttachments(value) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (typeof value === 'string' && value.trim()) {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
 }
 
 function getLocalDateKey(value = new Date()) {
@@ -201,6 +233,7 @@ function normalizeOrder(narudzbina) {
     customerNote: porudzbina.customerNote || porudzbina.napomena || '',
     internalNote: porudzbina.internalNote || '',
     fulfillment: porudzbina.fulfillment || { method: 'delivery', status: 'pending' },
+    attachments: normalizeAttachments(narudzbina.attachments),
     raw: porudzbina,
     isStandard,
   };
@@ -507,6 +540,9 @@ function OrderCard({ narudzbina }) {
   const details = narudzbina.details;
   const paymentLabel = PAYMENT_LABELS[details.paymentStatus] || details.paymentStatus;
   const typeLabel = TYPE_LABELS[details.type] || details.type;
+  const primaryAttachment = details.attachments[0] || null;
+  const attachmentHref =
+    primaryAttachment?.file_path || `/api/narudzbine/${narudzbina.id}/attachment`;
 
   return (
     <article className={styles.orderCard}>
@@ -604,6 +640,26 @@ function OrderCard({ narudzbina }) {
                 <span>Placanje</span>
                 <p>{paymentLabel}</p>
               </div>
+              {details.type === 'unique_fuel_inquiry' && (
+                <div className={styles.attachmentBox}>
+                  <span>Dokument</span>
+                  <a
+                    href={attachmentHref}
+                    className={styles.downloadButton}
+                    download
+                  >
+                    <FaDownload aria-hidden="true" />
+                    <span>
+                      {primaryAttachment?.file_name || 'Preuzmi dokument'}
+                      <small>
+                        {primaryAttachment
+                          ? formatFileSize(primaryAttachment.file_size)
+                          : 'Klikni za proveru i preuzimanje'}
+                      </small>
+                    </span>
+                  </a>
+                </div>
+              )}
             </aside>
           </div>
       </div>

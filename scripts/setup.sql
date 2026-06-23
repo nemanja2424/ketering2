@@ -13,6 +13,17 @@ CREATE TABLE IF NOT EXISTS narudzbine (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS narudzbine_attachments (
+    id BIGSERIAL PRIMARY KEY,
+    narudzbina_id BIGINT NOT NULL REFERENCES narudzbine(id) ON DELETE CASCADE,
+    file_name TEXT NOT NULL,
+    stored_file_name TEXT,
+    file_path TEXT,
+    mime_type TEXT,
+    file_size BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 INSERT INTO narudzbine (
     ime,
     email,

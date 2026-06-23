@@ -1,11 +1,15 @@
 import dotenv from 'dotenv';
+import { mkdir, writeFile } from 'fs/promises';
 import nodemailer from 'nodemailer';
+import path from 'path';
 import { Client } from 'pg';
 
 dotenv.config({ path: '.env.local' });
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+const MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
 
 const TYPE_LABELS = {
   meal_order: 'Pripremljen meni',
@@ -356,6 +360,120 @@ function createMailTransporter() {
   });
 }
 
+async function ensureAttachmentTable(client) {
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS narudzbine_attachments (
+      id BIGSERIAL PRIMARY KEY,
+      narudzbina_id BIGINT NOT NULL REFERENCES narudzbine(id) ON DELETE CASCADE,
+      file_name TEXT NOT NULL,
+      stored_file_name TEXT,
+      file_path TEXT,
+      mime_type TEXT,
+      file_size BIGINT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await client.query(`
+    ALTER TABLE narudzbine_attachments
+      ADD COLUMN IF NOT EXISTS stored_file_name TEXT,
+      ADD COLUMN IF NOT EXISTS file_path TEXT
+  `);
+
+  await client.query(`
+    DO $$
+    BEGIN
+      IF EXISTS (
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_name = 'narudzbine_attachments'
+          AND column_name = 'file_data'
+      ) THEN
+        ALTER TABLE narudzbine_attachments ALTER COLUMN file_data DROP NOT NULL;
+      END IF;
+    END $$;
+  `);
+}
+
+function getAttachmentMetadata(row) {
+  return {
+    id: row.id,
+    file_name: row.file_name,
+    stored_file_name: row.stored_file_name,
+    file_path: row.file_path,
+    mime_type: row.mime_type,
+    file_size: Number(row.file_size || 0),
+    created_at: row.created_at,
+  };
+}
+
+function sanitizeFileName(fileName) {
+  const parsed = path.parse(fileName || 'unique-fuel-dokument');
+  const baseName = parsed.name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80) || 'unique-fuel-dokument';
+  const extension = parsed.ext
+    .toLowerCase()
+    .replace(/[^a-z0-9.]/g, '')
+    .slice(0, 16);
+
+  return `${baseName}${extension}`;
+}
+
+async function saveAttachmentToPublicUploads(orderId, attachment) {
+  const uploadsDirectory = path.join(process.cwd(), 'public', 'uploads');
+  const safeFileName = sanitizeFileName(attachment.name);
+  const storedFileName = `${orderId}-${Date.now()}-${safeFileName}`;
+  const filePath = `/uploads/${storedFileName}`;
+  const absolutePath = path.join(uploadsDirectory, storedFileName);
+  const fileBuffer = Buffer.from(await attachment.arrayBuffer());
+
+  await mkdir(uploadsDirectory, { recursive: true });
+  await writeFile(absolutePath, fileBuffer);
+
+  return {
+    storedFileName,
+    filePath,
+  };
+}
+
+async function parseRequestBody(request) {
+  const contentType = request.headers.get('content-type') || '';
+
+  if (!contentType.includes('multipart/form-data')) {
+    return { body: await request.json(), attachment: null };
+  }
+
+  const formData = await request.formData();
+  const rawOrder = formData.get('porudzbina');
+  const file = formData.get('document');
+  const attachment =
+    file && typeof file === 'object' && typeof file.arrayBuffer === 'function' && file.size > 0
+      ? file
+      : null;
+
+  if (attachment && attachment.size > MAX_ATTACHMENT_BYTES) {
+    throw new Error('Dokument moze biti maksimalno 20MB.');
+  }
+
+  return {
+    body: {
+      ime: formData.get('ime'),
+      email: formData.get('email'),
+      br_tel: formData.get('br_tel'),
+      datum: formData.get('datum'),
+      vreme: formData.get('vreme'),
+      mesto: formData.get('mesto'),
+      cena: formData.get('cena'),
+      porudzbina: rawOrder ? JSON.parse(rawOrder) : null,
+    },
+    attachment,
+  };
+}
+
 async function sendOrderEmails(narudzbina) {
   const transporter = createMailTransporter();
   const ownerEmail = process.env.EMAIL_TO;
@@ -402,6 +520,7 @@ export async function GET(request) {
 
   try {
     await client.connect();
+    await ensureAttachmentTable(client);
 
     const result = await client.query(`
       SELECT 
@@ -416,7 +535,26 @@ export async function GET(request) {
         porudzbina,
         placeno,
         created_at,
-        updated_at
+        updated_at,
+        (
+          SELECT COALESCE(
+            json_agg(
+              json_build_object(
+                'id', attachment.id,
+                'file_name', attachment.file_name,
+                'stored_file_name', attachment.stored_file_name,
+                'file_path', attachment.file_path,
+                'mime_type', attachment.mime_type,
+                'file_size', attachment.file_size,
+                'created_at', attachment.created_at
+              )
+              ORDER BY attachment.created_at ASC
+            ),
+            '[]'::json
+          )
+          FROM narudzbine_attachments attachment
+          WHERE attachment.narudzbina_id = narudzbine.id
+        ) AS attachments
       FROM narudzbine
       ORDER BY datum DESC, vreme DESC
     `);
@@ -432,6 +570,7 @@ export async function GET(request) {
       cena: row.cena,
       porudzbina: row.porudzbina,
       placeno: row.placeno,
+      attachments: row.attachments || [],
       created_at: row.created_at,
       updated_at: row.updated_at,
     }));
@@ -454,7 +593,7 @@ export async function POST(request) {
   });
 
   try {
-    const body = await request.json();
+    const { body, attachment } = await parseRequestBody(request);
     const { ime, email, br_tel, datum, vreme, mesto, cena, porudzbina } = body;
 
     if (!ime || !datum || !vreme || !porudzbina) {
@@ -465,6 +604,7 @@ export async function POST(request) {
     }
 
     await client.connect();
+    await ensureAttachmentTable(client);
 
     const result = await client.query(
       `
@@ -507,9 +647,40 @@ export async function POST(request) {
     );
 
     const narudzbina = result.rows[0];
+    let attachments = [];
+
+    if (attachment) {
+      const savedAttachment = await saveAttachmentToPublicUploads(narudzbina.id, attachment);
+      const attachmentResult = await client.query(
+        `
+          INSERT INTO narudzbine_attachments (
+            narudzbina_id,
+            file_name,
+            stored_file_name,
+            file_path,
+            mime_type,
+            file_size
+          )
+          VALUES ($1, $2, $3, $4, $5, $6)
+          RETURNING id, file_name, stored_file_name, file_path, mime_type, file_size, created_at
+        `,
+        [
+          narudzbina.id,
+          attachment.name || 'unique-fuel-dokument',
+          savedAttachment.storedFileName,
+          savedAttachment.filePath,
+          attachment.type || 'application/octet-stream',
+          attachment.size,
+        ]
+      );
+
+      attachments = attachmentResult.rows.map(getAttachmentMetadata);
+    }
+
     const normalizedNarudzbina = {
       ...narudzbina,
       datum: narudzbina.datum.toISOString().split('T')[0],
+      attachments,
     };
     let emailStatus = { sent: false };
 

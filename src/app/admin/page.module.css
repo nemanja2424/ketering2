@@ -703,7 +703,8 @@
 }
 
 .totalBox,
-.noteBox {
+.noteBox,
+.attachmentBox {
   padding: 1rem;
   border-radius: 8px;
 }
@@ -714,7 +715,8 @@
 }
 
 .totalBox span,
-.noteBox span {
+.noteBox span,
+.attachmentBox > span {
   display: block;
   margin-bottom: 0.3rem;
   font-size: 0.74rem;
@@ -728,12 +730,14 @@
   font-weight: 950;
 }
 
-.noteBox {
+.noteBox,
+.attachmentBox {
   background: rgba(246, 225, 202, 0.44);
   border: 1px solid rgba(86, 111, 45, 0.14);
 }
 
-.noteBox span {
+.noteBox span,
+.attachmentBox > span {
   color: #566f2d;
 }
 
@@ -743,6 +747,57 @@
   font-size: 0.9rem;
   font-weight: 720;
   line-height: 1.5;
+}
+
+.attachmentBox {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.downloadButton {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem;
+  color: #f6e1ca;
+  background: #566f2d;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.downloadButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(1, 18, 9, 0.16);
+}
+
+.downloadButton svg {
+  font-size: 1rem;
+}
+
+.downloadButton span {
+  display: grid;
+  min-width: 0;
+  gap: 0.12rem;
+  overflow: hidden;
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.downloadButton small {
+  color: rgba(246, 225, 202, 0.78);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.attachmentBox p {
+  margin: 0;
+  color: #3f3b33;
+  font-size: 0.9rem;
+  font-weight: 720;
 }
 
 .emptyState,
