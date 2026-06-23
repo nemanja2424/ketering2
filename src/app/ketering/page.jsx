@@ -220,11 +220,11 @@ export default function KeteringPage() {
     (sum, item) => sum + item.priceRsd * item.quantity,
     0
   );
-  const customMenuTotalRsd = customMenuItems.reduce(
-    (sum, item) => sum + item.priceRsd * item.quantity,
+  const guestCount = Math.max(1, Number(formData.broj_osoba || 1));
+  const originalCustomMenuTotalRsd = customMenuItems.reduce(
+    (sum, item) => sum + item.priceRsd * guestCount,
     0
   );
-  const guestCount = Math.max(1, Number(formData.broj_osoba || 1));
   const selectedOfferExtras = (selectedOffer?.extras || []).filter((extra) =>
     selectedOfferExtraIds.includes(extra.id)
   );
@@ -237,6 +237,8 @@ export default function KeteringPage() {
   const discountRate = guestCount >= 50 ? 0.1 : guestCount >= 30 ? 0.05 : 0;
   const discountRsd = Math.round(originalOfferTotalRsd * discountRate);
   const offerTotalRsd = originalOfferTotalRsd - discountRsd;
+  const customMenuDiscountRsd = Math.round(originalCustomMenuTotalRsd * discountRate);
+  const customMenuTotalRsd = originalCustomMenuTotalRsd - customMenuDiscountRsd;
   const totalRsd =
     cateringMenuMode === 'custom'
       ? customMenuTotalRsd
@@ -308,26 +310,17 @@ export default function KeteringPage() {
     });
   };
 
-  const updateCustomMenuQuantity = (category, product, value, absolute = false) => {
+  const toggleCustomMenuItem = (category, product) => {
     setCustomMenuItems((current) => {
       const existing = current.find((item) => item.id === product.id);
-      const nextQuantity = normalizeQuantity(
-        absolute ? value : (existing?.quantity || 0) + value
-      );
-
-      if (nextQuantity === 0) {
-        return current.filter((item) => item.id !== product.id);
-      }
 
       if (existing) {
-        return current.map((item) =>
-          item.id === product.id ? { ...item, quantity: nextQuantity } : item
-        );
+        return current.filter((item) => item.id !== product.id);
       }
 
       return [
         ...current,
-        { ...product, quantity: nextQuantity, category: category.title },
+        { ...product, category: category.title },
       ];
     });
   };
@@ -419,10 +412,15 @@ export default function KeteringPage() {
                   name: item.name,
                   category: item.category,
                   variant: null,
-                  quantity: item.quantity,
-                  unitPriceRsd: item.priceRsd,
-                  totalPriceRsd: item.priceRsd * item.quantity,
-                  meta: { source: 'ketering-po-meri' },
+                  quantity: guestCount,
+                  unitPriceRsd: Math.round(item.priceRsd * (1 - discountRate)),
+                  totalPriceRsd: Math.round(item.priceRsd * guestCount * (1 - discountRate)),
+                  meta: {
+                    source: 'ketering-po-meri',
+                    guestCount,
+                    originalUnitPriceRsd: item.priceRsd,
+                    discountPercent: discountRate * 100,
+                  },
                 }))
               : [
                 {
@@ -476,10 +474,10 @@ export default function KeteringPage() {
             totals: {
               subtotalRsd:
                 cateringMenuMode === 'custom'
-                  ? customMenuTotalRsd
+                  ? originalCustomMenuTotalRsd
                   : originalOfferTotalRsd + addOnTotalRsd,
               deliveryRsd: 0,
-              discountRsd: cateringMenuMode === 'custom' ? 0 : discountRsd,
+              discountRsd: cateringMenuMode === 'custom' ? customMenuDiscountRsd : discountRsd,
               totalRsd,
             },
             customerNote: formData.napomena.trim(),
@@ -498,10 +496,12 @@ export default function KeteringPage() {
               confirmedAt: null,
               completedAt: null,
             },
-            legacy: {
-              offerId: selectedOffer.id,
-              rawOffer: selectedOffer,
-            },
+            legacy: cateringMenuMode === 'custom'
+              ? { customMenu: true }
+              : {
+                  offerId: selectedOffer.id,
+                  rawOffer: selectedOffer,
+                },
           },
         }),
       });
@@ -714,54 +714,33 @@ export default function KeteringPage() {
                   <div key={category.id} className={styles.customMenuCategory}>
                     <h3>{category.title}</h3>
                     {category.products.map((product) => {
-                      const quantity =
-                        customMenuItems.find((item) => item.id === product.id)?.quantity || 0;
+                      const isSelected = customMenuItems.some((item) => item.id === product.id);
 
                       return (
-                        <div key={product.id} className={styles.customMenuProduct}>
+                        <label
+                          key={product.id}
+                          className={`${styles.customMenuProduct} ${
+                            isSelected ? styles.customMenuProductSelected : ''
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            className={styles.customMenuCheckbox}
+                            checked={isSelected}
+                            onChange={() => toggleCustomMenuItem(category, product)}
+                          />
                           <div>
                             <strong>{product.name}</strong>
-                            <span>{formatRsd(product.priceRsd)}</span>
+                            <span>{formatRsd(product.priceRsd)} / gostu</span>
                           </div>
-                          <div className={styles.quantityControls}>
-                            <button
-                              type="button"
-                              onClick={() => updateCustomMenuQuantity(category, product, -1)}
-                              disabled={quantity === 0}
-                            >
-                              -
-                            </button>
-                            <input
-                              type="number"
-                              min="0"
-                              max="999"
-                              step="1"
-                              value={quantity}
-                              onChange={(event) =>
-                                updateCustomMenuQuantity(
-                                  category,
-                                  product,
-                                  event.target.value,
-                                  true
-                                )
-                              }
-                              aria-label={`Količina za ${product.name}`}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => updateCustomMenuQuantity(category, product, 1)}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
+                        </label>
                       );
                     })}
                   </div>
                 ))}
               </div>
               <div className={styles.customMenuTotal}>
-                <span>Sastavljeni meni</span>
+                <span>Sastavljeni meni / {guestCount} gostiju</span>
                 <strong>{formatRsd(customMenuTotalRsd)}</strong>
               </div>
             </>
@@ -777,7 +756,11 @@ export default function KeteringPage() {
                 : selectedOffer?.name || 'Izaberite ponudu iznad'}
             </h2>
             {cateringMenuMode === 'custom' ? (
-              <strong>{formatRsd(totalRsd)}</strong>
+              <div className={styles.discountPrice}>
+                {discountRate > 0 && <del>{formatRsd(originalCustomMenuTotalRsd)}</del>}
+                <strong>{formatRsd(totalRsd)}</strong>
+                {discountRate > 0 && <span>{discountRate * 100}% popusta</span>}
+              </div>
             ) : !selectedOffer ? (
               <span className={styles.emptyPrice}>Cena nakon izbora ponude</span>
             ) : (

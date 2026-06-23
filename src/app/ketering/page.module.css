@@ -415,27 +415,83 @@
 
 .customMenuProduct {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 0.75rem;
   padding: 0.7rem;
   background: rgba(255, 255, 255, 0.6);
+  border: 1px solid transparent;
   border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
-.customMenuProduct > div:first-child {
+.customMenuProduct:hover,
+.customMenuProductSelected {
+  background: rgba(86, 111, 45, 0.12);
+  border-color: rgba(86, 111, 45, 0.34);
+  box-shadow: 0 10px 24px rgba(31, 51, 24, 0.08);
+  transform: translateY(-1px);
+}
+
+.customMenuProduct > div {
   display: grid;
   gap: 0.2rem;
 }
 
-.customMenuProduct > div:first-child strong {
+.customMenuProduct > div strong {
   font-size: 0.88rem;
 }
 
-.customMenuProduct > div:first-child span {
+.customMenuProduct > div span {
   color: #566f2d;
   font-size: 0.78rem;
   font-weight: 850;
+}
+
+.customMenuCheckbox {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.82);
+  border: 2px solid rgba(86, 111, 45, 0.42);
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.customMenuCheckbox::before {
+  width: 10px;
+  height: 10px;
+  background: #566f2d;
+  border-radius: 3px;
+  content: "";
+  opacity: 0;
+  transform: scale(0.7);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.customMenuCheckbox:checked {
+  background: #f8eadb;
+  border-color: #566f2d;
+}
+
+.customMenuCheckbox:checked::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.customMenuCheckbox:focus-visible {
+  outline: 3px solid rgba(86, 111, 45, 0.2);
+  outline-offset: 2px;
 }
 
 .customMenuTotal {
