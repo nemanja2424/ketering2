@@ -48,7 +48,7 @@ export default function AboutPage() {
               <div className={styles.valueCard}>
                 <h3>Kreativnost i inovacija</h3>
                 <p>
-                  Naši kuvarи neprestano eksperimentuju sa novim receptima 
+                  Naši kuvari neprestano eksperimentuju sa novim receptima 
                   i ukusima kako bi vas iznenanadili.
                 </p>
               </div>
@@ -147,7 +147,7 @@ export default function AboutPage() {
                 i profesionalnih servera koji znaju kako da učini događaj besprekoran.
               </p>
               <p>
-                Svaki član tima je posvećen da pružи najbolju moguću uslugu i da se 
+                Svaki član tima je posvećen da pruži najbolju moguću uslugu i da se 
                 uklopi sa vašim vizijom za događaj. Možete biti sigurni da vašim 
                 događajem upravljaju stručnjaci koji se brinu o svakom detalju.
               </p>
