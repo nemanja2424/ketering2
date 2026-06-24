@@ -16,7 +16,7 @@ export default function Footer() {
           <div className={styles.section}>
             <h3 className={styles.sectionTitle}>O nama</h3>
             <p className={styles.description}>
-              Profesionalni ketering servis sa više od 20 godina iskustva. Specialisovani smo za sve vrste događaja.
+              Profesionalni ketering servis sa više od 20 godina iskustva. Specijalizovani smo za sve vrste događaja.
             </p>
             <div className={styles.socials}>
               <a
