@@ -103,11 +103,11 @@ const GRILL_OPTIONS = [
 const ADD_ON_CATEGORIES = [
   {
     id: 'potaz',
-    label: 'Potaz',
+    label: 'Potaž',
     products: [
-      { id: 'potaz-bundeva', name: 'Potaz od bundeve', priceRsd: 320 },
-      { id: 'potaz-brokoli', name: 'Potaz od brokolija', priceRsd: 340 },
-      { id: 'potaz-pecurke', name: 'Potaz od pecuraka', priceRsd: 360 },
+      { id: 'potaz-bundeva', name: 'Potaž od bundeve', priceRsd: 320 },
+      { id: 'potaz-brokoli', name: 'Potaž od brokolija', priceRsd: 340 },
+      { id: 'potaz-pecurke', name: 'Potaž od pečuraka', priceRsd: 360 },
     ],
   },
   {
@@ -115,7 +115,7 @@ const ADD_ON_CATEGORIES = [
     label: 'Deserti',
     products: [
       { id: 'desert-protein-kuglice', name: 'Protein kuglice', priceRsd: 290 },
-      { id: 'desert-cia-puding', name: 'Cia puding', priceRsd: 360 },
+      { id: 'desert-cia-puding', name: 'Čia puding', priceRsd: 360 },
       { id: 'desert-cheesecake', name: 'Mini cheesecake', priceRsd: 420 },
     ],
   },
@@ -136,7 +136,7 @@ const CATERING_MENU_CATEGORIES = [
     title: 'Predjela',
     products: [
       { id: 'kanapei', name: 'Mix kanapea', priceRsd: 4200 },
-      { id: 'mini-sendvici', name: 'Mini sendvici', priceRsd: 3600 },
+      { id: 'mini-sendvici', name: 'Mini sendviči', priceRsd: 3600 },
       { id: 'slani-zalogaji', name: 'Slani zalogaji', priceRsd: 3200 },
     ],
   },
@@ -164,7 +164,7 @@ const CATERING_MENU_CATEGORIES = [
     products: [
       { id: 'dezert-zalogaji', name: 'Dezert zalogaji', priceRsd: 3800 },
       { id: 'torte', name: 'Izbor torti', priceRsd: 6200 },
-      { id: 'vocni-sto', name: 'Vocni sto', priceRsd: 4600 },
+      { id: 'vocni-sto', name: 'Voćni sto', priceRsd: 4600 },
     ],
   },
 ];
@@ -390,7 +390,7 @@ export default function KeteringPage() {
       const grillExtraSelected = selectedOfferExtras.some((extra) => extra.type === 'grill');
 
       if (cateringMenuMode === 'supplement' && grillExtraSelected && selectedGrillItems.length !== 4) {
-        throw new Error('Izaberite tacno 4 vrste rostilja za dodatak.');
+        throw new Error('Izaberite tačno 4 vrste roštilja za dodatak.');
       }
 
       const response = await fetch('/api/narudzbine', {
@@ -961,7 +961,7 @@ export default function KeteringPage() {
               <div className={styles.modalFooter}>
                 <span>Dopuna ukupno: {formatRsd(addOnTotalRsd)}</span>
                 <button type="button" onClick={() => setActiveAddOnCategoryId(null)}>
-                  Sacuvaj dopunu
+                  Sačuvaj dopunu
                 </button>
               </div>
             </div>

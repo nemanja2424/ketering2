@@ -40,12 +40,12 @@ export default function CTA() {
       <div className={styles.overlay}></div>
       <div className={styles.container}>
         <div className={styles.content}>
-          <h2 className={styles.title}>Spreman za sledeci obrok?</h2>
+          <h2 className={styles.title}>Spreman za sledeći obrok?</h2>
           <p className={styles.subtitle}>
-            Izaberi personalizovani meni, mesecni plan ili ketering za dogadjaj.
+            Izaberi personalizovani meni, mesečni plan ili ketering za događaj.
           </p>
           <p className={styles.description}>
-            Slozi obrok po meri, poruci pripremljeni plan ili posalji upit za veci dogadjaj.
+            Složi obrok po meri, poruči pripremljeni plan ili pošalji upit za veći događaj.
           </p>
 
           <div className={styles.buttons}>

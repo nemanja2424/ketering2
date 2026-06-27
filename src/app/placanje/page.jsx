@@ -42,7 +42,7 @@ function formatDate(value) {
 
 function getOrderTitle(order) {
   if (!order) {
-    return 'Nova narudzbina';
+    return 'Nova narudžbina';
   }
 
   if (order.type === 'menu') {
@@ -194,7 +194,7 @@ export default function PlacanjePage() {
 function LoadingState() {
   return (
     <section className={styles.shell}>
-      <div className={styles.loadingPanel}>Ucitavanje narudzbine...</div>
+      <div className={styles.loadingPanel}>Učitavanje narudžbine...</div>
     </section>
   );
 }
@@ -228,7 +228,7 @@ function PaymentDraft() {
         const storedDraft = sessionStorage.getItem('pendingOrderDraft');
 
         if (!storedDraft) {
-          throw new Error('Narudzbina nije pronadjena. Vratite se na porucivanje.');
+          throw new Error('Narudžbina nije pronađena. Vratite se na poručivanje.');
         }
 
         const parsedDraft = JSON.parse(storedDraft);
@@ -391,13 +391,13 @@ function PaymentDraft() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Narudzbina nije sacuvana.');
+        throw new Error(data.message || 'Narudžbina nije sačuvana.');
       }
 
       setCreatedOrder(data.narudzbina);
       setStatus({
         type: 'success',
-        message: 'Narudzbina je sacuvana u bazi. Placanje jos nije aktivirano.',
+        message: 'Narudžbina je sačuvana u bazi. Plaćanje još nije aktivirano.',
       });
       setForm(INITIAL_FORM);
       setManualDescription('');
@@ -416,14 +416,14 @@ function PaymentDraft() {
         <div className={styles.hero}>
         <Link href="/poruci" className={styles.backLink}>
           <FaArrowLeft aria-hidden="true" />
-          Porucivanje
+          Poručivanje
         </Link>
         <div>
-          <span className={styles.eyebrow}>Potvrda narudzbine</span>
-          <h1>Podaci za isporuku i priprema placanja</h1>
+          <span className={styles.eyebrow}>Potvrda narudžbine</span>
+          <h1>Podaci za isporuku i priprema plaćanja</h1>
           <p>
-            Trenutno cuvamo narudzbinu u bazi bez naplate. Online placanje je izdvojeno kao sledeci
-            korak, pa se kasnije moze dodati bez promene forme.
+            Trenutno čuvamo narudžbinu u bazi bez naplate. Online plaćanje je izdvojeno kao sledeći
+            korak, pa se kasnije može dodati bez promene forme.
           </p>
         </div>
       </div>
@@ -548,7 +548,7 @@ function PaymentDraft() {
           {!order && (
             <div className={styles.manualBox}>
               <label className={styles.field}>
-                Opis narudzbine *
+                Opis narudžbine *
                 <textarea
                   value={manualDescription}
                   onChange={(event) => setManualDescription(event.target.value)}
@@ -590,9 +590,9 @@ function PaymentDraft() {
               disabled={isMobile ? false : !canSubmit}
               onClick={handleTopOrderClick}
             >
-              {submitting ? 'Slanje...' : 'Poruci'}
+              {submitting ? 'Slanje...' : 'Poruči'}
             </button>
-            <span>Placanje se ne naplacuje na ovom koraku.</span>
+            <span>Plaćanje se ne naplaćuje na ovom koraku.</span>
           </div>
 
           {status.message && (
@@ -606,13 +606,13 @@ function PaymentDraft() {
           <div className={styles.panelHeader}>
             <div>
               <span>Pregled</span>
-              <h2>Narudzbina</h2>
+              <h2>Narudžbina</h2>
             </div>
             <FaReceipt aria-hidden="true" />
           </div>
 
           {orderLoading ? (
-            <div className={styles.emptyState}>Ucitavanje izabrane narudzbine...</div>
+            <div className={styles.emptyState}>Učitavanje izabrane narudžbine...</div>
           ) : (
             <>
               <div className={styles.summaryTitle}>
@@ -627,7 +627,7 @@ function PaymentDraft() {
                   ))}
                 </ul>
               ) : (
-                <p className={styles.emptyState}>Unesite opis narudzbine u formi.</p>
+                <p className={styles.emptyState}>Unesite opis narudžbine u formi.</p>
               )}
 
               <div className={styles.metaList}>
@@ -655,7 +655,7 @@ function PaymentDraft() {
                   <strong>{formatRsd(totalRsd)}</strong>
                 </div>
                 <button type="submit" form={ORDER_FORM_ID} disabled={!canSubmit}>
-                  {submitting ? 'Slanje...' : 'Poruci'}
+                  {submitting ? 'Slanje...' : 'Poruči'}
                 </button>
               </div>
             </>
@@ -664,7 +664,7 @@ function PaymentDraft() {
           {createdOrder && (
             <div className={styles.savedBox}>
               <FaCheck aria-hidden="true" />
-              <span>Sacuvano u bazi kao narudzbina #{createdOrder.id}</span>
+              <span>Sačuvano u bazi kao narudžbina #{createdOrder.id}</span>
             </div>
           )}
         </aside>

@@ -22,7 +22,7 @@ import styles from './page.module.css';
 const PAYMENT_LABELS = {
   not_started: 'Nije pokrenuto',
   pending: 'Na cekanju',
-  paid: 'Placeno',
+  paid: 'Plaćeno',
   failed: 'Neuspesno',
   refunded: 'Refundirano',
 };
@@ -222,7 +222,7 @@ function normalizeOrder(narudzbina) {
       porudzbina.naslov ||
       porudzbina.ponuda ||
       porudzbina.meni ||
-      'Narudzbina',
+      'Narudžbina',
     type: porudzbina.type || porudzbina.tip || 'manual_order',
     status: porudzbina.status || 'new',
     source: porudzbina.source || porudzbina.kanal || 'legacy',
@@ -261,7 +261,7 @@ export default function AdminPage() {
         setNarudzbine(data);
       }
     } catch (err) {
-      console.error('Greska pri ucitavanju narudzbina:', err);
+      console.error('Greška pri učitavanju narudžbina:', err);
     } finally {
       setLoadingData(false);
     }
@@ -366,10 +366,10 @@ export default function AdminPage() {
         setEmail('');
         setPassword('');
       } else {
-        setError(data.message || 'Greska pri autentifikaciji');
+        setError(data.message || 'Greška pri autentifikaciji');
       }
     } catch (err) {
-      setError('Greska pri autentifikaciji');
+      setError('Greška pri autentifikaciji');
       console.error(err);
     }
   };
@@ -384,7 +384,7 @@ export default function AdminPage() {
     return (
       <main className={styles.loginContainer}>
         <div className={styles.loginBox}>
-          <p className={styles.emptyState}>Ucitavanje admin panela...</p>
+          <p className={styles.emptyState}>Učitavanje admin panela...</p>
         </div>
       </main>
     );
@@ -413,7 +413,7 @@ export default function AdminPage() {
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="Unesite sifru"
+                placeholder="Unesite šifru"
                 required
               />
             </label>
@@ -434,7 +434,7 @@ export default function AdminPage() {
       <header className={styles.header}>
         <div>
           <span>Admin</span>
-          <h1>Narudzbine</h1>
+          <h1>Narudžbine</h1>
         </div>
         <div className={styles.headerActions}>
           <Link href="/admin/pretplate" className={styles.refreshButton}>
@@ -451,13 +451,13 @@ export default function AdminPage() {
         </div>
       </header>
 
-      <section className={styles.statsGrid} aria-label="Pregled narudzbina">
+      <section className={styles.statsGrid} aria-label="Pregled narudžbina">
         <div>
           <span>Prikazano</span>
           <strong>{stats.total}</strong>
         </div>
         <div>
-          <span>Nije placeno</span>
+          <span>Nije plaćeno</span>
           <strong>{stats.unpaid}</strong>
         </div>
         <div>
@@ -466,7 +466,7 @@ export default function AdminPage() {
         </div>
       </section>
 
-      <section className={styles.filtersPanel} aria-label="Filteri narudzbina">
+      <section className={styles.filtersPanel} aria-label="Filteri narudžbina">
         <div className={styles.filtersTitle}>
           <FaFilter aria-hidden="true" />
           <span>Filteri</span>
@@ -487,12 +487,12 @@ export default function AdminPage() {
           </label>
 
           <label>
-            Placanje
+            Plaćanje
             <select value={paymentFilter} onChange={(event) => setPaymentFilter(event.target.value)}>
-              <option value="all">Sva placanja</option>
+              <option value="all">Sva plaćanja</option>
               <option value="not_started">Nije pokrenuto</option>
               <option value="pending">Na cekanju</option>
-              <option value="paid">Placeno</option>
+              <option value="paid">Plaćeno</option>
               <option value="failed">Neuspesno</option>
               <option value="refunded">Refundirano</option>
             </select>
@@ -520,9 +520,9 @@ export default function AdminPage() {
 
       <section className={styles.container}>
         {loadingData ? (
-          <p className={styles.emptyState}>Ucitavanje narudzbina...</p>
+          <p className={styles.emptyState}>Učitavanje narudžbina...</p>
         ) : visibleOrders.length === 0 ? (
-          <p className={styles.emptyState}>Nema narudzbina.</p>
+          <p className={styles.emptyState}>Nema narudžbina.</p>
         ) : (
           <div className={styles.ordersList}>
             {visibleOrders.map((narudzbina) => (
@@ -637,7 +637,7 @@ function OrderCard({ narudzbina }) {
                 <p>{formatDateTime(narudzbina.created_at)}</p>
               </div>
               <div className={styles.noteBox}>
-                <span>Placanje</span>
+                <span>Plaćanje</span>
                 <p>{paymentLabel}</p>
               </div>
               {details.type === 'unique_fuel_inquiry' && (

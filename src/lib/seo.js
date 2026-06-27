@@ -4,7 +4,7 @@ export const brandName = 'IN Ketering';
 export const legalName = 'Ketering by Pekarica';
 export const logoPath = '/LOGO no bg.webp';
 export const siteDescription =
-  'IN Ketering i Ketering by Pekarica nude ketering za Nis, okolinu, poslovne proslave i dnevne obroke po meri.';
+  'IN Ketering i Ketering by Pekarica nude ketering za Niš, okolinu, poslovne proslave i dnevne obroke po meri.';
 
 export const seoKeywords = [
   'ketering',
@@ -12,16 +12,16 @@ export const seoKeywords = [
   'ketering by pekarica',
   'IN Ketering',
   'inketering',
-  'ketering Nis',
   'ketering Niš',
-  'ketering okolina Nisa',
+  'ketering Niš',
   'ketering okolina Niša',
-  'dostava hrane Nis',
+  'ketering okolina Niša',
   'dostava hrane Niš',
-  'ketering Niska Banja',
+  'dostava hrane Niš',
+  'ketering Niška Banja',
   'ketering Niška Banja',
   'ketering za proslave',
-  'ketering za poslovne dogadjaje',
+  'ketering za poslovne događaje',
   'dnevni obroci',
   'personalizovani obroci',
   'clean obroci',
@@ -114,7 +114,7 @@ export const organizationJsonLd = {
   telephone: '+381641963677',
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Nis',
+    addressLocality: 'Niš',
     addressCountry: 'RS',
   },
   areaServed: [

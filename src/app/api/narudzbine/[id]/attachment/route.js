@@ -81,7 +81,7 @@ export async function GET(_request, { params }) {
   const orderId = Number(id);
 
   if (!Number.isInteger(orderId) || orderId <= 0) {
-    return Response.json({ message: 'Neispravan ID narudzbine.' }, { status: 400 });
+    return Response.json({ message: 'Neispravan ID narudžbine.' }, { status: 400 });
   }
 
   const client = new Client({
@@ -113,7 +113,7 @@ export async function GET(_request, { params }) {
     );
 
     if (result.rowCount === 0) {
-      return Response.json({ message: 'Dokument nije pronadjen.' }, { status: 404 });
+      return Response.json({ message: 'Dokument nije pronađen.' }, { status: 404 });
     }
 
     const attachment = result.rows[0];
@@ -135,11 +135,11 @@ export async function GET(_request, { params }) {
       return createAttachmentResponse(attachment.file_data, attachment);
     }
 
-    return Response.json({ message: 'Dokument nije pronadjen na disku.' }, { status: 404 });
+    return Response.json({ message: 'Dokument nije pronađen na disku.' }, { status: 404 });
   } catch (error) {
-    console.error('Greska pri preuzimanju dokumenta:', error);
+    console.error('Greška pri preuzimanju dokumenta:', error);
     return Response.json(
-      { message: 'Greska pri preuzimanju dokumenta: ' + error.message },
+      { message: 'Greška pri preuzimanju dokumenta: ' + error.message },
       { status: 500 }
     );
   } finally {

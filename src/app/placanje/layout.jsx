@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Placanje | IN Ketering',
-  description: 'Privremena potvrda narudzbine za IN Ketering.',
+  title: 'Plaćanje | IN Ketering',
+  description: 'Privremena potvrda narudžbine za IN Ketering.',
   robots: {
     index: false,
     follow: false,

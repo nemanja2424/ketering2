@@ -20,7 +20,7 @@ import styles from '../page.module.css';
 const PAYMENT_LABELS = {
   not_started: 'Nije pokrenuto',
   pending: 'Na cekanju',
-  paid: 'Placeno',
+  paid: 'Plaćeno',
   failed: 'Neuspesno',
   refunded: 'Refundirano',
 };
@@ -146,7 +146,7 @@ export default function PretplateAdminPage() {
         setNarudzbine(data);
       }
     } catch (err) {
-      console.error('Greska pri ucitavanju pretplata:', err);
+      console.error('Greška pri učitavanju pretplata:', err);
     } finally {
       setLoadingData(false);
     }
@@ -271,10 +271,10 @@ export default function PretplateAdminPage() {
         setEmail('');
         setPassword('');
       } else {
-        setError(data.message || 'Greska pri autentifikaciji');
+        setError(data.message || 'Greška pri autentifikaciji');
       }
     } catch (err) {
-      setError('Greska pri autentifikaciji');
+      setError('Greška pri autentifikaciji');
       console.error(err);
     }
   };
@@ -289,7 +289,7 @@ export default function PretplateAdminPage() {
     return (
       <main className={styles.loginContainer}>
         <div className={styles.loginBox}>
-          <p className={styles.emptyState}>Ucitavanje pretplata...</p>
+          <p className={styles.emptyState}>Učitavanje pretplata...</p>
         </div>
       </main>
     );
@@ -318,7 +318,7 @@ export default function PretplateAdminPage() {
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="Unesite sifru"
+                placeholder="Unesite šifru"
                 required
               />
             </label>
@@ -344,7 +344,7 @@ export default function PretplateAdminPage() {
         <div className={styles.headerActions}>
           <Link href="/admin" className={styles.refreshButton}>
             <FaArrowLeft aria-hidden="true" />
-            Narudzbine
+            Narudžbine
           </Link>
           <button type="button" onClick={fetchNarudzbine} className={styles.refreshButton}>
             <FaSyncAlt aria-hidden="true" />
@@ -367,7 +367,7 @@ export default function PretplateAdminPage() {
           <strong>{stats.deliveries}</strong>
         </div>
         <div>
-          <span>Nije placeno</span>
+          <span>Nije plaćeno</span>
           <strong>{stats.unpaid}</strong>
         </div>
         <div>
@@ -423,12 +423,12 @@ export default function PretplateAdminPage() {
 
         <div className={styles.subscriptionFiltersGrid}>
           <label>
-            Placanje
+            Plaćanje
             <select value={paymentFilter} onChange={(event) => setPaymentFilter(event.target.value)}>
-              <option value="all">Sva placanja</option>
+              <option value="all">Sva plaćanja</option>
               <option value="not_started">Nije pokrenuto</option>
               <option value="pending">Na cekanju</option>
-              <option value="paid">Placeno</option>
+              <option value="paid">Plaćeno</option>
               <option value="failed">Neuspesno</option>
               <option value="refunded">Refundirano</option>
             </select>
@@ -447,7 +447,7 @@ export default function PretplateAdminPage() {
 
       <section className={styles.container}>
         {loadingData ? (
-          <p className={styles.emptyState}>Ucitavanje pretplata...</p>
+          <p className={styles.emptyState}>Učitavanje pretplata...</p>
         ) : visibleSubscriptions.length === 0 ? (
           <p className={styles.emptyState}>Nema pretplata.</p>
         ) : (
@@ -532,7 +532,7 @@ function SubscriptionCard({ subscription }) {
                 <p>{details.daysCount}</p>
               </div>
               <div className={styles.noteBox}>
-                <span>Placanje</span>
+                <span>Plaćanje</span>
                 <p>{paymentLabel}</p>
               </div>
               <div className={styles.noteBox}>

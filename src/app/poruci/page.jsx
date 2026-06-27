@@ -19,26 +19,26 @@ const SUBSCRIPTION_OPTIONS = [
 const SUBSCRIPTION_EXTRAS = [
   {
     id: 'dnevni-kolac',
-    label: 'Dnevni kolac',
+    label: 'Dnevni kolač',
     priceRsd: 350,
     rotation: {
       ponedeljak: 'Protein kuglice',
       utorak: 'Mini cheesecake',
-      sreda: 'Cia puding',
-      cetvrtak: 'Kolac sa jabukom',
-      petak: 'Cokoladni mus',
+      sreda: 'Čia puding',
+      cetvrtak: 'Kolač sa jabukom',
+      petak: 'Čokoladni mus',
     },
   },
   {
     id: 'dnevni-potaz',
-    label: 'Dnevni potaz',
+    label: 'Dnevni potaž',
     priceRsd: 340,
     rotation: {
-      ponedeljak: 'Potaz od bundeve',
-      utorak: 'Potaz od brokolija',
-      sreda: 'Potaz od pecuraka',
-      cetvrtak: 'Potaz od karfiola',
-      petak: 'Potaz od paradajza',
+      ponedeljak: 'Potaž od bundeve',
+      utorak: 'Potaž od brokolija',
+      sreda: 'Potaž od pečuraka',
+      cetvrtak: 'Potaž od karfiola',
+      petak: 'Potaž od paradajza',
     },
   },
   {
@@ -58,20 +58,20 @@ const SUBSCRIPTION_EXTRAS = [
 const CUSTOM_ADD_ON_CATEGORIES = [
   {
     id: 'kolaci',
-    title: 'Kolaci',
+    title: 'Kolači',
     products: [
       { id: 'kolac-protein-kuglice', name: 'Protein kuglice', priceRsd: 290 },
-      { id: 'kolac-cia-puding', name: 'Cia puding', priceRsd: 360 },
+      { id: 'kolac-cia-puding', name: 'Čia puding', priceRsd: 360 },
       { id: 'kolac-cheesecake', name: 'Mini cheesecake', priceRsd: 420 },
     ],
   },
   {
     id: 'potazi',
-    title: 'Potazi',
+    title: 'Potaži',
     products: [
-      { id: 'potaz-bundeva', name: 'Potaz od bundeve', priceRsd: 320 },
-      { id: 'potaz-brokoli', name: 'Potaz od brokolija', priceRsd: 340 },
-      { id: 'potaz-pecurke', name: 'Potaz od pecuraka', priceRsd: 360 },
+      { id: 'potaz-bundeva', name: 'Potaž od bundeve', priceRsd: 320 },
+      { id: 'potaz-brokoli', name: 'Potaž od brokolija', priceRsd: 340 },
+      { id: 'potaz-pecurke', name: 'Potaž od pečuraka', priceRsd: 360 },
     ],
   },
   {
@@ -156,15 +156,15 @@ const CUSTOM_SECTIONS = [
 const DAILY_MENUS = {
   ponedeljak: [
     {
-      clean: 'Piletina sa pirincem i boranijom, zelena salata',
-      lean: 'Piletina sa brokolijem i sargarepom, zelena salata',
+      clean: 'Piletina sa pirinčem i boranijom, zelena salata',
+      lean: 'Piletina sa brokolijem i šargarepom, zelena salata',
     },
     {
-      clean: 'Curetina sa pirincem i mesanim povrcem, zelena salata',
-      lean: 'Curetina sa mesanim povrcem, zelena salata',
+      clean: 'Ćuretina sa pirinčem i mešanim povrćem, zelena salata',
+      lean: 'Ćuretina sa mešanim povrćem, zelena salata',
     },
     {
-      clean: 'Piletina sa pirincem i pireom od spanaca',
+      clean: 'Piletina sa pirinčem i pireom od spanaća',
       lean: 'Piletina sa avokadom i brokolijem',
     },
     {
@@ -174,56 +174,56 @@ const DAILY_MENUS = {
   ],
   utorak: [
     {
-      clean: 'Junetina sa celerom, krompirom i sargarepom',
+      clean: 'Junetina sa celerom, krompirom i šargarepom',
       lean: 'Junetina sa tikvicama i paprikom',
     },
     {
       clean: 'File minjon sa krompir pireom i zelenom salatom',
-      lean: 'File minjon sa tikvicama, paprikom i sargarepom',
+      lean: 'File minjon sa tikvicama, paprikom i šargarepom',
     },
     {
       clean: 'Junetina u paradajz sosu sa krompir pireom, vitaminska salata',
-      lean: 'Junetina u paradajz sosu sa tikvicama i sargarepom, vitaminska salata',
+      lean: 'Junetina u paradajz sosu sa tikvicama i šargarepom, vitaminska salata',
     },
     {
-      clean: 'Curetina pasta u kari sosu sa tikvicama i paprikom',
-      lean: 'Curetina sa tikvicama i paprikom, zeleni mix',
+      clean: 'Ćuretina pasta u kari sosu sa tikvicama i paprikom',
+      lean: 'Ćuretina sa tikvicama i paprikom, zeleni mix',
     },
   ],
   sreda: [
     {
-      clean: 'File minjon sa mesanim povrcem i prosom, zelena salata',
-      lean: 'File minjon sa mesanim povrcem, zeleni mix',
+      clean: 'File minjon sa mešanim povrćem i prosom, zelena salata',
+      lean: 'File minjon sa mešanim povrćem, zeleni mix',
     },
     {
       clean: 'Piletina pasta sa paradajz sosom i parmezanom',
-      lean: 'Piletina sa spanacem i cveklom',
+      lean: 'Piletina sa spanaćem i cveklom',
     },
     {
-      clean: 'Curetina sa prosom, boranijom i sargarepom',
-      lean: 'Curetina sa boranijom i sargarepom',
+      clean: 'Ćuretina sa prosom, boranijom i šargarepom',
+      lean: 'Ćuretina sa boranijom i šargarepom',
     },
     {
-      clean: 'Piletina sa pirincem, boranijom, sargarepom i cveklom',
+      clean: 'Piletina sa pirinčem, boranijom, šargarepom i cveklom',
       lean: 'Piletina sa tikvicama i paprikom',
     },
   ],
   cetvrtak: [
     {
-      clean: 'Curetina pasta u paradajz sosu sa tikvicama i paprikom',
-      lean: 'Curetina sa pirincem, tikvicama i paprikom',
+      clean: 'Ćuretina pasta u paradajz sosu sa tikvicama i paprikom',
+      lean: 'Ćuretina sa pirinčem, tikvicama i paprikom',
     },
     {
-      clean: 'Junetina sa pirincem i boranijom, zelena salata',
-      lean: 'Junetina sa boranijom i sargarepom, zelena salata',
+      clean: 'Junetina sa pirinčem i boranijom, zelena salata',
+      lean: 'Junetina sa boranijom i šargarepom, zelena salata',
     },
     {
       clean: 'File minjon sa pekarskim krompirom, zelena salata',
       lean: 'File minjon sa tikvicama i paprikom, zelena salata',
     },
     {
-      clean: 'Junetina sa celerom, sargarepom i krompirom',
-      lean: 'Junetina sa celerom i sargarepom, vitaminska salata',
+      clean: 'Junetina sa celerom, šargarepom i krompirom',
+      lean: 'Junetina sa celerom i šargarepom, vitaminska salata',
     },
   ],
   petak: [
@@ -240,8 +240,8 @@ const DAILY_MENUS = {
       lean: 'Pastrmka sa blitvom i vitaminskom salatom',
     },
     {
-      clean: 'Skarpina sa prosom i mesanim povrcem',
-      lean: 'Skarpina sa mesanim povrcem, zelena salata',
+      clean: 'Škarpina sa prosom i mešanim povrćem',
+      lean: 'Škarpina sa mešanim povrćem, zelena salata',
     },
   ],
 };
@@ -351,8 +351,8 @@ function OrderLoading() {
     <main className={styles.orderPage}>
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <span className={styles.eyebrow}>Porucivanje</span>
-          <h1>Ucitavanje porudzbine</h1>
+          <span className={styles.eyebrow}>Poručivanje</span>
+          <h1>Učitavanje porudžbine</h1>
           <p>Pripremamo izbor obroka.</p>
         </div>
       </section>
@@ -779,7 +779,7 @@ function OrderContent() {
 
       saveDraftAndContinue(order);
     } catch (error) {
-      setErrorMessage(error.message || 'Narudzbina nije pripremljena.');
+      setErrorMessage(error.message || 'Narudžbina nije pripremljena.');
       setPendingChoice(null);
     }
   };
@@ -794,7 +794,7 @@ function OrderContent() {
 
     if (file && file.size > MAX_UNIQUE_DOCUMENT_BYTES) {
       setUniqueDocument(null);
-      setUniqueStatus({ type: 'error', message: 'Dokument moze biti maksimalno 20MB.' });
+      setUniqueStatus({ type: 'error', message: 'Dokument može biti maksimalno 20MB.' });
       event.target.value = '';
       return;
     }
@@ -909,7 +909,7 @@ function OrderContent() {
     >
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <span className={styles.eyebrow}>Porucivanje</span>
+          <span className={styles.eyebrow}>Poručivanje</span>
           <h1>
             {mode === 'daily'
               ? 'Pretplata na obroke'
@@ -938,7 +938,7 @@ function OrderContent() {
       </section>
 
       <div className={styles.modeBar}>
-        <div className={styles.modeSwitch} role="tablist" aria-label="Tip narudzbine">
+        <div className={styles.modeSwitch} role="tablist" aria-label="Tip narudžbine">
           <button
             type="button"
             className={`${styles.modeButton} ${mode === 'daily' ? styles.activeMode : ''}`}
@@ -981,7 +981,7 @@ function OrderContent() {
           </div>
 
           <form className={styles.subscriptionForm} onSubmit={handleSubscriptionOrder}>
-            <div className={styles.planPicker} role="radiogroup" aria-label="Duzina pretplate">
+            <div className={styles.planPicker} role="radiogroup" aria-label="Dužina pretplate">
               {SUBSCRIPTION_OPTIONS.map((option) => (
                 <button
                   key={option.days}
@@ -1000,7 +1000,7 @@ function OrderContent() {
             <div className={styles.variantPicker} role="radiogroup" aria-label="Tip obroka">
               <div>
                 <span>Tip obroka za celu pretplatu</span>
-                <p>Izbor vazi za svaki dan, pa ga ne morate ponavljati u dnevnom meniju.</p>
+                <p>Izbor važi za svaki dan, pa ga ne morate ponavljati u dnevnom meniju.</p>
               </div>
               {['clean', 'lean'].map((variant) => (
                 <button
@@ -1018,7 +1018,7 @@ function OrderContent() {
             <section className={styles.subscriptionExtras}>
               <div className={styles.extrasHeader}>
                 <span>Dnevne dopune</span>
-                <p>Stiklirajte dopune koje zelite uz svaku isporuku.</p>
+                <p>Štiklirajte dopune koje želite uz svaku isporuku.</p>
               </div>
               <div className={styles.extraOptions}>
                 {SUBSCRIPTION_EXTRAS.map((extra) => (
@@ -1156,7 +1156,7 @@ function OrderContent() {
                   )}
                 </div>
                 <button type="submit" disabled={pendingChoice === 'subscription'}>
-                  {pendingChoice === 'subscription' ? 'Pripremamo placanje...' : 'Nastavi na placanje'}
+                  {pendingChoice === 'subscription' ? 'Pripremamo plaćanje...' : 'Nastavi na plaćanje'}
                 </button>
               </aside>
             </div>
@@ -1169,7 +1169,7 @@ function OrderContent() {
           aria-labelledby="custom-menu-title"
         >
           <div className={styles.sectionHeader}>
-            <span className={styles.kicker}>Slozi po meri</span>
+            <span className={styles.kicker}>Složi po meri</span>
             <h2 id="custom-menu-title">Personalizovani obrok</h2>
           </div>
 
@@ -1180,7 +1180,7 @@ function OrderContent() {
                 <textarea
                   rows="3"
                   value={notes}
-                  placeholder="Alergije, posebne zelje, bez luka..."
+                  placeholder="Alergije, posebne želje, bez luka..."
                   onChange={(event) => setNotes(event.target.value)}
                 />
               </label>
@@ -1273,7 +1273,7 @@ function OrderContent() {
             <section className={styles.customAddOns}>
               <div className={styles.extrasHeader}>
                 <span>Dopuni personalizovane obroke</span>
-                <p>Dodajte kolace, potaze ili smutije pre nastavka na placanje.</p>
+                <p>Dodajte kolače, potaže ili smutije pre nastavka na plaćanje.</p>
               </div>
               <div className={styles.customAddOnGrid}>
                 {CUSTOM_ADD_ON_CATEGORIES.map((category) => (
@@ -1338,12 +1338,12 @@ function OrderContent() {
             >
               {customMeals.length >= MAX_CUSTOM_MEALS
                 ? 'Dodato je maksimalno 10 obroka'
-                : 'Dodaj jos jedan obrok'}
+                : 'Dodaj još jedan obrok'}
             </button>
 
             <div ref={customSummaryRef} className={styles.customSummary}>
               <div>
-                <span>Razlicitih obroka</span>
+                <span>Različitih obroka</span>
                 <strong>{customMeals.length}</strong>
               </div>
               <div>
@@ -1351,7 +1351,7 @@ function OrderContent() {
                 <strong>{formatRsd(customTotal)}</strong>
               </div>
               <button type="submit" disabled={pendingChoice === 'custom'}>
-                {pendingChoice === 'custom' ? 'Pripremamo placanje...' : 'Nastavi na placanje'}
+                {pendingChoice === 'custom' ? 'Pripremamo plaćanje...' : 'Nastavi na plaćanje'}
               </button>
             </div>
           </form>
@@ -1427,7 +1427,7 @@ function OrderContent() {
                   onChange={handleUniqueDocumentChange}
                 />
                 <span>
-                  Opcionalno dodajte dokument koji ste dobili od trenera. Maksimalna velicina je 20MB.
+                  Opcionalno dodajte dokument koji ste dobili od trenera. Maksimalna veličina je 20MB.
                 </span>
                 {uniqueDocument && (
                   <strong>
@@ -1462,7 +1462,7 @@ function OrderContent() {
           showScrollButton ? styles.mobileScrollButtonVisible : ''
         }`}
         onClick={scrollToOrderSummary}
-        aria-label="Idi do nastavka porudzbine"
+        aria-label="Idi do nastavka porudžbine"
         aria-hidden={!showScrollButton}
         tabIndex={showScrollButton ? 0 : -1}
       >

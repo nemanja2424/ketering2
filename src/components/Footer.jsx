@@ -60,7 +60,7 @@ export default function Footer() {
             </div>
             <div className={styles.contactItem}>
               <FaEnvelope className={styles.icon} />
-              <a href="mailto:pekarica03@gmail.com">Posalji email</a>
+              <a href="mailto:pekarica03@gmail.com">Pošalji email</a>
             </div>
             <div className={styles.contactItem}>
               <FaMapMarkerAlt className={styles.icon} />

@@ -9,7 +9,7 @@ import { createMetadata } from '@/lib/seo';
 export const metadata = createMetadata({
   title: 'IN Ketering | Ketering by Pekarica',
   description:
-    'Profesionalni ketering by Pekarica za Nis i okolinu, proslave, poslovne dogadjaje i dnevne obroke. Izaberite gotove menije ili obrok po meri.',
+    'Profesionalni ketering by Pekarica za Niš i okolinu, proslave, poslovne događaje i dnevne obroke. Izaberite gotove menije ili obrok po meri.',
   path: '/',
 });
 

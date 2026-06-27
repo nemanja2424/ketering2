@@ -23,7 +23,7 @@ const TYPE_LABELS = {
 const PAYMENT_LABELS = {
   not_started: 'Nije pokrenuto',
   pending: 'Na cekanju',
-  paid: 'Placeno',
+  paid: 'Plaćeno',
   failed: 'Neuspesno',
   refunded: 'Refundirano',
 };
@@ -150,7 +150,7 @@ function getOrderDetails(narudzbina) {
       porudzbina.naslov ||
       porudzbina.ponuda ||
       porudzbina.meni ||
-      'Narudzbina',
+      'Narudžbina',
     type: porudzbina.type || porudzbina.tip || 'manual_order',
     items,
     totalRsd,
@@ -270,7 +270,7 @@ function buildEmailHtml({ narudzbina, recipientType }) {
                   ${!isUniqueFuel ? renderInfoRow('Datum', formatDate(narudzbina.datum)) : ''}
                   ${!isUniqueFuel ? renderInfoRow('Vreme', formatTime(narudzbina.vreme)) : ''}
                   ${renderInfoRow('Broj osoba', details.guestCount)}
-                  ${renderInfoRow('Placanje', paymentLabel)}
+                  ${renderInfoRow('Plaćanje', paymentLabel)}
                   ${renderInfoRow('Poslato', formatDateTime(narudzbina.created_at))}
                 </table>
               </td>
@@ -456,7 +456,7 @@ async function parseRequestBody(request) {
       : null;
 
   if (attachment && attachment.size > MAX_ATTACHMENT_BYTES) {
-    throw new Error('Dokument moze biti maksimalno 20MB.');
+    throw new Error('Dokument može biti maksimalno 20MB.');
   }
 
   return {

@@ -6,7 +6,7 @@ import { createMetadata } from '@/lib/seo';
 export const metadata = createMetadata({
   title: 'IN Ketering | Ketering by Pekarica',
   description:
-    'Upoznajte IN Ketering i Ketering by Pekarica tim sa vise od 20 godina iskustva u pripremi hrane i organizaciji dogadjaja.',
+    'Upoznajte IN Ketering i Ketering by Pekarica tim sa više od 20 godina iskustva u pripremi hrane i organizaciji događaja.',
   path: '/o-nama',
   images: ['/onamaHero.webp'],
 });
@@ -32,8 +32,8 @@ export default function AboutPage() {
               <h2>Naša priča</h2>
               <p>
                 Ketering je više od pripremanja hrane - to je umetnost kombinovanja kvalitete, 
-                kreativnosti i profesionalizma. Nasa prica pocela je pre vise od dve decenije kada smo odlucili
-                da unapredimo kako se dogadjaji dozivljavaju kroz hranu.
+                kreativnosti i profesionalizma. Naša priča počela je pre više od dve decenije kada smo odlučili
+                da unapredimo kako se događaji doživljavaju kroz hranu.
               </p>
               <p>
                 Sa iskustvom i strastima kao vodičima, transformisali smo skromne početke u 
