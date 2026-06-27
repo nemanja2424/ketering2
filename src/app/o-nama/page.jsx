@@ -1,10 +1,15 @@
+import Image from 'next/image';
 import CTA from '@/components/CTA';
 import styles from './page.module.css';
+import { createMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'O nama - Premium Ketering Servis',
-  description: 'Upoznajte našu priču, vrednosti i iskustvo sa više od 20 godina u industriji keteringa.',
-};
+export const metadata = createMetadata({
+  title: 'O nama | Ketering by Pekarica',
+  description:
+    'Upoznajte IN Ketering, Pekarica 03 i Ketering by Pekarica tim sa vise od 20 godina iskustva u pripremi hrane i organizaciji dogadjaja.',
+  path: '/o-nama',
+  images: ['/onamaHero.webp'],
+});
 
 export default function AboutPage() {
   return (
@@ -90,9 +95,11 @@ export default function AboutPage() {
               </div>
               <div className={styles.storyImage}>
                 <div className={styles.imagePlaceholder}>
-                  <img 
-                    src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&h=400&fit=crop" 
-                    alt="Naš tim" 
+                  <Image
+                    src="/onamaHero.webp"
+                    alt="IN Ketering by Pekarica 03 tim"
+                    width={500}
+                    height={400}
                   />
                 </div>
               </div>
@@ -182,3 +189,4 @@ export default function AboutPage() {
     </>
   );
 }
+

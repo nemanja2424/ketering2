@@ -4,6 +4,14 @@ import Services from '../components/Services';
 import Reviews from '../components/Reviews';
 import CTA from '../components/CTA';
 import styles from './page.module.css';
+import { createMetadata } from '@/lib/seo';
+
+export const metadata = createMetadata({
+  title: 'Ketering by Pekarica 03 | IN Ketering',
+  description:
+    'Profesionalni ketering by Pekarica za Nis i okolinu, proslave, poslovne dogadjaje i dnevne obroke. Izaberite gotove menije ili obrok po meri.',
+  path: '/',
+});
 
 export default function Home() {
   return (

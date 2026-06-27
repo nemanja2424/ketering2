@@ -23,7 +23,7 @@ export default function Header() {
           <Link href="/">
             <Image
               src="/LOGO no bg.png"
-              alt="Ketering Logo"
+              alt="IN Ketering - Ketering by Pekarica 03"
               width={600}
               height={600}
               className={styles.logoImage}
