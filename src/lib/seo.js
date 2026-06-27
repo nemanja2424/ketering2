@@ -3,12 +3,11 @@ export const siteUrl = 'https://inketering.com';
 export const brandName = 'IN Ketering';
 export const legalName = 'Ketering by Pekarica';
 export const siteDescription =
-  'IN Ketering, Pekarica 03 i Ketering by Pekarica nude ketering za Nis, okolinu, poslovne proslave i dnevne obroke po meri.';
+  'IN Ketering i Ketering by Pekarica nude ketering za Nis, okolinu, poslovne proslave i dnevne obroke po meri.';
 
 export const seoKeywords = [
   'ketering',
   'pekarica',
-  'pekarica 03',
   'ketering by pekarica',
   'IN Ketering',
   'inketering',
@@ -85,7 +84,7 @@ export const organizationJsonLd = {
   '@type': 'FoodEstablishment',
   '@id': `${siteUrl}/#organization`,
   name: brandName,
-  alternateName: ['Ketering by Pekarica', 'Pekarica 03', 'Pekarica2003 Ketering'],
+  alternateName: ['Ketering by Pekarica', 'Pekarica'],
   url: siteUrl,
   logo: absoluteUrl('/LOGO no bg.png'),
   image: absoluteUrl('/bgHero.webp'),

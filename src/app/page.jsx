@@ -7,7 +7,7 @@ import styles from './page.module.css';
 import { createMetadata } from '@/lib/seo';
 
 export const metadata = createMetadata({
-  title: 'Ketering by Pekarica 03 | IN Ketering',
+  title: 'IN Ketering | Ketering by Pekarica',
   description:
     'Profesionalni ketering by Pekarica za Nis i okolinu, proslave, poslovne dogadjaje i dnevne obroke. Izaberite gotove menije ili obrok po meri.',
   path: '/',

@@ -21,7 +21,7 @@ const services = [
   },
   {
     id: 3,
-    number: '03',
+    number: '3',
     title: 'Proslave',
     description: 'Ketering za sve vrste proslava uz raznovrsna jela i posluženje.',
     image: '/03card.webp'

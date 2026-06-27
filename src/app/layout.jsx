@@ -15,10 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = createMetadata({
-  title: {
-    default: "IN Ketering | Ketering by Pekarica",
-    template: "%s | IN Ketering",
-  },
+  title: "IN Ketering | Ketering by Pekarica",
 });
 
 export default function RootLayout({ children }) {

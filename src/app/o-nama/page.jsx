@@ -4,9 +4,9 @@ import styles from './page.module.css';
 import { createMetadata } from '@/lib/seo';
 
 export const metadata = createMetadata({
-  title: 'O nama | Ketering by Pekarica',
+  title: 'IN Ketering | Ketering by Pekarica',
   description:
-    'Upoznajte IN Ketering, Pekarica 03 i Ketering by Pekarica tim sa vise od 20 godina iskustva u pripremi hrane i organizaciji dogadjaja.',
+    'Upoznajte IN Ketering i Ketering by Pekarica tim sa vise od 20 godina iskustva u pripremi hrane i organizaciji dogadjaja.',
   path: '/o-nama',
   images: ['/onamaHero.webp'],
 });
@@ -32,8 +32,8 @@ export default function AboutPage() {
               <h2>Naša priča</h2>
               <p>
                 Ketering je više od pripremanja hrane - to je umetnost kombinovanja kvalitete, 
-                kreativnosti i profesionalizma. Naša priča počela je 2003. godine kada smo odlučili 
-                da promijenimo kako se događaji doživljavaju kroz hranu.
+                kreativnosti i profesionalizma. Nasa prica pocela je pre vise od dve decenije kada smo odlucili
+                da unapredimo kako se dogadjaji dozivljavaju kroz hranu.
               </p>
               <p>
                 Sa iskustvom i strastima kao vodičima, transformisali smo skromne početke u 
@@ -78,7 +78,7 @@ export default function AboutPage() {
               <div className={styles.storyContent}>
                 <h2>Kako je sve počelo</h2>
                 <p>
-                  Pekarica2003 Ketering je nastao iz jednostavne ideje - da dobra hrana i pažljivo organizovan servis mogu svaki događaj da pretvore u prijatno i bezbrižno iskustvo.
+                  Ketering by Pekarica je nastao iz jednostavne ideje - da dobra hrana i pažljivo organizovan servis mogu svaki događaj da pretvore u prijatno i bezbrižno iskustvo.
                 </p>
                 <p>
                   Od samog početka fokus je bio na kvaliteti, svežim namirnicama i pažljivo pripremljenim jelima, bez kompromisa.
@@ -97,7 +97,7 @@ export default function AboutPage() {
                 <div className={styles.imagePlaceholder}>
                   <Image
                     src="/onamaHero.webp"
-                    alt="IN Ketering by Pekarica 03 tim"
+                    alt="IN Ketering by Pekarica tim"
                     width={500}
                     height={400}
                   />
@@ -189,4 +189,5 @@ export default function AboutPage() {
     </>
   );
 }
+
 

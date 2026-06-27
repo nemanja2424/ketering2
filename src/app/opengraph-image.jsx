@@ -2,7 +2,7 @@
 import { ImageResponse } from 'next/og';
 import { absoluteUrl } from '@/lib/seo';
 
-export const alt = 'IN Ketering by Pekarica 03 - ketering Nis i okolina';
+export const alt = 'IN Ketering | Ketering by Pekarica - ketering Nis i okolina';
 export const size = {
   width: 1200,
   height: 630,
@@ -43,7 +43,7 @@ export default function OpenGraphImage() {
               fontWeight: 700,
             }}
           >
-            Ketering by Pekarica 03
+            Ketering by Pekarica
           </div>
           <div
             style={{
@@ -53,7 +53,7 @@ export default function OpenGraphImage() {
               fontWeight: 800,
             }}
           >
-            IN Ketering za Nis i okolinu
+            IN Ketering | Ketering by Pekarica
           </div>
           <div
             style={{

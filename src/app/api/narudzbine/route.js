@@ -303,7 +303,7 @@ function buildEmailHtml({ narudzbina, recipientType }) {
             </tr>
             <tr>
               <td style="padding: 22px 30px 30px; color: #6b7280; font-size: 12px; line-height: 1.6; background: #fbfcf8;">
-                Ovaj email je automatski poslat preko Pekarica2003 sajta.
+                Ovaj email je automatski poslat preko IN Ketering sajta.
               </td>
             </tr>
           </table>
@@ -484,7 +484,7 @@ async function sendOrderEmails(narudzbina) {
   }
 
   const details = getOrderDetails(narudzbina);
-  const from = `"Pekarica2003" <${senderEmail}>`;
+  const from = `"IN Ketering" <${senderEmail}>`;
   const messages = [];
 
   if (ownerEmail) {
