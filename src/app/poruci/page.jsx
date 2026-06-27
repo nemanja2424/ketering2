@@ -1081,7 +1081,7 @@ function OrderContent() {
                           </div>
                           <em>{formatRsd(day.priceRsd)}</em>
                         </div>
-                        <button
+                        {/*<button
                           type="button"
                           className={styles.editMealButton}
                           onClick={() =>
@@ -1089,7 +1089,7 @@ function OrderContent() {
                           }
                         >
                           {editingDayId === day.id ? 'Zatvori izbor' : 'Izmeni obrok'}
-                        </button>
+                        </button>*/}
                       </div>
 
                       <div
