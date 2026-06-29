@@ -687,7 +687,6 @@
 .variantPicker button {
   display: grid;
   gap: 0.3rem;
-  min-height: 64px;
   padding: 0.75rem;
   color: #566f2d;
   background: rgba(246, 225, 202, 0.6);
@@ -1307,23 +1306,27 @@
 }
 
 @media (min-width: 821px) {
-  .mainDishCard {
-    max-height: 430px;
+  .customSections {
+    align-items: stretch;
+  }
+
+  .customCard {
     overflow-y: auto;
+    height: clamp(340px, 48vh, 353px);
     scrollbar-color: rgba(86, 111, 45, 0.6) rgba(246, 225, 202, 0.55);
     scrollbar-width: thin;
   }
 
-  .mainDishCard::-webkit-scrollbar {
+  .customCard::-webkit-scrollbar {
     width: 8px;
   }
 
-  .mainDishCard::-webkit-scrollbar-track {
+  .customCard::-webkit-scrollbar-track {
     background: rgba(246, 225, 202, 0.55);
     border-radius: 999px;
   }
 
-  .mainDishCard::-webkit-scrollbar-thumb {
+  .customCard::-webkit-scrollbar-thumb {
     background: rgba(86, 111, 45, 0.6);
     border-radius: 999px;
   }

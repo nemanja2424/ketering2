@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import { useRef, useState } from 'react';
-import { FaPlus, FaTimes } from 'react-icons/fa';
+import { FaPlus, FaTimes, FaChevronDown } from 'react-icons/fa';
 import styles from './page.module.css';
 
 const OFFERS = [
@@ -135,36 +135,91 @@ const CATERING_MENU_CATEGORIES = [
     id: 'predjela',
     title: 'Predjela',
     products: [
-      { id: 'kanapei', name: 'Mix kanapea', priceRsd: 4200 },
-      { id: 'mini-sendvici', name: 'Mini sendviči', priceRsd: 3600 },
-      { id: 'slani-zalogaji', name: 'Slani zalogaji', priceRsd: 3200 },
+      { id: 'sendvici-80', name: "Sendviči '80", priceRsd: 140 },
+      { id: 'club-sendvic', name: 'Club sendvič', priceRsd: 180 },
+      { id: 'pileci-wrap', name: 'Pileći wrap', priceRsd: 180 },
+      { id: 'giros-sendvic', name: 'Giros sendvič', priceRsd: 170 },
+      { id: 'roma-tortilja', name: 'Roma tortilja', priceRsd: 150 },
+      { id: 'meksicka-tortilja', name: 'Meksička tortilja', priceRsd: 170 },
+      { id: 'takosi', name: 'Takosi', priceRsd: 180 },
+      { id: 'mini-burgeri', name: 'Mini burgeri', priceRsd: 160 },
+      { id: 'kanapei', name: 'Kanapei', priceRsd: 120 },
+      { id: 'brusketi-suhomesnato', name: 'Brusketi suhomesnato', priceRsd: 130 },
+      { id: 'brusketi-gljive-tofu-sirevi', name: 'Brusketi (šumske gljive, tofu, sirevi)', priceRsd: 120 },
+      { id: 'brusketi-gljive-tofu-humus', name: 'Brusketi (šumske gljive, tofu, humus)', priceRsd: 120 },
+      { id: 'brodici-povrce-sir', name: 'Brodići sa povrćem i sirom', priceRsd: 110 },
+      {
+        id: 'brodici-mix',
+        name: 'Brodići (grčka salata, grilovano povrće, morski plodovi, francuska salata)',
+        priceRsd: 130,
+      },
+      { id: 'karpeze-raznjic', name: 'Karpeze ražnjić', priceRsd: 150 },
+      { id: 'slani-rolati', name: 'Slani rolati', priceRsd: 110 },
+      { id: 'rolatici', name: 'Rolatići', priceRsd: 100 },
+      { id: 'slane-tortice', name: 'Slane tortice', priceRsd: 130 },
+      { id: 'prolecne-rolnice', name: 'Prolećne rolnice', priceRsd: 120 },
+      { id: 'pilece-rolnice', name: 'Pileće rolnice', priceRsd: 150 },
+      { id: 'rolat-dimljeni-losos', name: 'Rolat sa dimljenim lososom', priceRsd: 190 },
+      { id: 'gibanica-sir', name: 'Gibanica sir', priceRsd: 90 },
+      { id: 'gibanica-meso', name: 'Gibanica meso', priceRsd: 110 },
+      { id: 'projice', name: 'Projice', priceRsd: 60 },
+      { id: 'projice-masline', name: 'Projice sa maslinama', priceRsd: 70 },
+      { id: 'mediteranska-projica', name: 'Mediteranska projica', priceRsd: 80 },
+      { id: 'kiflice-sir', name: 'Kiflice sir', priceRsd: 60 },
+      { id: 'pasta-pogacice', name: 'Pasta pogačice', priceRsd: 70 },
+      { id: 'zemicke', name: 'Zemičke', priceRsd: 50 },
+      { id: 'galete', name: 'Galete', priceRsd: 80 },
+      { id: 'pita-spanac', name: 'Pita spanać', priceRsd: 90 },
+      { id: 'pita-pecurke', name: 'Pita pečurke', priceRsd: 90 },
     ],
   },
   {
     id: 'glavna-jela',
     title: 'Glavna jela',
     products: [
-      { id: 'gril-mix', name: 'Gril mix', priceRsd: 7800 },
-      { id: 'pecenje', name: 'Pecenje', priceRsd: 9200 },
-      { id: 'riblji-izbor', name: 'Riblji izbor', priceRsd: 9800 },
+      { id: 'cevapi', name: 'Ćevapi', priceRsd: 200 },
+      { id: 'pileci-prstici', name: 'Pileći prstići', priceRsd: 180 },
+      { id: 'raznjic-grilovano-povrce', name: 'Ražnjić od grilovanog povrća', priceRsd: 140 },
+      { id: 'raznjic-povrce-tofu', name: 'Ražnjić od grilovanog povrća i tofu sira', priceRsd: 160 },
+      { id: 'tikvice-sa-sirom', name: 'Tikvice sa sirom', priceRsd: 130 },
+      { id: 'tikvice-feta-parmezan', name: 'Tikvice punjene fetom i parmezanom', priceRsd: 170 },
+      { id: 'paprika-sa-sirom', name: 'Paprika sa sirom', priceRsd: 120 },
+      { id: 'paprika-punjena-sirom', name: 'Paprika punjena sirom', priceRsd: 140 },
+      { id: 'rizoto-morski-plodovi', name: 'Rižoto sa morskim plodovima', priceRsd: 200 },
+      { id: 'falafel-kuglice', name: 'Falafel kuglice', priceRsd: 160 },
     ],
   },
   {
     id: 'prilozi-salate',
     title: 'Prilozi i salate',
     products: [
-      { id: 'sezonske-salate', name: 'Sezonske salate', priceRsd: 2800 },
-      { id: 'topli-prilozi', name: 'Topli prilozi', priceRsd: 3400 },
-      { id: 'premium-salate', name: 'Premium salate', priceRsd: 4200 },
+      { id: 'pomfrit', name: 'Pomfrit', priceRsd: 80 },
+      { id: 'masline', name: 'Masline', priceRsd: 60 },
+      { id: 'apetisani', name: 'Apetisani', priceRsd: 80 },
+      { id: 'suvo-voce', name: 'Suvo voće', priceRsd: 90 },
+      { id: 'daska-sireva', name: 'Daska sireva', priceRsd: 180 },
+      { id: 'daska-mesnih-delikatesa', name: 'Daska mesnih delikatesa', priceRsd: 190 },
+      { id: 'sveze-voce', name: 'Sveže voće', priceRsd: 100 },
+      { id: 'vitaminska-salata', name: 'Vitaminska salata', priceRsd: 90 },
+      { id: 'grcka-salata', name: 'Grčka salata', priceRsd: 120 },
+      { id: 'fisek-pileca-salata', name: 'Fišek pileća salata', priceRsd: 150 },
+      { id: 'francuska-salata', name: 'Francuska salata', priceRsd: 100 },
+      { id: 'sezonska-salata', name: 'Sezonska salata', priceRsd: 80 },
+      { id: 'zeleni-mix', name: 'Zeleni mix', priceRsd: 90 },
+      { id: 'mediteranska-salata', name: 'Mediteranska salata', priceRsd: 120 },
+      { id: 'kraba-salata', name: 'Kraba salata', priceRsd: 170 },
     ],
   },
   {
-    id: 'dezerti',
-    title: 'Dezerti',
+    id: 'deserti',
+    title: 'Deserti',
     products: [
-      { id: 'dezert-zalogaji', name: 'Dezert zalogaji', priceRsd: 3800 },
-      { id: 'torte', name: 'Izbor torti', priceRsd: 6200 },
-      { id: 'vocni-sto', name: 'Voćni sto', priceRsd: 4600 },
+      { id: 'coko-mus', name: 'Čoko mus', priceRsd: 100 },
+      { id: 'ceri-mus', name: 'Čeri mus', priceRsd: 100 },
+      { id: 'americke-palacinke', name: 'Američke palačinke', priceRsd: 140 },
+      { id: 'cizkejk', name: 'Čizkejk', priceRsd: 180 },
+      { id: 'pita-suve-sljive', name: 'Pita sa suvim šljivama', priceRsd: 100 },
+      { id: 'pita-visnja-vanila', name: 'Pita višnja-vanila', priceRsd: 120 },
     ],
   },
 ];
@@ -204,15 +259,12 @@ export default function KeteringPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeAddOnCategoryId, setActiveAddOnCategoryId] = useState(null);
   const [addOns, setAddOns] = useState([]);
-  const [cateringMenuMode, setCateringMenuMode] = useState('supplement');
   const [customMenuItems, setCustomMenuItems] = useState([]);
   const [selectedOfferExtraIds, setSelectedOfferExtraIds] = useState([]);
   const [selectedGrillItems, setSelectedGrillItems] = useState([]);
+  const [isMenuBuilderOpen, setIsMenuBuilderOpen] = useState(false);
 
-  const selectedOffer =
-    cateringMenuMode === 'supplement'
-      ? OFFERS.find((offer) => offer.id === selectedOfferId) || null
-      : null;
+  const selectedOffer = OFFERS.find((offer) => offer.id === selectedOfferId) || null;
   const activeAddOnCategory = ADD_ON_CATEGORIES.find(
     (category) => category.id === activeAddOnCategoryId
   );
@@ -232,17 +284,14 @@ export default function KeteringPage() {
     (sum, extra) => sum + extra.priceRsd,
     0
   );
-  const priceRsdPerGuest = Number(selectedOffer?.priceRsd || 0) + extrasPriceRsdPerGuest;
-  const originalOfferTotalRsd = priceRsdPerGuest * guestCount;
+  const selectedOfferPriceRsdPerGuest = Number(selectedOffer?.priceRsd || 0);
+  const selectedOfferTotalRsd = selectedOfferPriceRsdPerGuest * guestCount;
+  const selectedOfferExtrasTotalRsd = extrasPriceRsdPerGuest * guestCount;
+  const originalOfferTotalRsd = selectedOfferTotalRsd + selectedOfferExtrasTotalRsd;
+  const subtotalRsd = originalOfferTotalRsd + originalCustomMenuTotalRsd + addOnTotalRsd;
   const discountRate = guestCount >= 50 ? 0.1 : guestCount >= 30 ? 0.05 : 0;
-  const discountRsd = Math.round(originalOfferTotalRsd * discountRate);
-  const offerTotalRsd = originalOfferTotalRsd - discountRsd;
-  const customMenuDiscountRsd = Math.round(originalCustomMenuTotalRsd * discountRate);
-  const customMenuTotalRsd = originalCustomMenuTotalRsd - customMenuDiscountRsd;
-  const totalRsd =
-    cateringMenuMode === 'custom'
-      ? customMenuTotalRsd
-      : offerTotalRsd + addOnTotalRsd;
+  const discountRsd = Math.round(subtotalRsd * discountRate);
+  const totalRsd = subtotalRsd - discountRsd;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -341,12 +390,13 @@ export default function KeteringPage() {
 
   const selectOffer = (offerId) => {
     if (selectedOfferId === offerId) {
-      setCateringMenuMode('supplement');
+      setSelectedOfferId(null);
+      setSelectedOfferExtraIds([]);
+      setSelectedGrillItems([]);
       return;
     }
 
     setSelectedOfferId(offerId);
-    setCateringMenuMode('supplement');
     setSelectedOfferExtraIds([]);
     setSelectedGrillItems([]);
   };
@@ -379,19 +429,82 @@ export default function KeteringPage() {
         throw new Error('Izaberite vreme u 24h formatu.');
       }
 
-      if (cateringMenuMode === 'custom' && customMenuItems.length === 0) {
-        throw new Error('Dodajte bar jednu stavku u ketering meni.');
-      }
-
-      if (cateringMenuMode === 'supplement' && !selectedOffer) {
-        throw new Error('Izaberite ketering ponudu.');
+      if (!selectedOffer && customMenuItems.length === 0 && addOns.length === 0) {
+        throw new Error('Izaberite meni ili dodajte bar jednu stavku u sastavljeni meni.');
       }
 
       const grillExtraSelected = selectedOfferExtras.some((extra) => extra.type === 'grill');
 
-      if (cateringMenuMode === 'supplement' && grillExtraSelected && selectedGrillItems.length !== 4) {
+      if (grillExtraSelected && selectedGrillItems.length !== 4) {
         throw new Error('Izaberite tačno 4 vrste roštilja za dodatak.');
       }
+
+      const orderItems = [
+        ...(selectedOffer
+          ? [
+              {
+                id: selectedOffer.id,
+                name: selectedOffer.name,
+                category: 'Ketering ponuda',
+                variant: null,
+                quantity: guestCount,
+                unitPriceRsd: Math.round(selectedOffer.priceRsd * (1 - discountRate)),
+                totalPriceRsd: Math.round(selectedOffer.priceRsd * guestCount * (1 - discountRate)),
+                meta: {
+                  dishes: selectedOffer.items,
+                  guestCount,
+                  originalUnitPriceRsd: selectedOffer.priceRsd,
+                  discountPercent: discountRate * 100,
+                },
+              },
+              ...selectedOfferExtras.map((extra) => ({
+                id: `${selectedOffer.id}-${extra.id}`,
+                name: extra.label,
+                category: 'Dopuna ketering menija',
+                variant: null,
+                quantity: guestCount,
+                unitPriceRsd: Math.round(extra.priceRsd * (1 - discountRate)),
+                totalPriceRsd: Math.round(extra.priceRsd * guestCount * (1 - discountRate)),
+                meta: {
+                  source: 'dopuna',
+                  originalUnitPriceRsd: extra.priceRsd,
+                  dishes: extra.type === 'grill' ? selectedGrillItems : extra.items || [],
+                  discountPercent: discountRate * 100,
+                },
+              })),
+            ]
+          : []),
+        ...customMenuItems.map((item) => ({
+          id: item.id,
+          name: item.name,
+          category: item.category,
+          variant: null,
+          quantity: guestCount,
+          unitPriceRsd: Math.round(item.priceRsd * (1 - discountRate)),
+          totalPriceRsd: Math.round(item.priceRsd * guestCount * (1 - discountRate)),
+          meta: {
+            source: 'ketering-po-meri',
+            guestCount,
+            originalUnitPriceRsd: item.priceRsd,
+            discountPercent: discountRate * 100,
+          },
+        })),
+        ...addOns.map((item) => ({
+          id: item.id,
+          name: item.name,
+          category: item.categoryLabel,
+          variant: null,
+          quantity: item.quantity,
+          unitPriceRsd: Math.round(item.priceRsd * (1 - discountRate)),
+          totalPriceRsd: Math.round(item.priceRsd * item.quantity * (1 - discountRate)),
+          meta: {
+            source: 'dopuna',
+            categoryId: item.categoryId,
+            originalUnitPriceRsd: item.priceRsd,
+            discountPercent: discountRate * 100,
+          },
+        })),
+      ];
 
       const response = await fetch('/api/narudzbine', {
         method: 'POST',
@@ -403,81 +516,14 @@ export default function KeteringPage() {
             schemaVersion: 1,
             source: 'ketering',
             type: 'catering_inquiry',
-            title: cateringMenuMode === 'custom' ? 'Ketering po meri' : selectedOffer.name,
+            title: selectedOffer ? `${selectedOffer.name} + ketering po meri` : 'Ketering po meri',
             status: 'new',
             guestCount,
-            items: cateringMenuMode === 'custom'
-              ? customMenuItems.map((item) => ({
-                  id: item.id,
-                  name: item.name,
-                  category: item.category,
-                  variant: null,
-                  quantity: guestCount,
-                  unitPriceRsd: Math.round(item.priceRsd * (1 - discountRate)),
-                  totalPriceRsd: Math.round(item.priceRsd * guestCount * (1 - discountRate)),
-                  meta: {
-                    source: 'ketering-po-meri',
-                    guestCount,
-                    originalUnitPriceRsd: item.priceRsd,
-                    discountPercent: discountRate * 100,
-                  },
-                }))
-              : [
-                {
-                id: selectedOffer.id,
-                name: selectedOffer.name,
-                category: 'Ketering ponuda',
-                variant: null,
-                quantity: guestCount,
-                unitPriceRsd: Math.round(selectedOffer.priceRsd * (1 - discountRate)),
-                totalPriceRsd: Math.round(
-                  selectedOffer.priceRsd * guestCount * (1 - discountRate)
-                ),
-                meta: {
-                  dishes: selectedOffer.items,
-                  guestCount,
-                  originalUnitPriceRsd: selectedOffer.priceRsd,
-                  discountPercent: discountRate * 100,
-                },
-              },
-                ...selectedOfferExtras.map((extra) => ({
-                  id: `${selectedOffer.id}-${extra.id}`,
-                  name: extra.label,
-                  category: 'Dopuna ketering menija',
-                  variant: null,
-                  quantity: guestCount,
-                  unitPriceRsd: Math.round(extra.priceRsd * (1 - discountRate)),
-                  totalPriceRsd: Math.round(
-                    extra.priceRsd * guestCount * (1 - discountRate)
-                  ),
-                  meta: {
-                    source: 'dopuna',
-                    originalUnitPriceRsd: extra.priceRsd,
-                    dishes: extra.type === 'grill' ? selectedGrillItems : extra.items || [],
-                    discountPercent: discountRate * 100,
-                  },
-                })),
-                ...addOns.map((item) => ({
-                id: item.id,
-                name: item.name,
-                category: item.categoryLabel,
-                variant: null,
-                quantity: item.quantity,
-                unitPriceRsd: item.priceRsd,
-                totalPriceRsd: item.priceRsd * item.quantity,
-                meta: {
-                  source: 'dopuna',
-                  categoryId: item.categoryId,
-                },
-                })),
-              ],
+            items: orderItems,
             totals: {
-              subtotalRsd:
-                cateringMenuMode === 'custom'
-                  ? originalCustomMenuTotalRsd
-                  : originalOfferTotalRsd + addOnTotalRsd,
+              subtotalRsd,
               deliveryRsd: 0,
-              discountRsd: cateringMenuMode === 'custom' ? customMenuDiscountRsd : discountRsd,
+              discountRsd,
               totalRsd,
             },
             customerNote: formData.napomena.trim(),
@@ -496,12 +542,11 @@ export default function KeteringPage() {
               confirmedAt: null,
               completedAt: null,
             },
-            legacy: cateringMenuMode === 'custom'
-              ? { customMenu: true }
-              : {
-                  offerId: selectedOffer.id,
-                  rawOffer: selectedOffer,
-                },
+            legacy: {
+              customMenu: customMenuItems.length > 0,
+              offerId: selectedOffer?.id || null,
+              rawOffer: selectedOffer,
+            },
           },
         }),
       });
@@ -553,14 +598,10 @@ export default function KeteringPage() {
           {OFFERS.map((offer) => (
             <article
               key={offer.id}
-              className={`${styles.offerCard} ${
-                cateringMenuMode === 'supplement' && selectedOfferId === offer.id
-                  ? styles.selectedCard
-                  : ''
-              }`}
+              className={`${styles.offerCard} ${selectedOfferId === offer.id ? styles.selectedCard : ''}`}
               role="button"
               tabIndex={0}
-              aria-pressed={cateringMenuMode === 'supplement' && selectedOfferId === offer.id}
+              aria-pressed={selectedOfferId === offer.id}
               onClick={(event) => {
                 if (event.target.closest('input, label, [data-offer-extras]')) {
                   return;
@@ -585,8 +626,7 @@ export default function KeteringPage() {
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-                {cateringMenuMode === 'supplement' &&
-                  selectedOfferId === offer.id &&
+                {selectedOfferId === offer.id &&
                   offer.extras.length > 0 && (
                   <div className={styles.offerExtras} data-offer-extras>
                     {offer.extras.map((extra) => {
@@ -633,8 +673,8 @@ export default function KeteringPage() {
                   </div>
                 )}
                 <span className={styles.offerSelectAction}>
-                  {cateringMenuMode === 'supplement' && selectedOfferId === offer.id
-                    ? 'Izabrano'
+                  {selectedOfferId === offer.id
+                    ? 'Odustani od menija'
                     : 'Izaberi ponudu'}
                 </span>
               </div>
@@ -647,68 +687,24 @@ export default function KeteringPage() {
         </p>
 
         <section className={styles.menuBuilder}>
-          <div className={styles.menuBuilderHeader}>
-            <span>Prilagodite ketering</span>
-            <h2>Dopunite ponudu ili sastavite svoj meni</h2>
-          </div>
-          <div className={styles.builderModeSwitch}>
-            <button
-              type="button"
-              className={cateringMenuMode === 'supplement' ? styles.activeBuilderMode : ''}
-              onClick={() => setCateringMenuMode('supplement')}
-            >
-              Dopuni izabranu ponudu
-            </button>
-            <button
-              type="button"
-              className={cateringMenuMode === 'custom' ? styles.activeBuilderMode : ''}
-              onClick={() => {
-                setCateringMenuMode('custom');
-                setSelectedOfferId(null);
-                setSelectedOfferExtraIds([]);
-                setSelectedGrillItems([]);
-              }}
-            >
-              Sastavi svoj meni
-            </button>
-          </div>
+          <button
+            type="button"
+            className={styles.menuBuilderHeader}
+            onClick={() => setIsMenuBuilderOpen((current) => !current)}
+            aria-expanded={isMenuBuilderOpen}
+          >
+            <div>
+              <span>Prilagodite ketering</span>
+              <h2>Dopunite ponudu ili sastavite svoj meni</h2>
+            </div>
+            <FaChevronDown
+              className={`${styles.menuBuilderIcon} ${isMenuBuilderOpen ? styles.menuBuilderIconOpen : ''}`}
+              aria-hidden="true"
+            />
+          </button>
 
-          {cateringMenuMode === 'supplement' ? (
-            <>
-              <div className={styles.addOnPanel}>
-                <div className={styles.addOnPanelHeader}>
-                  <FaPlus aria-hidden="true" />
-                  <strong>Dopuni narudzbinu</strong>
-                </div>
-                <div className={styles.addOnButtons}>
-                  {ADD_ON_CATEGORIES.map((category) => (
-                    <button
-                      key={category.id}
-                      type="button"
-                      onClick={() => setActiveAddOnCategoryId(category.id)}
-                    >
-                      {category.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {addOns.length > 0 && (
-                <div className={styles.addOnSummary}>
-                  <span>Dodato u narudzbinu</span>
-                  <ul>
-                    {addOns.map((item) => (
-                      <li key={item.id}>
-                        <span>{item.quantity}x {item.name}</span>
-                        <strong>{formatRsd(item.priceRsd * item.quantity)}</strong>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </>
-          ) : (
-            <>
+          {isMenuBuilderOpen && (
+            <div className={styles.menuBuilderContent}>
               <div className={styles.customMenuGrid}>
                 {CATERING_MENU_CATEGORIES.map((category) => (
                   <div key={category.id} className={styles.customMenuCategory}>
@@ -741,37 +737,25 @@ export default function KeteringPage() {
               </div>
               <div className={styles.customMenuTotal}>
                 <span>Sastavljeni meni / {guestCount} gostiju</span>
-                <strong>{formatRsd(customMenuTotalRsd)}</strong>
+                <strong>{formatRsd(originalCustomMenuTotalRsd)}</strong>
               </div>
-            </>
+            </div>
           )}
         </section>
+        
 
         <form className={styles.inquiryForm} onSubmit={handleSubmit}>
           <div className={styles.formHeader}>
-            <span>{cateringMenuMode === 'custom' ? 'Meni po meri' : 'Izabrana ponuda'}</span>
-            <h2>
-              {cateringMenuMode === 'custom'
-                ? 'Ketering po meri'
-                : selectedOffer?.name || 'Izaberite ponudu iznad'}
-            </h2>
-            {cateringMenuMode === 'custom' ? (
+            <span>Ukupan izbor</span>
+            <h2>{selectedOffer ? `${selectedOffer.name} + dodate stavke` : 'Ketering po meri'}</h2>
+            {subtotalRsd > 0 ? (
               <div className={styles.discountPrice}>
-                {discountRate > 0 && <del>{formatRsd(originalCustomMenuTotalRsd)}</del>}
+                {discountRate > 0 && <del>{formatRsd(subtotalRsd)}</del>}
                 <strong>{formatRsd(totalRsd)}</strong>
                 {discountRate > 0 && <span>{discountRate * 100}% popusta</span>}
               </div>
-            ) : !selectedOffer ? (
-              <span className={styles.emptyPrice}>Cena nakon izbora ponude</span>
             ) : (
-              <div className={styles.discountPrice}>
-                {discountRate > 0 && <del>{formatRsd(originalOfferTotalRsd)}</del>}
-                <strong>{formatRsd(offerTotalRsd)}</strong>
-                <span>
-                  {addOnTotalRsd > 0 ? `Ukupno sa dopunama: ${formatRsd(totalRsd)}` : ''}
-                  {discountRate > 0 ? `${addOnTotalRsd > 0 ? ' / ' : ''}${discountRate * 100}% popusta` : ''}
-                </span>
-              </div>
+              <span className={styles.emptyPrice}>Cena nakon izbora menija ili stavki</span>
             )}
           </div>
 

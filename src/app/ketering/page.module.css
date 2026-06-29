@@ -353,6 +353,27 @@
   box-shadow: 0 18px 42px rgba(1, 18, 9, 0.09);
 }
 
+.menuBuilderHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.menuBuilderHeader:focus-visible {
+  outline: 3px solid rgba(86, 111, 45, 0.28);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
 .menuBuilderHeader span {
   color: #566f2d;
   font-size: 0.78rem;
@@ -364,6 +385,22 @@
 .menuBuilderHeader h2 {
   margin: 0.3rem 0 0;
   font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+.menuBuilderIcon {
+  flex: 0 0 auto;
+  color: #566f2d;
+  font-size: 1.15rem;
+  transition: transform 0.22s ease;
+}
+
+.menuBuilderIconOpen {
+  transform: rotate(180deg);
+}
+
+.menuBuilderContent {
+  display: grid;
+  gap: 1rem;
 }
 
 .builderModeSwitch {
@@ -406,6 +443,34 @@
   background: rgba(246, 225, 202, 0.45);
   border: 1px solid rgba(86, 111, 45, 0.16);
   border-radius: 10px;
+}
+
+@media (min-width: 761px) {
+  .customMenuGrid {
+    align-items: stretch;
+  }
+
+  .customMenuCategory {
+    overflow-y: auto;
+    height: clamp(420px, 58vh, 620px);
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(86, 111, 45, 0.55) rgba(246, 225, 202, 0.5);
+  }
+
+  .customMenuCategory::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .customMenuCategory::-webkit-scrollbar-track {
+    background: rgba(246, 225, 202, 0.5);
+    border-radius: 999px;
+  }
+
+  .customMenuCategory::-webkit-scrollbar-thumb {
+    background: rgba(86, 111, 45, 0.55);
+    border-radius: 999px;
+  }
 }
 
 .customMenuCategory h3 {

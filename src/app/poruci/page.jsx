@@ -1010,7 +1010,6 @@ function OrderContent() {
                   onClick={() => setSubscriptionVariant(variant)}
                 >
                   <strong>{variant === 'clean' ? 'Clean' : 'Lean'}</strong>
-                  <span>{formatRsd(VARIANT_PRICES_RSD[variant])} / dan</span>
                 </button>
               ))}
             </div>
@@ -1029,7 +1028,6 @@ function OrderContent() {
                       onChange={() => handleSubscriptionExtraToggle(extra.id)}
                     />
                     <span>{extra.label}</span>
-                    <strong>{formatRsd(extra.priceRsd)} / dan</strong>
                   </label>
                 ))}
               </div>
