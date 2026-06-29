@@ -446,6 +446,29 @@
 }
 
 @media (min-width: 761px) {
+  .offerBody ul {
+    max-height: clamp(12rem, 22vw, 15rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 0.35rem;
+    scrollbar-color: rgba(86, 111, 45, 0.55) rgba(246, 225, 202, 0.55);
+    scrollbar-width: thin;
+  }
+
+  .offerBody ul::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .offerBody ul::-webkit-scrollbar-track {
+    background: rgba(246, 225, 202, 0.55);
+    border-radius: 999px;
+  }
+
+  .offerBody ul::-webkit-scrollbar-thumb {
+    background: rgba(86, 111, 45, 0.55);
+    border-radius: 999px;
+  }
+
   .customMenuGrid {
     align-items: stretch;
   }

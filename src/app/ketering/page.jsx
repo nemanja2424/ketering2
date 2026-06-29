@@ -9,7 +9,7 @@ const AVAILABLE_HOURS = Array.from({ length: 8 }, (_, index) => (index + 12).toS
 const OFFERS = [
   {
     id: 'meni-1',
-    name: 'Meni #1',
+    name: 'Party time',
     image: '/01card.webp',
     priceRsd: 1404,
     items: [
@@ -20,7 +20,7 @@ const OFFERS = [
   },
   {
     id: 'meni-2',
-    name: 'Meni #2',
+    name: 'Totalno svoji',
     image: '/02card.webp',
     priceRsd: 2223,
     items: [
@@ -34,7 +34,7 @@ const OFFERS = [
   },
   {
     id: 'meni-3',
-    name: 'Meni #3',
+    name: 'Čarolija',
     image: '/03card.webp',
     priceRsd: 1872,
     items: [
@@ -49,7 +49,7 @@ const OFFERS = [
   },
   {
     id: 'meni-4',
-    name: 'Meni #4',
+    name: 'Trenutak magije',
     image: '/04card.webp',
     priceRsd: 2457,
     items: [
@@ -78,7 +78,7 @@ const OFFERS = [
   },
   {
     id: 'meni-5',
-    name: 'Meni #5',
+    name: 'Isposti se',
     image: '/01card.webp',
     priceRsd: 2223,
     items: [
