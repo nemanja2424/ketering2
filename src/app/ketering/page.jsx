@@ -4,6 +4,8 @@ import { useRef, useState } from 'react';
 import { FaPlus, FaTimes, FaChevronDown } from 'react-icons/fa';
 import styles from './page.module.css';
 
+const AVAILABLE_HOURS = Array.from({ length: 8 }, (_, index) => (index + 12).toString().padStart(2, '0'));
+
 const OFFERS = [
   {
     id: 'meni-1',
@@ -277,6 +279,10 @@ export default function KeteringPage() {
     (sum, item) => sum + item.priceRsd * guestCount,
     0
   );
+  const customMenuTotalRsdPerGuest = customMenuItems.reduce(
+    (sum, item) => sum + item.priceRsd,
+    0
+  );
   const selectedOfferExtras = (selectedOffer?.extras || []).filter((extra) =>
     selectedOfferExtraIds.includes(extra.id)
   );
@@ -303,8 +309,10 @@ export default function KeteringPage() {
 
   const handleTimePartChange = (part, value) => {
     const [currentHour = '12', currentMinute = '00'] = formData.vreme.split(':');
-    const nextHour = part === 'hour' ? value : currentHour;
-    const nextMinute = part === 'minute' ? value : currentMinute;
+    const normalizedHour = AVAILABLE_HOURS.includes(currentHour) ? currentHour : '12';
+    const normalizedMinute = ['00', '15', '30', '45'].includes(currentMinute) ? currentMinute : '00';
+    const nextHour = part === 'hour' ? (AVAILABLE_HOURS.includes(value) ? value : normalizedHour) : normalizedHour;
+    const nextMinute = part === 'minute' ? (['00', '15', '30', '45'].includes(value) ? value : normalizedMinute) : normalizedMinute;
 
     setFormData((current) => ({
       ...current,
@@ -736,8 +744,8 @@ export default function KeteringPage() {
                 ))}
               </div>
               <div className={styles.customMenuTotal}>
-                <span>Sastavljeni meni / {guestCount} gostiju</span>
-                <strong>{formatRsd(originalCustomMenuTotalRsd)}</strong>
+                <span>Sastavljeni meni / 1 osoba</span>
+                <strong>{formatRsd(customMenuTotalRsdPerGuest)}</strong>
               </div>
             </div>
           )}
@@ -817,13 +825,11 @@ export default function KeteringPage() {
                   <option value="" disabled>
                     Sat
                   </option>
-                  {Array.from({ length: 24 }, (_, hour) => hour.toString().padStart(2, '0')).map(
-                    (hour) => (
-                      <option key={hour} value={hour}>
-                        {hour}
-                      </option>
-                    )
-                  )}
+                  {AVAILABLE_HOURS.map((hour) => (
+                    <option key={hour} value={hour}>
+                      {hour}
+                    </option>
+                  ))}
                 </select>
                 <span>:</span>
                 <select

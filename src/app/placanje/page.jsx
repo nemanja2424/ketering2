@@ -15,6 +15,8 @@ import {
 } from 'react-icons/fa';
 import styles from './page.module.css';
 
+const AVAILABLE_HOURS = Array.from({ length: 8 }, (_, index) => (index + 12).toString().padStart(2, '0'));
+
 const INITIAL_FORM = {
   ime: '',
   email: '',
@@ -287,8 +289,10 @@ function PaymentDraft() {
 
   const handleTimePartChange = (part, value) => {
     const [currentHour = '12', currentMinute = '00'] = form.vreme.split(':');
-    const nextHour = part === 'hour' ? value : currentHour;
-    const nextMinute = part === 'minute' ? value : currentMinute;
+    const normalizedHour = AVAILABLE_HOURS.includes(currentHour) ? currentHour : '12';
+    const normalizedMinute = ['00', '15', '30', '45'].includes(currentMinute) ? currentMinute : '00';
+    const nextHour = part === 'hour' ? (AVAILABLE_HOURS.includes(value) ? value : normalizedHour) : normalizedHour;
+    const nextMinute = part === 'minute' ? (['00', '15', '30', '45'].includes(value) ? value : normalizedMinute) : normalizedMinute;
 
     setForm((current) => ({
       ...current,
@@ -519,13 +523,11 @@ function PaymentDraft() {
                   <option value="" disabled>
                     Sat
                   </option>
-                  {Array.from({ length: 24 }, (_, hour) => hour.toString().padStart(2, '0')).map(
-                    (hour) => (
-                      <option key={hour} value={hour}>
-                        {hour}
-                      </option>
-                    )
-                  )}
+                  {AVAILABLE_HOURS.map((hour) => (
+                    <option key={hour} value={hour}>
+                      {hour}
+                    </option>
+                  ))}
                 </select>
                 <span>:</span>
                 <select

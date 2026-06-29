@@ -10,6 +10,17 @@ const VARIANT_PRICES_RSD = {
   lean: 850,
 };
 
+const SUBSCRIPTION_PLAN_PRICES_RSD = {
+  clean: {
+    10: 7000,
+    22: 15000,
+  },
+  lean: {
+    10: 8000,
+    22: 17000,
+  },
+};
+
 const SUBSCRIPTION_OPTIONS = [
   { days: 5, label: '5 dana' },
   { days: 10, label: '10 dana' },
@@ -20,37 +31,40 @@ const SUBSCRIPTION_EXTRAS = [
   {
     id: 'dnevni-kolac',
     label: 'Dnevni kolač',
-    priceRsd: 350,
+    priceRsd: 99,
+    description: 'Kolač višnja, lenja pita, brownie, banana bread, medeno srce',
     rotation: {
-      ponedeljak: 'Protein kuglice',
-      utorak: 'Mini cheesecake',
-      sreda: 'Čia puding',
-      cetvrtak: 'Kolač sa jabukom',
-      petak: 'Čokoladni mus',
+      ponedeljak: 'Kolač višnja',
+      utorak: 'Lenja pita',
+      sreda: 'Brownie',
+      cetvrtak: 'Banana bread',
+      petak: 'Medeno srce',
     },
   },
   {
     id: 'dnevni-potaz',
     label: 'Dnevni potaž',
-    priceRsd: 340,
+    priceRsd: 199,
+    description: 'Brokoli, šargarepa, krompir i praziluk, grašak, karfiol',
     rotation: {
-      ponedeljak: 'Potaž od bundeve',
-      utorak: 'Potaž od brokolija',
-      sreda: 'Potaž od pečuraka',
-      cetvrtak: 'Potaž od karfiola',
-      petak: 'Potaž od paradajza',
+      ponedeljak: 'Brokoli',
+      utorak: 'Šargarepa',
+      sreda: 'Krompir i praziluk',
+      cetvrtak: 'Grašak',
+      petak: 'Karfiol',
     },
   },
   {
     id: 'dnevni-smuti',
     label: 'Dnevni smuti',
-    priceRsd: 430,
+    priceRsd: 199,
+    description: 'Tropska snaga, crveni bust, zelena energija, plavi impuls, ajdared iskra',
     rotation: {
-      ponedeljak: 'Zeleni smuti',
-      utorak: 'Smuti sa bobicama',
-      sreda: 'Protein smuti',
-      cetvrtak: 'Mango smuti',
-      petak: 'Kakao-banana smuti',
+      ponedeljak: 'Tropska snaga',
+      utorak: 'Crveni bust',
+      sreda: 'Zelena energija',
+      cetvrtak: 'Plavi impuls',
+      petak: 'Ajdared iskra',
     },
   },
 ];
@@ -277,6 +291,21 @@ function formatRsd(value) {
   return `${value.toLocaleString('sr-RS')} RSD`;
 }
 
+function getSubscriptionPlanPrice(variant, days) {
+  return SUBSCRIPTION_PLAN_PRICES_RSD[variant]?.[days] ?? days * VARIANT_PRICES_RSD[variant];
+}
+
+function getDistributedPrice(totalRsd, itemCount, itemIndex) {
+  if (itemCount <= 0) {
+    return 0;
+  }
+
+  const basePrice = Math.floor(totalRsd / itemCount);
+  const remainder = totalRsd - basePrice * itemCount;
+
+  return basePrice + (itemIndex < remainder ? 1 : 0);
+}
+
 function normalizeQuantity(value) {
   const quantity = Number(value);
   return Number.isFinite(quantity) ? Math.max(0, Math.min(999, Math.floor(quantity))) : 0;
@@ -425,12 +454,12 @@ function OrderContent() {
   const selectedSubscriptionExtras = SUBSCRIPTION_EXTRAS.filter((extra) =>
     subscriptionExtraIds.includes(extra.id)
   );
+  const subscriptionBasePrice = getSubscriptionPlanPrice(subscriptionVariant, subscriptionDays);
   const subscriptionExtrasTotal = selectedSubscriptionExtras.reduce(
     (sum, extra) => sum + extra.priceRsd * subscriptionDays,
     0
   );
-  const subscriptionTotal =
-    subscriptionPlan.reduce((sum, day) => sum + day.priceRsd, 0) + subscriptionExtrasTotal;
+  const subscriptionTotal = subscriptionBasePrice + subscriptionExtrasTotal;
 
   const customMealSummaries = useMemo(() => {
     return customMeals.map((meal, mealIndex) => {
@@ -577,6 +606,10 @@ function OrderContent() {
 
     try {
       const now = new Date().toISOString();
+      const orderSubscriptionPlan = subscriptionPlan.map((day, dayIndex) => ({
+        ...day,
+        orderPriceRsd: getDistributedPrice(subscriptionBasePrice, subscriptionPlan.length, dayIndex),
+      }));
       const order = {
         id: createDraftId(),
         status: 'draft',
@@ -593,11 +626,13 @@ function OrderContent() {
             id: extra.id,
             name: extra.label,
             priceRsdPerDay: extra.priceRsd,
+            description: extra.description,
             rotation: extra.rotation,
           })),
-          items: subscriptionPlan,
+          items: orderSubscriptionPlan,
+          planPriceRsd: subscriptionBasePrice,
         },
-        selectedDishes: subscriptionPlan.flatMap((day) => [
+        selectedDishes: orderSubscriptionPlan.flatMap((day) => [
           {
             id: `${day.date}-obrok-${day.mealNumber}-${day.variant}`,
             name: `${day.formattedDate} - Obrok ${day.mealNumber} ${day.variantLabel}`,
@@ -608,7 +643,7 @@ function OrderContent() {
             variant: day.variantLabel,
             mealNumber: day.mealNumber,
             description: day.description,
-            priceRsdPerPerson: day.priceRsd,
+            priceRsdPerPerson: day.orderPriceRsd,
           },
           ...selectedSubscriptionExtras.map((extra) => ({
             id: `${day.date}-${extra.id}`,
@@ -992,7 +1027,7 @@ function OrderContent() {
                   onClick={() => setSubscriptionDays(option.days)}
                 >
                   <span>{option.label}</span>
-                  <strong>{formatRsd(option.days * VARIANT_PRICES_RSD[subscriptionVariant])}</strong>
+                  <strong>{formatRsd(getSubscriptionPlanPrice(subscriptionVariant, option.days))}</strong>
                 </button>
               ))}
             </div>
@@ -1027,25 +1062,14 @@ function OrderContent() {
                       checked={subscriptionExtraIds.includes(extra.id)}
                       onChange={() => handleSubscriptionExtraToggle(extra.id)}
                     />
-                    <span>{extra.label}</span>
+                    <span className={styles.extraOptionContent}>
+                      <span className={styles.extraOptionName}>{extra.label}</span>
+                      <strong>{formatRsd(extra.priceRsd)}</strong>
+                      <span className={styles.extraOptionDescription}>{extra.description}</span>
+                    </span>
                   </label>
                 ))}
               </div>
-              {selectedSubscriptionExtras.length > 0 && (
-                <div className={styles.rotationList}>
-                  <strong>Nedeljna rotacija</strong>
-                  {selectedSubscriptionExtras.map((extra) => (
-                    <div key={extra.id}>
-                      <span>{extra.label}</span>
-                      <p>
-                        {Object.entries(extra.rotation)
-                          .map(([day, product]) => `${DAY_LABELS[day]}: ${product}`)
-                          .join(' / ')}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
             </section>
 
             <div className={styles.planActions}>
