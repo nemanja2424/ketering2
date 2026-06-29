@@ -1072,17 +1072,6 @@ function OrderContent() {
               </div>
             </section>
 
-            <div className={styles.planActions}>
-              <button
-                type="button"
-                className={styles.resetPlanButton}
-                onClick={handleResetSubscriptionChanges}
-                disabled={Object.keys(subscriptionChoices).length === 0}
-              >
-                Resetuj izmene
-              </button>
-            </div>
-
             <div className={styles.subscriptionLayout}>
               <div className={styles.calendarList}>
                 {subscriptionPlan.map((day) => (
