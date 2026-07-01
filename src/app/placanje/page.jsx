@@ -16,6 +16,8 @@ import {
 import styles from './page.module.css';
 
 const AVAILABLE_HOURS = Array.from({ length: 8 }, (_, index) => (index + 12).toString().padStart(2, '0'));
+const BELGRADE_TIME_ZONE = 'Europe/Belgrade';
+const SAME_DAY_ORDER_CUTOFF_HOUR = 10;
 
 const INITIAL_FORM = {
   ime: '',
@@ -40,6 +42,62 @@ function formatDate(value) {
 
   const [year, month, day] = value.split('-');
   return `${day}.${month}.${year}.`;
+}
+
+function addDaysToDateInputValue(value, days) {
+  const [year, month, day] = value.split('-').map(Number);
+  const nextDate = new Date(Date.UTC(year, month - 1, day + days));
+
+  return [
+    nextDate.getUTCFullYear(),
+    String(nextDate.getUTCMonth() + 1).padStart(2, '0'),
+    String(nextDate.getUTCDate()).padStart(2, '0'),
+  ].join('-');
+}
+
+function getBelgradeDateTimeParts(date = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: BELGRADE_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(date);
+
+  return Object.fromEntries(parts.map((part) => [part.type, part.value]));
+}
+
+function getBelgradeDateInputValue(date = new Date()) {
+  const parts = getBelgradeDateTimeParts(date);
+
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+function getMinimumDeliveryDate(date = new Date()) {
+  const parts = getBelgradeDateTimeParts(date);
+  const today = `${parts.year}-${parts.month}-${parts.day}`;
+
+  if (Number(parts.hour) >= SAME_DAY_ORDER_CUTOFF_HOUR) {
+    return addDaysToDateInputValue(today, 1);
+  }
+
+  return today;
+}
+
+function getDeliveryDateMessage(minimumDate) {
+  const todayInBelgrade = getBelgradeDateInputValue();
+
+  if (minimumDate === todayInBelgrade) {
+    return 'Današnji datum je dostupan do 10:00 po vremenu u Beogradu.';
+  }
+
+  return `Posle 10:00 po vremenu u Beogradu najraniji datum isporuke je ${formatDate(minimumDate)}`;
+}
+
+function isSelectableDeliveryDate(value, minimumDate) {
+  return !value || value >= minimumDate;
 }
 
 function getOrderTitle(order) {
@@ -216,6 +274,7 @@ function PaymentDraft() {
   const [status, setStatus] = useState({ type: '', message: '' });
   const [createdOrder, setCreatedOrder] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [minimumDeliveryDate, setMinimumDeliveryDate] = useState(() => getMinimumDeliveryDate());
 
   useEffect(() => {
     if (!hasDraft) {
@@ -270,20 +329,48 @@ function PaymentDraft() {
     };
   }, []);
 
+  useEffect(() => {
+    const updateMinimumDeliveryDate = () => {
+      setMinimumDeliveryDate(getMinimumDeliveryDate());
+    };
+
+    updateMinimumDeliveryDate();
+    const intervalId = window.setInterval(updateMinimumDeliveryDate, 60 * 1000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
   const orderItems = useMemo(() => getOrderItems(order), [order]);
   const baseTotalRsd = order ? Number(order.totalRsd || 0) : Number(manualTotal || 0);
   const totalRsd = baseTotalRsd;
+  const dateMustBeSelectable = order?.type !== 'subscription';
+  const selectedDateIsValid =
+    !dateMustBeSelectable || isSelectableDeliveryDate(form.datum, minimumDeliveryDate);
+  const deliveryDateMessage = getDeliveryDateMessage(minimumDeliveryDate);
   const canSubmit = Boolean(
     !submitting &&
       !orderLoading &&
       form.ime &&
       form.datum &&
+      selectedDateIsValid &&
       form.vreme &&
       (order || manualDescription.trim())
   );
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+
+    if (name === 'datum' && value && !isSelectableDeliveryDate(value, minimumDeliveryDate)) {
+      setStatus({
+        type: 'error',
+        message: deliveryDateMessage,
+      });
+      setForm((current) => ({ ...current, datum: '' }));
+      return;
+    }
+
     setForm((current) => ({ ...current, [name]: value }));
   };
 
@@ -332,6 +419,14 @@ function PaymentDraft() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setStatus({ type: '', message: '' });
+
+    if (dateMustBeSelectable && !isSelectableDeliveryDate(form.datum, minimumDeliveryDate)) {
+      setStatus({
+        type: 'error',
+        message: deliveryDateMessage,
+      });
+      return;
+    }
 
     if (!canSubmit) {
       setStatus({ type: 'error', message: 'Popunite obavezna polja pre potvrde.' });
@@ -504,10 +599,13 @@ function PaymentDraft() {
                     className={styles.hiddenDateInput}
                     name="datum"
                     type="date"
+                    min={minimumDeliveryDate}
                     value={form.datum}
                     onChange={handleChange}
                     tabIndex={-1}
+                    required
                   />
+                  <p className={styles.dateHelper}>{deliveryDateMessage}</p>
                 </div>
               )}
             </label>

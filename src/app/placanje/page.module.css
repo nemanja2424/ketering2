@@ -231,6 +231,15 @@
   position: relative;
 }
 
+.dateHelper {
+  margin: 0.35rem 0 0;
+  color: #5d574d;
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.4;
+  text-transform: none;
+}
+
 .hiddenDateInput {
   position: absolute;
   right: 0;

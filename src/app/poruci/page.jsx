@@ -319,6 +319,11 @@ function getDistributedPrice(totalRsd, itemCount, itemIndex) {
   return basePrice + (itemIndex < remainder ? 1 : 0);
 }
 
+function normalizeQuantity(value) {
+  const quantity = Number(value);
+  return Number.isFinite(quantity) ? Math.max(0, Math.min(999, Math.floor(quantity))) : 0;
+}
+
 function createDraftId() {
   if (globalThis.crypto?.randomUUID) {
     return globalThis.crypto.randomUUID();
@@ -580,17 +585,26 @@ function OrderContent() {
     );
   };
 
-  const handleCustomAddOnToggle = (category, product) => {
+  const updateCustomAddOnQuantity = (category, product, value, absolute = false) => {
     setCustomAddOns((current) => {
-      const existing = current.some((item) => item.id === product.id);
+      const existing = current.find((item) => item.id === product.id);
+      const nextQuantity = normalizeQuantity(
+        absolute ? value : (existing?.quantity || 0) + value
+      );
+
+      if (nextQuantity === 0) {
+        return current.filter((item) => item.id !== product.id);
+      }
 
       if (existing) {
-        return current.filter((item) => item.id !== product.id);
+        return current.map((item) =>
+          item.id === product.id ? { ...item, quantity: nextQuantity } : item
+        );
       }
 
       return [
         ...current,
-        { ...product, quantity: 1, category: category.title, source: 'dopuna' },
+        { ...product, quantity: nextQuantity, category: category.title, source: 'dopuna' },
       ];
     });
   };
