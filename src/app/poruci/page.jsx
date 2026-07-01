@@ -10,6 +10,8 @@ const VARIANT_PRICES_RSD = {
   lean: 850,
 };
 
+const DAILY_MEAL_PORTION_NOTE = '150g mesa, 150g priloga i 100g salate';
+
 const SUBSCRIPTION_PLAN_PRICES_RSD = {
   clean: {
     10: 7000,
@@ -103,6 +105,7 @@ const CUSTOM_SECTIONS = [
   {
     id: 'baza',
     title: 'Baza',
+    portionLabel: '100g',
     maxSelections: 1,
     options: [
       { id: 'pirinac-dugo-zrno', name: 'Pirinač dugo zrno', priceRsdPerPerson: 0 },
@@ -115,6 +118,7 @@ const CUSTOM_SECTIONS = [
   {
     id: 'prilog',
     title: 'Prilog',
+    portionLabel: '100g',
     maxSelections: 2,
     options: [
       { id: 'batat-zacini', name: 'Batat sa začinima', priceRsdPerPerson: 0 },
@@ -129,6 +133,7 @@ const CUSTOM_SECTIONS = [
   {
     id: 'glavno',
     title: 'Glavno jelo',
+    portionLabel: '150g',
     maxSelections: 1,
     options: [
       { id: 'cureci-file', name: 'Ćureći file sa začinima', priceRsdPerPerson: 950 },
@@ -145,6 +150,7 @@ const CUSTOM_SECTIONS = [
   {
     id: 'salate',
     title: 'Salata',
+    portionLabel: '100g',
     maxSelections: 2,
     options: [
       { id: 'zeleni-mix', name: 'Zeleni mix', priceRsdPerPerson: 0 },
@@ -156,6 +162,7 @@ const CUSTOM_SECTIONS = [
   {
     id: 'dresing',
     title: 'Dresing',
+    portionLabel: '30g',
     maxSelections: 1,
     options: [
       { id: 'in-dresing', name: 'IN dresing (bosiljak, peršun, ulje)', priceRsdPerPerson: 0 },
@@ -306,11 +313,6 @@ function getDistributedPrice(totalRsd, itemCount, itemIndex) {
   return basePrice + (itemIndex < remainder ? 1 : 0);
 }
 
-function normalizeQuantity(value) {
-  const quantity = Number(value);
-  return Number.isFinite(quantity) ? Math.max(0, Math.min(999, Math.floor(quantity))) : 0;
-}
-
 function createDraftId() {
   if (globalThis.crypto?.randomUUID) {
     return globalThis.crypto.randomUUID();
@@ -442,10 +444,11 @@ function OrderContent() {
       return {
         ...day,
         mealIndex,
-        mealNumber: mealIndex + 1,
+        mealNumber: dayIndex + 1,
         variant,
         variantLabel,
         description: meal[variant],
+        portionNote: DAILY_MEAL_PORTION_NOTE,
         priceRsd: VARIANT_PRICES_RSD[variant],
       };
     });
@@ -469,6 +472,7 @@ function OrderContent() {
           .map((option) => ({
             ...option,
             category: section.title,
+            portionLabel: section.portionLabel,
             mealId: meal.id,
             mealLabel: `Obrok ${mealIndex + 1}`,
           }))
@@ -570,26 +574,17 @@ function OrderContent() {
     );
   };
 
-  const updateCustomAddOnQuantity = (category, product, value, absolute = false) => {
+  const handleCustomAddOnToggle = (category, product) => {
     setCustomAddOns((current) => {
-      const existing = current.find((item) => item.id === product.id);
-      const nextQuantity = normalizeQuantity(
-        absolute ? value : (existing?.quantity || 0) + value
-      );
-
-      if (nextQuantity === 0) {
-        return current.filter((item) => item.id !== product.id);
-      }
+      const existing = current.some((item) => item.id === product.id);
 
       if (existing) {
-        return current.map((item) =>
-          item.id === product.id ? { ...item, quantity: nextQuantity } : item
-        );
+        return current.filter((item) => item.id !== product.id);
       }
 
       return [
         ...current,
-        { ...product, quantity: nextQuantity, category: category.title, source: 'dopuna' },
+        { ...product, quantity: 1, category: category.title, source: 'dopuna' },
       ];
     });
   };
@@ -643,6 +638,7 @@ function OrderContent() {
             variant: day.variantLabel,
             mealNumber: day.mealNumber,
             description: day.description,
+            portionNote: day.portionNote,
             priceRsdPerPerson: day.orderPriceRsd,
           },
           ...selectedSubscriptionExtras.map((extra) => ({
@@ -1089,8 +1085,8 @@ function OrderContent() {
                               Obrok {day.mealNumber} / {day.variantLabel}
                             </span>
                             <strong>{day.description}</strong>
+                            <p className={styles.mealPortionNote}>{day.portionNote}</p>
                           </div>
-                          <em>{formatRsd(day.priceRsd)}</em>
                         </div>
                         {/*<button
                           type="button"
@@ -1236,6 +1232,9 @@ function OrderContent() {
                       >
                         <legend>
                           {section.title}
+                          <strong className={styles.sectionPortion}>
+                            {section.portionLabel}
+                          </strong>
                           <span>
                             {section.maxSelections === 1
                               ? 'Izaberi jednu opciju'
@@ -1291,49 +1290,26 @@ function OrderContent() {
                   <div key={category.id} className={styles.customAddOnCategory}>
                     <h3>{category.title}</h3>
                     {category.products.map((product) => {
-                      const quantity =
-                        customAddOns.find((item) => item.id === product.id)?.quantity || 0;
+                      const isSelected = customAddOns.some((item) => item.id === product.id);
 
                       return (
-                        <div key={product.id} className={styles.customAddOnProduct}>
+                        <label
+                          key={product.id}
+                          className={`${styles.customAddOnProduct} ${
+                            isSelected ? styles.selectedCustomAddOn : ''
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleCustomAddOnToggle(category, product)}
+                            aria-label={`${isSelected ? 'Ukloni' : 'Dodaj'} ${product.name}`}
+                          />
                           <div>
                             <strong>{product.name}</strong>
                             <span>{formatRsd(product.priceRsd)}</span>
                           </div>
-                          <div className={styles.addOnQuantity}>
-                            <button
-                              type="button"
-                              onClick={() => updateCustomAddOnQuantity(category, product, -1)}
-                              disabled={quantity === 0}
-                              aria-label={`Ukloni ${product.name}`}
-                            >
-                              -
-                            </button>
-                            <input
-                              type="number"
-                              min="0"
-                              max="999"
-                              step="1"
-                              value={quantity}
-                              onChange={(event) =>
-                                updateCustomAddOnQuantity(
-                                  category,
-                                  product,
-                                  event.target.value,
-                                  true
-                                )
-                              }
-                              aria-label={`Količina za ${product.name}`}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => updateCustomAddOnQuantity(category, product, 1)}
-                              aria-label={`Dodaj ${product.name}`}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
+                        </label>
                       );
                     })}
                   </div>
