@@ -426,8 +426,7 @@ function PaymentDraft() {
           <span className={styles.eyebrow}>Potvrda narudžbine</span>
           <h1>Podaci za isporuku i priprema plaćanja</h1>
           <p>
-            Trenutno čuvamo narudžbinu u bazi bez naplate. Online plaćanje je izdvojeno kao sledeći
-            korak, pa se kasnije može dodati bez promene forme.
+            Trenutno čuvamo narudžbinu u bazi bez naplate. Trenutno prihvatamo samo keš plaćanje, ali u skorije vreme će i online plaćanje biti dostupno.
           </p>
         </div>
       </div>

@@ -76,27 +76,33 @@ const CUSTOM_ADD_ON_CATEGORIES = [
     id: 'kolaci',
     title: 'Kolači',
     products: [
-      { id: 'kolac-protein-kuglice', name: 'Protein kuglice', priceRsd: 290 },
-      { id: 'kolac-cia-puding', name: 'Čia puding', priceRsd: 360 },
-      { id: 'kolac-cheesecake', name: 'Mini cheesecake', priceRsd: 420 },
+      { id: 'kolac-visnja', name: 'Kolač višnja', priceRsd: 99 },
+      { id: 'lenja-pita', name: 'Lenja pita', priceRsd: 99 },
+      { id: 'brownie', name: 'Brownie', priceRsd: 99 },
+      { id: 'banana-bread', name: 'Banana bread', priceRsd: 99 },
+      { id: 'medeno-srce', name: 'Medeno srce', priceRsd: 99 },
     ],
   },
   {
     id: 'potazi',
     title: 'Potaži',
     products: [
-      { id: 'potaz-bundeva', name: 'Potaž od bundeve', priceRsd: 320 },
-      { id: 'potaz-brokoli', name: 'Potaž od brokolija', priceRsd: 340 },
-      { id: 'potaz-pecurke', name: 'Potaž od pečuraka', priceRsd: 360 },
+      { id: 'brokoli', name: 'Brokoli', priceRsd: 199 },
+      { id: 'sargarepa', name: 'Šargarepa', priceRsd: 199 },
+      { id: 'krompir-i-praziluk', name: 'Krompir i praziluk', priceRsd: 199 },
+      { id: 'grasak', name: 'Grašak', priceRsd: 199 },
+      { id: 'karfiol', name: 'Karfiol', priceRsd: 199 },
     ],
   },
   {
     id: 'smutiji',
     title: 'Smutiji',
     products: [
-      { id: 'smuti-zeleni', name: 'Zeleni smuti', priceRsd: 390 },
-      { id: 'smuti-bobice', name: 'Smuti sa bobicama', priceRsd: 420 },
-      { id: 'smuti-protein', name: 'Protein smuti', priceRsd: 480 },
+      { id: 'tropska-snaga', name: 'Tropska snaga', priceRsd: 199 },
+      { id: 'crveni-bust', name: 'Crveni bust', priceRsd: 199 },
+      { id: 'zelena-energija', name: 'Zelena energija', priceRsd: 199 },
+      { id: 'plavi-inpuls', name: 'Plavi impuls', priceRsd: 199 },
+      { id: 'ajdared-iskra', name: 'Ajdared iskra', priceRsd: 199 },
     ],
   },
 ];
@@ -1280,7 +1286,7 @@ function OrderContent() {
               ))}
             </div>
 
-            <section className={styles.customAddOns}>
+           <section className={styles.customAddOns}>
               <div className={styles.extrasHeader}>
                 <span>Dopuni personalizovane obroke</span>
                 <p>Dodajte kolače, potaže ili smutije pre nastavka na plaćanje.</p>
@@ -1290,26 +1296,49 @@ function OrderContent() {
                   <div key={category.id} className={styles.customAddOnCategory}>
                     <h3>{category.title}</h3>
                     {category.products.map((product) => {
-                      const isSelected = customAddOns.some((item) => item.id === product.id);
+                      const quantity =
+                        customAddOns.find((item) => item.id === product.id)?.quantity || 0;
 
                       return (
-                        <label
-                          key={product.id}
-                          className={`${styles.customAddOnProduct} ${
-                            isSelected ? styles.selectedCustomAddOn : ''
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => handleCustomAddOnToggle(category, product)}
-                            aria-label={`${isSelected ? 'Ukloni' : 'Dodaj'} ${product.name}`}
-                          />
+                        <div key={product.id} className={styles.customAddOnProduct}>
                           <div>
                             <strong>{product.name}</strong>
                             <span>{formatRsd(product.priceRsd)}</span>
                           </div>
-                        </label>
+                          <div className={styles.addOnQuantity}>
+                            <button
+                              type="button"
+                              onClick={() => updateCustomAddOnQuantity(category, product, -1)}
+                              disabled={quantity === 0}
+                              aria-label={`Ukloni ${product.name}`}
+                            >
+                              -
+                            </button>
+                            <input
+                              type="number"
+                              min="0"
+                              max="999"
+                              step="1"
+                              value={quantity}
+                              onChange={(event) =>
+                                updateCustomAddOnQuantity(
+                                  category,
+                                  product,
+                                  event.target.value,
+                                  true
+                                )
+                              }
+                              aria-label={`Količina za ${product.name}`}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => updateCustomAddOnQuantity(category, product, 1)}
+                              aria-label={`Dodaj ${product.name}`}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
                       );
                     })}
                   </div>

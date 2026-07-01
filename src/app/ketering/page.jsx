@@ -11,7 +11,7 @@ const OFFERS = [
     id: 'meni-1',
     name: 'Party time',
     image: '/01card.webp',
-    priceRsd: 1404,
+    priceRsd: 1400,
     items: [
       "Sendviči '80", 'Pileći wrap', 'Club sendvič', 'Pileći prstići', 'Ćevapi',
       'Pomfrit', 'Vitaminska salata', 'Kiflice sir', 'Projice', 'Rolatići',
@@ -22,7 +22,7 @@ const OFFERS = [
     id: 'meni-2',
     name: 'Totalno svoji',
     image: '/02card.webp',
-    priceRsd: 2223,
+    priceRsd: 2200,
     items: [
       "Sendviči '80", 'Pileći wrap', 'Club sendvič', 'Pileći prstići', 'Giros sendvič',
       'Mini burgeri', 'Roma tortilja', 'Fišek pileća salata', 'Takosi', 'Pomfrit',
@@ -36,7 +36,7 @@ const OFFERS = [
     id: 'meni-3',
     name: 'Čarolija',
     image: '/03card.webp',
-    priceRsd: 1872,
+    priceRsd: 1900,
     items: [
       'Masline', 'Apetisani', 'Suvo voće',
       'Kanapei (dimljena piletina, peperoni, pršuta, morski plodovi)', 'Roma tortilja',
@@ -51,7 +51,7 @@ const OFFERS = [
     id: 'meni-4',
     name: 'Trenutak magije',
     image: '/04card.webp',
-    priceRsd: 2457,
+    priceRsd: 2500,
     items: [
       'Masline', 'Apetisani', 'Suvo voće',
       'Kanapei (pršut, kraški vrat, dimljeni losos, prepeličja jaja)',
@@ -80,7 +80,7 @@ const OFFERS = [
     id: 'meni-5',
     name: 'Isposti se',
     image: '/01card.webp',
-    priceRsd: 2223,
+    priceRsd: 2200,
     items: [
       'Masline', 'Apetisani', 'Suvo voće', 'Brusketi (šumske gljive, tofu, humus)',
       'Kanapei (losos, gambori, namaz od tartufa)',
