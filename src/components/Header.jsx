@@ -22,7 +22,7 @@ export default function Header() {
         <div className={styles.brand}>
           <Link href="/">
             <Image
-              src="/LOGO no bg.png"
+              src="/88.png"
               alt="IN Ketering - Ketering by Pekarica"
               width={600}
               height={600}
