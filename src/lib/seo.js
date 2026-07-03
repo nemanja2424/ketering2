@@ -2,7 +2,7 @@ export const siteUrl = 'https://inketering.com';
 
 export const brandName = 'IN Ketering';
 export const legalName = 'Ketering by Pekarica';
-export const logoPath = '/LOGO no bg.webp';
+export const logoPath = '/keterINg.jpg';
 export const siteDescription =
   'IN Ketering i Ketering by Pekarica nude ketering za Niš, okolinu, poslovne proslave i dnevne obroke po meri.';
 
@@ -36,7 +36,7 @@ export function createMetadata({
   title,
   description,
   path = '/',
-  images = ['/bgHero.webp'],
+  images = ['/keterINg.jpg'],
   robots,
 } = {}) {
   const resolvedTitle = title || `${brandName} | Ketering by Pekarica`;
@@ -46,7 +46,7 @@ export function createMetadata({
       : resolvedTitle?.default || `${brandName} | Ketering by Pekarica`;
   const resolvedDescription = description || siteDescription;
   const url = absoluteUrl(path);
-  const socialImages = ['/LOGO no bg.png', ...images.filter((image) => image !== '/LOGO no bg.png')];
+  const socialImages = ['/keterINg.jpg', ...images.filter((image) => image !== '/keterINg.jpg')];
 
   return {
     metadataBase: new URL(siteUrl),
@@ -57,19 +57,19 @@ export function createMetadata({
       icon: [
         {
           url: logoPath,
-          type: 'image/webp',
+          type: 'image/jpeg',
         },
       ],
       shortcut: [
         {
           url: logoPath,
-          type: 'image/webp',
+          type: 'image/jpeg',
         },
       ],
       apple: [
         {
           url: logoPath,
-          type: 'image/webp',
+          type: 'image/jpeg',
         },
       ],
     },
@@ -108,7 +108,7 @@ export const organizationJsonLd = {
   alternateName: ['Ketering by Pekarica', 'Pekarica'],
   url: siteUrl,
   logo: absoluteUrl(logoPath),
-  image: absoluteUrl('/bgHero.webp'),
+  image: absoluteUrl('/keterINg.jpg'),
   description: siteDescription,
   email: 'pekarica03@gmail.com',
   telephone: '+381641963677',
