@@ -17,7 +17,7 @@ import styles from './page.module.css';
 
 const AVAILABLE_HOURS = Array.from({ length: 8 }, (_, index) => (index + 12).toString().padStart(2, '0'));
 const BELGRADE_TIME_ZONE = 'Europe/Belgrade';
-const SAME_DAY_ORDER_CUTOFF_HOUR = 10;
+const SAME_DAY_ORDER_CUTOFF_HOUR = 6;
 
 const INITIAL_FORM = {
   ime: '',

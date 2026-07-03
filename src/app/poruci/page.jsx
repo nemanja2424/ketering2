@@ -114,11 +114,36 @@ const CUSTOM_SECTIONS = [
     portionLabel: '100g',
     maxSelections: 1,
     options: [
-      { id: 'pirinac-dugo-zrno', name: 'Pirinač dugo zrno', priceRsdPerPerson: 0 },
-      { id: 'integralni-pirinac', name: 'Integralni pirinač', priceRsdPerPerson: 0 },
-      { id: 'kinoa', name: 'Kinoa', priceRsdPerPerson: 0 },
-      { id: 'bulgur', name: 'Bulgur', priceRsdPerPerson: 0 },
-      { id: 'heljda', name: 'Heljda', priceRsdPerPerson: 0 },
+      {
+        id: 'pirinac-dugo-zrno',
+        name: 'Pirinač dugo zrno',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 130, protein: 2.7, carbs: 28.2, fat: 0.3 },
+      },
+      {
+        id: 'integralni-pirinac',
+        name: 'Integralni pirinač',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 123, protein: 2.7, carbs: 25.6, fat: 1 },
+      },
+      {
+        id: 'kinoa',
+        name: 'Kinoa',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 120, protein: 4.4, carbs: 21.3, fat: 1.9 },
+      },
+      {
+        id: 'bulgur',
+        name: 'Bulgur',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 83, protein: 3.1, carbs: 18.6, fat: 0.2 },
+      },
+      {
+        id: 'heljda',
+        name: 'Heljda',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 92, protein: 3.4, carbs: 19.9, fat: 0.6 },
+      },
     ],
   },
   {
@@ -127,13 +152,48 @@ const CUSTOM_SECTIONS = [
     portionLabel: '100g',
     maxSelections: 2,
     options: [
-      { id: 'batat-zacini', name: 'Batat sa začinima', priceRsdPerPerson: 0 },
-      { id: 'sargarepa-mirodjija', name: 'Šargarepa sa mirođijom', priceRsdPerPerson: 0 },
-      { id: 'brokoli', name: 'Brokoli', priceRsdPerPerson: 0 },
-      { id: 'mesano-povrce', name: 'Mešano povrće', priceRsdPerPerson: 0 },
-      { id: 'krompir', name: 'Krompir', priceRsdPerPerson: 0 },
-      { id: 'blitva', name: 'Blitva', priceRsdPerPerson: 0 },
-      { id: 'boranija', name: 'Boranija', priceRsdPerPerson: 0 },
+      {
+        id: 'batat-zacini',
+        name: 'Batat sa začinima',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 90, protein: 2, carbs: 21, fat: 0.2 },
+      },
+      {
+        id: 'sargarepa-mirodjija',
+        name: 'Šargarepa sa mirođijom',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 38, protein: 0.9, carbs: 8.8, fat: 0.2 },
+      },
+      {
+        id: 'brokoli',
+        name: 'Brokoli',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 35, protein: 2.8, carbs: 7, fat: 0.4 },
+      },
+      {
+        id: 'mesano-povrce',
+        name: 'Mešano povrće',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 36, protein: 2.2, carbs: 7.2, fat: 0.3 },
+      },
+      {
+        id: 'krompir',
+        name: 'Krompir',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 93, protein: 2.5, carbs: 21, fat: 0.1 },
+      },
+      {
+        id: 'blitva',
+        name: 'Blitva',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 20, protein: 1.9, carbs: 3.7, fat: 0.2 },
+      },
+      {
+        id: 'boranija',
+        name: 'Boranija',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 35, protein: 1.9, carbs: 7.9, fat: 0.2 },
+      },
     ],
   },
   {
@@ -142,15 +202,60 @@ const CUSTOM_SECTIONS = [
     portionLabel: '150g',
     maxSelections: 1,
     options: [
-      { id: 'cureci-file', name: 'Ćureći file sa začinima', priceRsdPerPerson: 950 },
-      { id: 'junetina-saft', name: 'Junetina u saftu', priceRsdPerPerson: 950 },
-      { id: 'losos-file', name: 'Losos file', priceRsdPerPerson: 950 },
-      { id: 'pileci-file', name: 'Pileći file sa začinima', priceRsdPerPerson: 750 },
-      { id: 'butkica', name: 'Butkica', priceRsdPerPerson: 750 },
-      { id: 'skarpina', name: 'Škarpina', priceRsdPerPerson: 750 },
-      { id: 'varivo-socivo', name: 'Varivo od crvenog sočiva', priceRsdPerPerson: 650 },
-      { id: 'ragu-leblebije', name: 'Ragu sa leblebijama', priceRsdPerPerson: 650 },
-      { id: 'tofu', name: 'Grilovani tofu sir', priceRsdPerPerson: 650 },
+      {
+        id: 'cureci-file',
+        name: 'Ćureći file sa začinima',
+        priceRsdPerPerson: 950,
+        macros: { kcal: 203, protein: 44, carbs: 0, fat: 2.2 },
+      },
+      {
+        id: 'junetina-saft',
+        name: 'Junetina u saftu',
+        priceRsdPerPerson: 950,
+        macros: { kcal: 285, protein: 40, carbs: 2, fat: 12 },
+      },
+      {
+        id: 'losos-file',
+        name: 'Losos file',
+        priceRsdPerPerson: 950,
+        macros: { kcal: 312, protein: 33, carbs: 0, fat: 20 },
+      },
+      {
+        id: 'pileci-file',
+        name: 'Pileći file sa začinima',
+        priceRsdPerPerson: 750,
+        macros: { kcal: 248, protein: 46, carbs: 0, fat: 5.4 },
+      },
+      {
+        id: 'butkica',
+        name: 'Butkica',
+        priceRsdPerPerson: 750,
+        macros: { kcal: 270, protein: 39, carbs: 0, fat: 12 },
+      },
+      {
+        id: 'skarpina',
+        name: 'Škarpina',
+        priceRsdPerPerson: 750,
+        macros: { kcal: 150, protein: 34, carbs: 0, fat: 2 },
+      },
+      {
+        id: 'varivo-socivo',
+        name: 'Varivo od crvenog sočiva',
+        priceRsdPerPerson: 650,
+        macros: { kcal: 175, protein: 12, carbs: 27, fat: 2 },
+      },
+      {
+        id: 'ragu-leblebije',
+        name: 'Ragu sa leblebijama',
+        priceRsdPerPerson: 650,
+        macros: { kcal: 210, protein: 10, carbs: 28, fat: 6 },
+      },
+      {
+        id: 'tofu',
+        name: 'Grilovani tofu sir',
+        priceRsdPerPerson: 650,
+        macros: { kcal: 220, protein: 24, carbs: 5, fat: 14 },
+      },
     ],
   },
   {
@@ -159,10 +264,30 @@ const CUSTOM_SECTIONS = [
     portionLabel: '100g',
     maxSelections: 2,
     options: [
-      { id: 'zeleni-mix', name: 'Zeleni mix', priceRsdPerPerson: 0 },
-      { id: 'vitaminska', name: 'Vitaminska', priceRsdPerPerson: 0 },
-      { id: 'grcka', name: 'Grčka', priceRsdPerPerson: 0 },
-      { id: 'crveni-luk', name: 'Crveni luk', priceRsdPerPerson: 0 },
+      {
+        id: 'zeleni-mix',
+        name: 'Zeleni mix',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 18, protein: 1.6, carbs: 2.8, fat: 0.3 },
+      },
+      {
+        id: 'vitaminska',
+        name: 'Vitaminska',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 32, protein: 1.3, carbs: 7.2, fat: 0.2 },
+      },
+      {
+        id: 'grcka',
+        name: 'Grčka',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 95, protein: 3.8, carbs: 5.5, fat: 6.8 },
+      },
+      {
+        id: 'crveni-luk',
+        name: 'Crveni luk',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 40, protein: 1.1, carbs: 9.3, fat: 0.1 },
+      },
     ],
   },
   {
@@ -171,11 +296,36 @@ const CUSTOM_SECTIONS = [
     portionLabel: '30g',
     maxSelections: 1,
     options: [
-      { id: 'in-dresing', name: 'IN dresing (bosiljak, peršun, ulje)', priceRsdPerPerson: 0 },
-      { id: 'cezar-dresing', name: 'Cezar dresing (majonez, jogurt, senf, limun, začin)', priceRsdPerPerson: 0 },
-      { id: 'tzatziki', name: 'Tzatziki (jogurt, krastavac, mirođija, beli luk)', priceRsdPerPerson: 0 },
-      { id: 'ss-dresing', name: 'S&S dresing (senf, med, balsamico, začini)', priceRsdPerPerson: 0 },
-      { id: 'monte-dresing', name: 'Monte dresing (grčki jogurt, ren, začini)', priceRsdPerPerson: 0 },
+      {
+        id: 'in-dresing',
+        name: 'IN dresing (bosiljak, peršun, ulje)',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 85, protein: 0.4, carbs: 1.2, fat: 9 },
+      },
+      {
+        id: 'cezar-dresing',
+        name: 'Cezar dresing (majonez, jogurt, senf, limun, začin)',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 105, protein: 1.2, carbs: 1.8, fat: 10.5 },
+      },
+      {
+        id: 'tzatziki',
+        name: 'Tzatziki (jogurt, krastavac, mirođija, beli luk)',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 35, protein: 2.3, carbs: 2, fat: 2 },
+      },
+      {
+        id: 'ss-dresing',
+        name: 'S&S dresing (senf, med, balsamico, začini)',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 55, protein: 0.6, carbs: 7, fat: 2.5 },
+      },
+      {
+        id: 'monte-dresing',
+        name: 'Monte dresing (grčki jogurt, ren, začini)',
+        priceRsdPerPerson: 0,
+        macros: { kcal: 45, protein: 3, carbs: 2.5, fat: 2 },
+      },
     ],
   },
 ];
@@ -273,6 +423,99 @@ const DAILY_MENUS = {
   ],
 };
 
+const DAILY_MEAL_MACROS = {
+  ponedeljak: [
+    {
+      clean: { kcal: 590, protein: 50, carbs: 44, fat: 16 },
+      lean: { kcal: 500, protein: 50, carbs: 17, fat: 16 },
+    },
+    {
+      clean: { kcal: 595, protein: 49, carbs: 43, fat: 16 },
+      lean: { kcal: 490, protein: 48, carbs: 17, fat: 15 },
+    },
+    {
+      clean: { kcal: 580, protein: 50, carbs: 38, fat: 16 },
+      lean: { kcal: 550, protein: 49, carbs: 18, fat: 28 },
+    },
+    {
+      clean: { kcal: 655, protein: 43, carbs: 35, fat: 34 },
+      lean: { kcal: 560, protein: 45, carbs: 24, fat: 24 },
+    },
+  ],
+  utorak: [
+    {
+      clean: { kcal: 590, protein: 44, carbs: 34, fat: 21 },
+      lean: { kcal: 515, protein: 46, carbs: 17, fat: 22 },
+    },
+    {
+      clean: { kcal: 650, protein: 43, carbs: 35, fat: 33 },
+      lean: { kcal: 520, protein: 45, carbs: 18, fat: 26 },
+    },
+    {
+      clean: { kcal: 625, protein: 46, carbs: 39, fat: 20 },
+      lean: { kcal: 520, protein: 46, carbs: 21, fat: 20 },
+    },
+    {
+      clean: { kcal: 625, protein: 48, carbs: 41, fat: 20 },
+      lean: { kcal: 485, protein: 48, carbs: 16, fat: 15 },
+    },
+  ],
+  sreda: [
+    {
+      clean: { kcal: 640, protein: 44, carbs: 42, fat: 28 },
+      lean: { kcal: 540, protein: 45, carbs: 18, fat: 31 },
+    },
+    {
+      clean: { kcal: 635, protein: 49, carbs: 43, fat: 22 },
+      lean: { kcal: 495, protein: 50, carbs: 18, fat: 15 },
+    },
+    {
+      clean: { kcal: 565, protein: 48, carbs: 36, fat: 15 },
+      lean: { kcal: 495, protein: 48, carbs: 18, fat: 15 },
+    },
+    {
+      clean: { kcal: 590, protein: 50, carbs: 42, fat: 16 },
+      lean: { kcal: 490, protein: 50, carbs: 16, fat: 15 },
+    },
+  ],
+  cetvrtak: [
+    {
+      clean: { kcal: 605, protein: 48, carbs: 41, fat: 17 },
+      lean: { kcal: 570, protein: 48, carbs: 35, fat: 16 },
+    },
+    {
+      clean: { kcal: 620, protein: 45, carbs: 45, fat: 21 },
+      lean: { kcal: 530, protein: 46, carbs: 19, fat: 21 },
+    },
+    {
+      clean: { kcal: 670, protein: 43, carbs: 38, fat: 32 },
+      lean: { kcal: 530, protein: 45, carbs: 16, fat: 27 },
+    },
+    {
+      clean: { kcal: 590, protein: 44, carbs: 34, fat: 21 },
+      lean: { kcal: 510, protein: 46, carbs: 20, fat: 21 },
+    },
+  ],
+  petak: [
+    {
+      clean: { kcal: 670, protein: 41, carbs: 37, fat: 35 },
+      lean: { kcal: 550, protein: 41, carbs: 16, fat: 34 },
+    },
+    {
+      clean: { kcal: 615, protein: 49, carbs: 40, fat: 16 },
+      lean: { kcal: 485, protein: 49, carbs: 15, fat: 15 },
+    },
+    {
+      clean: { kcal: 565, protein: 42, carbs: 37, fat: 24 },
+      lean: { kcal: 495, protein: 42, carbs: 16, fat: 27 },
+    },
+    {
+      clean: { kcal: 560, protein: 44, carbs: 39, fat: 18 },
+      lean: { kcal: 485, protein: 44, carbs: 17, fat: 19 },
+    },
+  ],
+};
+
 const DAY_LABELS = {
   ponedeljak: 'Ponedeljak',
   utorak: 'Utorak',
@@ -302,6 +545,14 @@ const INITIAL_UNIQUE_FORM = {
 
 function formatRsd(value) {
   return `${value.toLocaleString('sr-RS')} RSD`;
+}
+
+function formatMacros(macros) {
+  if (!macros) {
+    return '';
+  }
+
+  return `${macros.kcal} kcal | Proteini ${macros.protein}g | UH ${macros.carbs}g | Masti ${macros.fat}g`;
 }
 
 function getSubscriptionPlanPrice(variant, days) {
@@ -449,6 +700,10 @@ function OrderContent() {
       };
       const mealIndex = Number.isInteger(selected.mealIndex) ? selected.mealIndex : 0;
       const meal = DAILY_MENUS[day.serviceDay][mealIndex] || DAILY_MENUS[day.serviceDay][0];
+      const macros =
+        DAILY_MEAL_MACROS[day.serviceDay]?.[mealIndex]?.[subscriptionVariant] ||
+        DAILY_MEAL_MACROS[day.serviceDay]?.[0]?.[subscriptionVariant] ||
+        null;
       const variant = subscriptionVariant;
       const variantLabel = variant === 'clean' ? 'Clean' : 'Lean';
 
@@ -459,6 +714,7 @@ function OrderContent() {
         variant,
         variantLabel,
         description: meal[variant],
+        macros,
         portionNote: DAILY_MEAL_PORTION_NOTE,
         priceRsd: VARIANT_PRICES_RSD[variant],
       };
@@ -658,6 +914,7 @@ function OrderContent() {
             variant: day.variantLabel,
             mealNumber: day.mealNumber,
             description: day.description,
+            macros: day.macros,
             portionNote: day.portionNote,
             priceRsdPerPerson: day.orderPriceRsd,
           },
@@ -1105,6 +1362,7 @@ function OrderContent() {
                               Obrok {day.mealNumber} / {day.variantLabel}
                             </span>
                             <strong>{day.description}</strong>
+                            <p className={styles.mealMacros}>{formatMacros(day.macros)}</p>
                             <p className={styles.mealPortionNote}>{day.portionNote}</p>
                           </div>
                         </div>
@@ -1148,6 +1406,13 @@ function OrderContent() {
                               >
                                 <span>{day.variantLabel}</span>
                                 <p>{meal[subscriptionVariant]}</p>
+                                <span className={styles.dayVariantMacros}>
+                                  {formatMacros(
+                                    DAILY_MEAL_MACROS[day.serviceDay]?.[index]?.[
+                                      subscriptionVariant
+                                    ]
+                                  )}
+                                </span>
                                 <strong>{formatRsd(VARIANT_PRICES_RSD[subscriptionVariant])}</strong>
                               </button>
                             </div>
@@ -1285,7 +1550,10 @@ function OrderContent() {
                                     handleCustomToggle(meal.id, section.id, option.id)
                                   }
                                 />
-                                <span>{option.name}</span>
+                                <span className={styles.checkboxContent}>
+                                  <span>{option.name}</span>
+                                  <small>{formatMacros(option.macros)}</small>
+                                </span>
                                 {option.priceRsdPerPerson > 0 && (
                                   <strong>{formatRsd(option.priceRsdPerPerson)}</strong>
                                 )}
