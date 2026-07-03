@@ -73,9 +73,6 @@ export default function Header() {
         <Link href="/o-nama" className={styles.mobileNavLink} onClick={closeNav}>
           O nama
         </Link>
-        <Link href="/placanje" className={styles.mobileNavLink} onClick={closeNav}>
-          Plaćanje
-        </Link>
       </nav>
     </header>
   );
