@@ -275,15 +275,33 @@
   border-radius: 8px;
 }
 
-.submitRow {
+.submitRow,
+.paymentChoice {
   display: grid;
-  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
-  align-items: center;
-  gap: 1rem;
+  gap: 0.65rem;
   padding-top: 0.25rem;
 }
 
-.submitRow button {
+.paymentChoice > span {
+  color: #566f2d;
+  font-size: 0.8rem;
+  font-weight: 950;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.paymentButtons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.submitRow button,
+.paymentButtons button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   min-height: 52px;
   padding: 0.75rem 1rem;
   color: #f8eadb;
@@ -297,12 +315,19 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
-.submitRow button:hover:not(:disabled) {
+.paymentButtons button svg {
+  flex: 0 0 auto;
+  font-size: 1rem;
+}
+
+.submitRow button:hover:not(:disabled),
+.paymentButtons button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 12px 24px rgba(86, 111, 45, 0.2);
 }
 
-.submitRow button:disabled {
+.submitRow button:disabled,
+.paymentButtons button:disabled {
   cursor: not-allowed;
   opacity: 0.54;
 }
@@ -450,6 +475,14 @@
   border-radius: 8px;
 }
 
+.paymentChoiceDark {
+  padding-top: 0;
+}
+
+.paymentChoiceDark > span {
+  color: #f8eadb;
+}
+
 .totalPrice {
   display: flex;
   align-items: center;
@@ -469,7 +502,8 @@
   font-weight: 950;
 }
 
-.totalBox button {
+.totalBox button,
+.paymentChoiceDark .paymentButtons button {
   width: 100%;
   min-height: 50px;
   padding: 0.75rem 1rem;
@@ -484,12 +518,14 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
-.totalBox button:hover:not(:disabled) {
+.totalBox button:hover:not(:disabled),
+.paymentChoiceDark .paymentButtons button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
 }
 
-.totalBox button:disabled {
+.totalBox button:disabled,
+.paymentChoiceDark .paymentButtons button:disabled {
   cursor: not-allowed;
   opacity: 0.54;
 }
@@ -724,7 +760,8 @@
 
   .fieldsGrid,
   .manualBox,
-  .submitRow {
+  .submitRow,
+  .paymentButtons {
     grid-template-columns: 1fr;
   }
 

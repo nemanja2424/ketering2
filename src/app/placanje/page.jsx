@@ -8,7 +8,9 @@ import {
   FaCalendarAlt,
   FaCheck,
   FaClock,
+  FaCreditCard,
   FaMapMarkerAlt,
+  FaMoneyBillWave,
   FaPhoneAlt,
   FaReceipt,
   FaUser,
@@ -30,6 +32,10 @@ const INITIAL_FORM = {
 };
 
 const ORDER_FORM_ID = 'placanje-order-form';
+const PAYMENT_METHOD_LABELS = {
+  cash: 'Gotovina',
+  card: 'Kartica',
+};
 
 function formatRsd(value) {
   return `${Number(value || 0).toLocaleString('sr-RS')} RSD`;
@@ -420,6 +426,9 @@ function PaymentDraft() {
     event.preventDefault();
     setStatus({ type: '', message: '' });
 
+    const submitter = event.nativeEvent?.submitter;
+    const paymentMethod = submitter?.value || 'cash';
+
     if (dateMustBeSelectable && !isSelectableDeliveryDate(form.datum, minimumDeliveryDate)) {
       setStatus({
         type: 'error',
@@ -469,6 +478,8 @@ function PaymentDraft() {
             status: 'not_started',
             provider: null,
             providerPaymentId: null,
+            method: paymentMethod,
+            methodLabel: PAYMENT_METHOD_LABELS[paymentMethod] || paymentMethod,
             amountRsd: totalRsd,
             currency: 'RSD',
             paidAt: null,
@@ -521,7 +532,7 @@ function PaymentDraft() {
           <span className={styles.eyebrow}>Potvrda narudžbine</span>
           <h1>Podaci za isporuku i priprema plaćanja</h1>
           <p>
-            Trenutno čuvamo narudžbinu u bazi bez naplate. Trenutno prihvatamo samo keš plaćanje, ali u skorije vreme će i online plaćanje biti dostupno.
+            Trenutno čuvamo narudžbinu u bazi bez naplate. Trenutno prihvatamo plaćanje karticom ili gotovinom prilikom isporuke, ali u skorije vreme će i online plaćanje biti dostupno.
           </p>
         </div>
       </div>
@@ -682,16 +693,32 @@ function PaymentDraft() {
             />
           </label>
 
-          <div className={styles.submitRow}>
-            <button
-              type={isMobile ? 'button' : 'submit'}
-              form={isMobile ? undefined : ORDER_FORM_ID}
-              disabled={isMobile ? false : !canSubmit}
-              onClick={handleTopOrderClick}
-            >
-              {submitting ? 'Slanje...' : 'Poruči'}
-            </button>
-            <span>Plaćanje se ne naplaćuje na ovom koraku.</span>
+          <div className={styles.paymentChoice}>
+            <span>Način plaćanja prilikom isporuke</span>
+            <div className={styles.paymentButtons}>
+              <button
+                type={isMobile ? 'button' : 'submit'}
+                form={isMobile ? undefined : ORDER_FORM_ID}
+                name="paymentMethod"
+                value="cash"
+                disabled={isMobile ? false : !canSubmit}
+                onClick={handleTopOrderClick}
+              >
+                <FaMoneyBillWave aria-hidden="true" />
+                {submitting ? 'Slanje...' : 'Gotovina'}
+              </button>
+              <button
+                type={isMobile ? 'button' : 'submit'}
+                form={isMobile ? undefined : ORDER_FORM_ID}
+                name="paymentMethod"
+                value="card"
+                disabled={isMobile ? false : !canSubmit}
+                onClick={handleTopOrderClick}
+              >
+                <FaCreditCard aria-hidden="true" />
+                {submitting ? 'Slanje...' : 'Kartica'}
+              </button>
+            </div>
           </div>
 
           {status.message && (
@@ -753,9 +780,19 @@ function PaymentDraft() {
                   <span>Ukupno</span>
                   <strong>{formatRsd(totalRsd)}</strong>
                 </div>
-                <button type="submit" form={ORDER_FORM_ID} disabled={!canSubmit}>
-                  {submitting ? 'Slanje...' : 'Poruči'}
-                </button>
+                <div className={`${styles.paymentChoice} ${styles.paymentChoiceDark}`}>
+                  <span>Način plaćanja prilikom isporuke</span>
+                  <div className={styles.paymentButtons}>
+                    <button type="submit" form={ORDER_FORM_ID} name="paymentMethod" value="cash" disabled={!canSubmit}>
+                      <FaMoneyBillWave aria-hidden="true" />
+                      {submitting ? 'Slanje...' : 'Gotovina'}
+                    </button>
+                    <button type="submit" form={ORDER_FORM_ID} name="paymentMethod" value="card" disabled={!canSubmit}>
+                      <FaCreditCard aria-hidden="true" />
+                      {submitting ? 'Slanje...' : 'Kartica'}
+                    </button>
+                  </div>
+                </div>
               </div>
             </>
           )}
