@@ -20,6 +20,8 @@ import styles from './page.module.css';
 const AVAILABLE_HOURS = Array.from({ length: 8 }, (_, index) => (index + 12).toString().padStart(2, '0'));
 const BELGRADE_TIME_ZONE = 'Europe/Belgrade';
 const SAME_DAY_ORDER_CUTOFF_HOUR = 6;
+const IMMEDIATE_DELIVERY_START_HOUR = 11;
+const IMMEDIATE_DELIVERY_END_HOUR = 19;
 
 const INITIAL_FORM = {
   ime: '',
@@ -92,14 +94,31 @@ function getMinimumDeliveryDate(date = new Date()) {
   return today;
 }
 
+function getImmediateDeliveryFields(date = new Date()) {
+  const deliveryDate = new Date(date.getTime() + 60 * 60 * 1000);
+  const parts = getBelgradeDateTimeParts(deliveryDate);
+
+  return {
+    datum: `${parts.year}-${parts.month}-${parts.day}`,
+    vreme: `${parts.hour}:${parts.minute}`,
+  };
+}
+
+function isImmediateDeliveryAvailable(date = new Date()) {
+  const parts = getBelgradeDateTimeParts(date);
+  const hour = Number(parts.hour);
+
+  return hour >= IMMEDIATE_DELIVERY_START_HOUR && hour < IMMEDIATE_DELIVERY_END_HOUR;
+}
+
 function getDeliveryDateMessage(minimumDate) {
   const todayInBelgrade = getBelgradeDateInputValue();
 
   if (minimumDate === todayInBelgrade) {
-    return 'Današnji datum je dostupan do 10:00 po vremenu u Beogradu.';
+    return '';
   }
 
-  return `Posle 10:00 po vremenu u Beogradu najraniji datum isporuke je ${formatDate(minimumDate)}`;
+  return {/*`Posle 10:00 po vremenu u Beogradu najraniji datum isporuke je ${formatDate(minimumDate)`;*/}
 }
 
 function isSelectableDeliveryDate(value, minimumDate) {
@@ -280,6 +299,10 @@ function PaymentDraft() {
   const [status, setStatus] = useState({ type: '', message: '' });
   const [createdOrder, setCreatedOrder] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [immediateDelivery, setImmediateDelivery] = useState(false);
+  const [immediateDeliveryAvailable, setImmediateDeliveryAvailable] = useState(() =>
+    isImmediateDeliveryAvailable()
+  );
   const [minimumDeliveryDate, setMinimumDeliveryDate] = useState(() => getMinimumDeliveryDate());
 
   useEffect(() => {
@@ -338,6 +361,7 @@ function PaymentDraft() {
   useEffect(() => {
     const updateMinimumDeliveryDate = () => {
       setMinimumDeliveryDate(getMinimumDeliveryDate());
+      setImmediateDeliveryAvailable(isImmediateDeliveryAvailable());
     };
 
     updateMinimumDeliveryDate();
@@ -351,7 +375,8 @@ function PaymentDraft() {
   const orderItems = useMemo(() => getOrderItems(order), [order]);
   const baseTotalRsd = order ? Number(order.totalRsd || 0) : Number(manualTotal || 0);
   const totalRsd = baseTotalRsd;
-  const dateMustBeSelectable = order?.type !== 'subscription';
+  const isFuelBuilderOrder = order?.type === 'custom';
+  const dateMustBeSelectable = order?.type !== 'subscription' && !immediateDelivery;
   const selectedDateIsValid =
     !dateMustBeSelectable || isSelectableDeliveryDate(form.datum, minimumDeliveryDate);
   const deliveryDateMessage = getDeliveryDateMessage(minimumDeliveryDate);
@@ -420,6 +445,31 @@ function PaymentDraft() {
     }
 
     scrollToBottomOrder();
+  };
+
+  const handleImmediateOrderClick = () => {
+    if (!immediateDeliveryAvailable) {
+      return;
+    }
+
+    const deliveryFields = getImmediateDeliveryFields();
+
+    setImmediateDelivery(true);
+    setForm((current) => ({
+      ...current,
+      ...deliveryFields,
+    }));
+    setStatus({ type: '', message: '' });
+  };
+
+  const handleScheduledOrderClick = () => {
+    setImmediateDelivery(false);
+    setForm((current) => ({
+      ...current,
+      datum: '',
+      vreme: '',
+    }));
+    setStatus({ type: '', message: '' });
   };
 
   const handleSubmit = async (event) => {
@@ -594,65 +644,103 @@ function PaymentDraft() {
               />
             </label>
 
-            <label className={styles.field}>
-              {order?.type === 'subscription' ? 'Prva isporuka' : 'Datum *'}
-              {order?.type === 'subscription' ? (
-                <div className={styles.readOnlyValue}>
-                  {form.datum ? formatDate(form.datum) : 'Datum iz pretplate'}
-                </div>
-              ) : (
-                <div className={styles.datePickerWrap}>
-                  <button type="button" className={styles.pickerButton} onClick={openDatePicker}>
-                    {form.datum ? formatDate(form.datum) : 'dd.mm.yyyy'}
-                  </button>
-                  <input
-                    ref={dateInputRef}
-                    className={styles.hiddenDateInput}
-                    name="datum"
-                    type="date"
-                    min={minimumDeliveryDate}
-                    value={form.datum}
-                    onChange={handleChange}
-                    tabIndex={-1}
-                    required
-                  />
-                  <p className={styles.dateHelper}>{deliveryDateMessage}</p>
-                </div>
-              )}
-            </label>
-
-            <label className={styles.field}>
-              Vreme *
-              <div className={styles.timePickerWrap}>
-                <select
-                  value={form.vreme.split(':')[0] || ''}
-                  onChange={(event) => handleTimePartChange('hour', event.target.value)}
-                >
-                  <option value="" disabled>
-                    Sat
-                  </option>
-                  {AVAILABLE_HOURS.map((hour) => (
-                    <option key={hour} value={hour}>
-                      {hour}
-                    </option>
-                  ))}
-                </select>
-                <span>:</span>
-                <select
-                  value={form.vreme.split(':')[1] || ''}
-                  onChange={(event) => handleTimePartChange('minute', event.target.value)}
-                >
-                  <option value="" disabled>
-                    Min
-                  </option>
-                  {['00', '15', '30', '45'].map((minute) => (
-                    <option key={minute} value={minute}>
-                      {minute}
-                    </option>
-                  ))}
-                </select>
+            {isFuelBuilderOrder && (
+              <div className={styles.immediateOrderBox}>
+                {!immediateDelivery ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleImmediateOrderClick}
+                      disabled={!immediateDeliveryAvailable}
+                    >
+                      Želim isporuku za 1h
+                    </button>
+                    {!immediateDeliveryAvailable && (
+                      <div className={styles.immediateNotice}>
+                        Isporuka za 1h dostupna je od 11 do 19h.
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.immediateNotice}>
+                      Narudžbina stiže za 1h.
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.scheduleOrderButton}
+                      onClick={handleScheduledOrderClick}
+                    >
+                      Izaberi datum i vreme
+                    </button>
+                  </>
+                )}
               </div>
-            </label>
+            )}
+
+            {!immediateDelivery && (
+              <>
+                <label className={styles.field}>
+                  {order?.type === 'subscription' ? 'Prva isporuka' : 'Datum *'}
+                  {order?.type === 'subscription' ? (
+                    <div className={styles.readOnlyValue}>
+                      {form.datum ? formatDate(form.datum) : 'Datum iz pretplate'}
+                    </div>
+                  ) : (
+                    <div className={styles.datePickerWrap}>
+                      <button type="button" className={styles.pickerButton} onClick={openDatePicker}>
+                        {form.datum ? formatDate(form.datum) : 'dd.mm.yyyy'}
+                      </button>
+                      <input
+                        ref={dateInputRef}
+                        className={styles.hiddenDateInput}
+                        name="datum"
+                        type="date"
+                        min={minimumDeliveryDate}
+                        value={form.datum}
+                        onChange={handleChange}
+                        tabIndex={-1}
+                        required
+                      />
+                      <p className={styles.dateHelper}>{deliveryDateMessage}</p>
+                    </div>
+                  )}
+                </label>
+
+                <label className={styles.field}>
+                  Vreme *
+                  <div className={styles.timePickerWrap}>
+                    <select
+                      value={form.vreme.split(':')[0] || ''}
+                      onChange={(event) => handleTimePartChange('hour', event.target.value)}
+                    >
+                      <option value="" disabled>
+                        Sat
+                      </option>
+                      {AVAILABLE_HOURS.map((hour) => (
+                        <option key={hour} value={hour}>
+                          {hour}
+                        </option>
+                      ))}
+                    </select>
+                    <span>:</span>
+                    <select
+                      value={form.vreme.split(':')[1] || ''}
+                      onChange={(event) => handleTimePartChange('minute', event.target.value)}
+                    >
+                      <option value="" disabled>
+                        Min
+                      </option>
+                      {['00', '15', '30', '45'].map((minute) => (
+                        <option key={minute} value={minute}>
+                          {minute}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </label>
+              </>
+            )}
           </div>
 
           {!order && (
