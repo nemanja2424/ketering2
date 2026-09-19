@@ -1322,7 +1322,7 @@ function OrderContent() {
               ))}
             </div>
 
-            <section className={styles.subscriptionExtras}>
+            {/* <section className={styles.subscriptionExtras}>
               <div className={styles.extrasHeader}>
                 <span>Dnevne dopune</span>
                 <p>Štiklirajte dopune koje želite uz svaku isporuku.</p>
@@ -1343,7 +1343,7 @@ function OrderContent() {
                   </label>
                 ))}
               </div>
-            </section>
+            </section> */}
 
             <div className={styles.subscriptionLayout}>
               <div className={styles.calendarList}>
@@ -1568,7 +1568,7 @@ function OrderContent() {
               ))}
             </div>
 
-           <section className={styles.customAddOns}>
+           {/* <section className={styles.customAddOns}>
               <div className={styles.extrasHeader}>
                 <span>Dopuni personalizovane obroke</span>
                 <p>Dodajte kolače, potaže ili smutije pre nastavka na plaćanje.</p>
@@ -1626,7 +1626,7 @@ function OrderContent() {
                   </div>
                 ))}
               </div>
-            </section>
+            </section> */}
 
             <button
               type="button"
