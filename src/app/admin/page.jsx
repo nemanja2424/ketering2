@@ -27,6 +27,11 @@ const PAYMENT_LABELS = {
   refunded: 'Refundirano',
 };
 
+const PAYMENT_METHOD_LABELS = {
+  cash: 'Gotovina',
+  card: 'Kartica',
+};
+
 const TYPE_LABELS = {
   meal_order: 'Pripremljen meni',
   subscription_order: 'Pretplata',
@@ -208,6 +213,11 @@ function normalizeOrder(narudzbina) {
   const items = normalizeItems(porudzbina);
   const totalRsd = Number(porudzbina.totals?.totalRsd || narudzbina.cena || 0);
   const paymentStatus = porudzbina.payment?.status || (narudzbina.placeno ? 'paid' : 'not_started');
+  const paymentMethod =
+    porudzbina.payment?.methodLabel ||
+    PAYMENT_METHOD_LABELS[porudzbina.payment?.method] ||
+    porudzbina.payment?.method ||
+    '';
   const guestCount = Number(
     porudzbina.guestCount ||
       porudzbina.brOsoba ||
@@ -230,6 +240,7 @@ function normalizeOrder(narudzbina) {
     totalRsd,
     guestCount: Number.isFinite(guestCount) && guestCount > 0 ? guestCount : null,
     paymentStatus,
+    paymentMethod,
     customerNote: porudzbina.customerNote || porudzbina.napomena || '',
     internalNote: porudzbina.internalNote || '',
     fulfillment: porudzbina.fulfillment || { method: 'delivery', status: 'pending' },
@@ -538,7 +549,7 @@ export default function AdminPage() {
 function OrderCard({ narudzbina }) {
   const [isOpen, setIsOpen] = useState(true);
   const details = narudzbina.details;
-  const paymentLabel = PAYMENT_LABELS[details.paymentStatus] || details.paymentStatus;
+  const paymentLabel = details.paymentMethod || 'Nije izabrano';
   const typeLabel = TYPE_LABELS[details.type] || details.type;
   const primaryAttachment = details.attachments[0] || null;
   const attachmentHref =
