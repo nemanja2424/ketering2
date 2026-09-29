@@ -118,7 +118,7 @@ function getDeliveryDateMessage(minimumDate) {
     return '';
   }
 
-  return {/*`Posle 10:00 po vremenu u Beogradu najraniji datum isporuke je ${formatDate(minimumDate)`;*/}
+  return `Najraniji datum isporuke je ${formatDate(minimumDate)}`;
 }
 
 function isSelectableDeliveryDate(value, minimumDate) {
